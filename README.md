@@ -39,6 +39,24 @@ Three layers, described in the plan at `~/.commandcode/plans/rotherham-virtual-s
 3. **The Virtual School twist** — an audience router, a distinct **Pupil Zone** sub-brand written
    for children, a plain-English outcomes page, and inline glossary definitions of jargon.
 
+### Navigation
+
+The primary navigation is the **audience axis itself** — one short item per audience — matching how
+peer virtual schools organise their sites (Achieving for Children, for example, navigates by
+Schools, Parents and Carers, Social Workers and Pupils).
+
+The cross-cutting destinations (news, training and events, documents) live in the footer rather than
+the top bar. A service navigation that mixes audiences with content types is both harder to scan and
+physically too wide: GOV.UK's navigation list is `display: flex; flex-wrap: wrap`, and its items carry
+a 30px right margin at desktop, so seven long labels come to roughly 1130px against a 960px page.
+Five short audience labels come to about 754px, which leaves enough headroom to stay on one line.
+
+The menu is CMS-managed (`primary` in `seed/seed.json`), so editors can change it without a deploy.
+
+Below the tablet breakpoint GOV.UK collapses the list behind a "Menu" button automatically — the JS
+drives that from the presence of the toggle button and its `aria-controls`, so no extra wiring is
+needed.
+
 ## Getting started
 
 ```bash
@@ -216,7 +234,8 @@ you any rights to it.
 **Council-derived content and branding — Rotherham Metropolitan Borough Council.** The description
 of the Virtual School's purpose and duties is reproduced or adapted from the service's published
 website (see `LICENSE` for the files), as are the service name and the Rotherham brand identity.
-This includes `public/brand/rmbc-logo.svg`, the council's logo, taken from the council's public
+This includes the council's logo — `public/brand/rmbc-logo-white.svg` in the header and
+`public/brand/rmbc-logo.svg` in the footer — taken from the council's public
 [`rothgov/images`](https://github.com/rothgov/images) repository. This is **not** covered by the
 paragraph above, is included for demonstration purposes only, and is reproduced **without any
 licence from the council**. Replace it with licensed or original wording before any real use.

@@ -204,13 +204,11 @@
 			"name": "primary",
 			"label": "Primary navigation",
 			"items": [
-				{ "type": "custom", "label": "Children and young people", "url": "/children-young-people/" },
+				{ "type": "custom", "label": "Young people", "url": "/children-young-people/" },
 				{ "type": "custom", "label": "Parents and carers", "url": "/parents-carers/" },
 				{ "type": "custom", "label": "Schools", "url": "/schools/" },
 				{ "type": "custom", "label": "Social workers", "url": "/social-workers/" },
-				{ "type": "custom", "label": "Training and events", "url": "/training-events/" },
-				{ "type": "custom", "label": "News", "url": "/news/" },
-				{ "type": "custom", "label": "Documents", "url": "/documents/" }
+				{ "type": "custom", "label": "Professionals", "url": "/professionals/" }
 			]
 		}
 	],

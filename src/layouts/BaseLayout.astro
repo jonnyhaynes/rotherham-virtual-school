@@ -109,7 +109,13 @@ const pageCtx = createPublicPageContext({
 				<div class="govuk-header__container govuk-width-container">
 					<div class="govuk-header__logo">
 						<a href="/" class="govuk-header__homepage-link">
-							<span class="govuk-header__logotype">{SITE_DEFAULTS.organisation}</span>
+							<img
+								class="govuk-header__logotype rvs-header-logo"
+								src="/brand/rmbc-logo-white.svg"
+								alt={SITE_DEFAULTS.organisation}
+								width="132"
+								height="46"
+							/>
 							<span class="govuk-header__product-name">{SITE_DEFAULTS.shortName}</span>
 						</a>
 					</div>
@@ -213,6 +219,9 @@ const pageCtx = createPublicPageContext({
 								<li class="govuk-footer__list-item">
 									<a class="govuk-footer__link" href="/training-events/">Training and events</a>
 								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/documents/">Documents and policies</a>
+								</li>
 							</ul>
 						</div>
 						<div class="govuk-footer__section govuk-grid-column-one-third">
@@ -231,6 +240,9 @@ const pageCtx = createPublicPageContext({
 								</li>
 								<li class="govuk-footer__list-item">
 									<a class="govuk-footer__link" href="/social-workers/">Social workers</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/professionals/">Other professionals</a>
 								</li>
 							</ul>
 						</div>
@@ -310,9 +322,23 @@ const pageCtx = createPublicPageContext({
 		margin-top: 1rem;
 	}
 
-	/* Council logo in the footer. The GOV.UK crest that shipped with the
-	   govuk-footer__copyright-logo class is removed deliberately: this is a
-	   council service, not a GOV.UK service. */
+	/* Council logo in the header. Uses the reversed (white) variant, which is
+	   the one drawn for a dark background. It reuses GOV.UK's
+	   govuk-header__logotype class for positioning, so only the height is set
+	   here. The GOV.UK crest is deliberately not used: this is a council
+	   service, not a GOV.UK service. */
+	.rvs-header-logo {
+		height: 34px;
+		width: auto;
+	}
+
+	@media (min-width: 40.0625em) {
+		.rvs-header-logo {
+			height: 40px;
+		}
+	}
+
+	/* Council logo in the footer. */
 	.rvs-footer-brand {
 		text-align: center;
 	}

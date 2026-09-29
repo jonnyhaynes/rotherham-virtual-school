@@ -43,10 +43,11 @@ in it are granted or transferred by this notice:
         seed/seed.json
   - the service name "Rotherham Virtual School"; and
   - the Rotherham brand identity, including the council name, the council's
-    brand palette, and the council logo. The logo file
-    `public/brand/rmbc-logo.svg` is taken from the council's public
-    "rothgov/images" repository and remains the council's property. It is
-    displayed in this prototype for demonstration purposes only, and its
+    brand palette, and the council logo. The logo files
+    `public/brand/rmbc-logo-white.svg` (header) and
+    `public/brand/rmbc-logo.svg` (footer) are taken from the council's public
+    "rothgov/images" repository and remain the council's property. They are
+    displayed in this prototype for demonstration purposes only, and their
     presence does not imply any affiliation with or endorsement by the
     council.
 
