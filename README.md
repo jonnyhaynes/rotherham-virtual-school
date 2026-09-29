@@ -152,12 +152,23 @@ Targeting **WCAG 2.2 AA**, against the Public Sector Bodies (Websites and Mobile
 (No. 2) Accessibility Regulations 2018. The build uses semantic landmarks, a skip link, keyboard-
 operable navigation, visible focus (Rotherham's yellow accent), and the GOV.UK type scale.
 
-The accessibility statement at `/accessibility-statement/` is a **draft** and contains
-`[TODO before launch]` markers for its compliance status, testing description and dates.
+**Contrast has been verified programmatically.** Every text and UI pairing in the palette — including
+all five audience accent colours — passes 4.5:1 against white. One deliberate divergence from
+Rotherham's palette: GOV.UK's `success` colour is set to `#2a6b3c`, a darkened version of the
+council's light green. GOV.UK uses that colour both as the confirmation panel background behind
+white text *and* as the success link colour, and Rotherham's `#a4d0b1` measures only 1.72:1 — it is a
+surface colour, not a functional one. See `src/styles/_tokens.scss`.
 
-**Not yet done:** automated axe-core testing, manual screen-reader passes, contrast verification on
-every audience accent colour, and a plain-language review of the Pupil Zone content. These are
-listed under outstanding items.
+**Links have been checked.** All internal links resolve, and every external link resolves.
+
+The accessibility statement at `/accessibility-statement/` follows the
+[GOV.UK model accessibility statement](https://www.gov.uk/guidance/model-accessibility-statement),
+keeping the legally required wording intact, with `[TODO before publication]` markers for the facts
+only the council can supply.
+
+**Not yet done:** automated axe-core testing and manual screen-reader passes. Both need a browser,
+which was not available in the build environment. Do not claim a compliance status until they are
+complete.
 
 ## Outstanding items
 
@@ -169,10 +180,11 @@ listed under outstanding items.
       duties — see [LICENSE](LICENSE) section 2 for the files affected
 - [ ] Replace the invented outcome figures with real published data (or remove the page)
 - [ ] Confirm names, roles and contact details for the team page
-- [ ] Complete the accessibility statement (compliance status, testing description, dates)
-- [ ] Have the council's Data Protection Officer review the privacy and cookies notice
+- [ ] Complete the accessibility statement — fill in the `[TODO before publication]` markers
+      (compliance status, testing description, contact details, dates) and have it reviewed
 - [ ] Run axe-core in CI and do manual keyboard and screen-reader testing
-- [ ] Verify colour contrast for every audience accent colour
+- [ ] Review the Pupil Zone content for plain-language readability
+- [ ] Have the council's Data Protection Officer review the privacy and cookies notice
 - [ ] Point the domain at the deployment only with the council's agreement
 
 ## Licence

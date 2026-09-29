@@ -4,35 +4,37 @@
 // GOV.UK Frontend provides the structural layer; the Virtual School's own
 // components live alongside their Astro components and consume the tokens
 // exposed as CSS custom properties by ./_tokens.scss.
+//
+// The palette lives in one place. Anything here that hard-codes a colour is a
+// bug waiting to happen — see `success` below for why.
 // =============================================================================
+
+@use "./tokens" as tokens;
 
 @use "govuk-frontend/dist/govuk" with (
 	$govuk-functional-colours: (
 		// Rotherham navy drives the header, footer and buttons.
-		brand: #002554,
-		text: #252b36,
-		secondary-text: #616365,
-		link: #002554,
-		link-hover: #001a3e,
-		link-visited: #a0505c,
-		link-active: #252b36,
+		brand: tokens.$rvs-navy,
+		text: tokens.$rvs-ink,
+		secondary-text: tokens.$rvs-grey,
+		link: tokens.$rvs-navy,
+		link-hover: tokens.$rvs-navy-dark,
+		link-visited: tokens.$rvs-maroon,
+		link-active: tokens.$rvs-ink,
 		// Rotherham's accent yellow, used for keyboard focus.
-		focus: #ffe13b,
-		error: #ae1a28,
-		success: #a4d0b1,
+		focus: tokens.$rvs-yellow,
+		error: tokens.$rvs-error,
+		// Must be the *functional* green, not Rotherham's light surface green.
+		// GOV.UK uses this as the confirmation panel background behind white
+		// text, and as the success link colour, so it needs 4.5:1 both ways.
+		success: tokens.$rvs-success-functional,
 		// Pale Rotherham blue for the page template and surface backgrounds.
-		template-background: #e2ebf1,
-		surface-background: #e2ebf1
+		template-background: tokens.$rvs-blue-tint,
+		surface-background: tokens.$rvs-blue-tint
 	),
 	// Muli/Mulish matches the council site and degrades to Arial, which is also
 	// the GOV.UK fallback.
-	$govuk-font-family: (
-		"Mulish",
-		"Muli",
-		arial,
-		sans-serif
-	)
+	$govuk-font-family: tokens.$rvs-font-family
 );
 
-@use "./tokens";
 @use "./overrides";
