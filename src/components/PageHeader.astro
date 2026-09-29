@@ -1,0 +1,31 @@
+---
+interface Props {
+	title: string;
+	lead?: string | null;
+	/** Rendered under the lead, e.g. a last-updated date. */
+	meta?: string | null;
+}
+
+const { title, lead, meta } = Astro.props;
+---
+
+<header class="rvs-page-header">
+	<h1 class="govuk-heading-xl">{title}</h1>
+	{lead && <p class="govuk-body-l">{lead}</p>}
+	{meta && <p class="govuk-body-s rvs-page-header__meta">{meta}</p>}
+</header>
+
+<style>
+	.rvs-page-header {
+		padding: 1.5rem 0 0.5rem;
+	}
+
+	.rvs-page-header h1 {
+		margin-bottom: 0.75rem;
+	}
+
+	.rvs-page-header__meta {
+		color: var(--rvs-grey);
+		margin-bottom: 0;
+	}
+</style>

@@ -1,0 +1,107 @@
+---
+import { getEmDashCollection } from "emdash";
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_DEFAULTS } from "../../utils/site";
+
+const { entries, cacheHint } = await getEmDashCollection("team_members", {
+	limit: 100,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const team = [...entries].sort(
+	(a, b) => Number(a.data.order ?? 100) - Number(b.data.order ?? 100),
+);
+---
+
+<BaseLayout
+	title="Our team"
+	description="Who works in Rotherham Virtual School, what they cover and how to contact them."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Our team" }]}
+>
+	<PageHeader
+		title="Our team"
+		lead="The Virtual School is a small team. Each member covers a phase or a specialist area, so you reach the right person quickly."
+	/>
+
+	{
+		team.length === 0 ? (
+			<InsetText title="Team details coming soon">
+				<p class="govuk-body">
+					Contact the team inbox and we will put you in touch with the right person.
+				</p>
+			</InsetText>
+		) : (
+			<ul class="rvs-team">
+				{team.map((member) => (
+					<li class="rvs-team__member">
+						{member.data.photo?.src && (
+							<img
+								class="rvs-team__photo"
+								src={member.data.photo.src}
+								alt=""
+								width="96"
+								height="96"
+							/>
+						)}
+						<div>
+							<h2 class="govuk-heading-m rvs-team__role">{member.data.role}</h2>
+							{member.data.name && (
+								<p class="govuk-body rvs-team__name">{member.data.name}</p>
+							)}
+							{member.data.remit && <p class="govuk-body">{member.data.remit}</p>}
+							<p class="govuk-body">
+								<a class="govuk-link" href={`mailto:${member.data.email ?? SITE_DEFAULTS.email}`}>
+									{member.data.email ?? SITE_DEFAULTS.email}
+								</a>
+								{member.data.phone && <> · {member.data.phone}</>}
+							</p>
+						</div>
+					</li>
+				))}
+			</ul>
+		)
+	}
+
+	<InsetText title="Not sure who you need?">
+		<p class="govuk-body">
+			Email <a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
+			and your message will be passed to the right person.
+		</p>
+	</InsetText>
+</BaseLayout>
+
+<style>
+	.rvs-team {
+		list-style: none;
+		padding: 0;
+		margin: 1.5rem 0;
+	}
+
+	.rvs-team__member {
+		display: flex;
+		gap: 1.25rem;
+		align-items: flex-start;
+		border-top: 1px solid var(--rvs-border);
+		padding: 1.5rem 0;
+	}
+
+	.rvs-team__member:last-child {
+		border-bottom: 1px solid var(--rvs-border);
+	}
+
+	.rvs-team__photo {
+		border-radius: 50%;
+		flex: 0 0 auto;
+	}
+
+	.rvs-team__role {
+		margin: 0 0 0.25rem;
+	}
+
+	.rvs-team__name {
+		font-weight: 700;
+		margin: 0 0 0.25rem;
+	}
+</style>

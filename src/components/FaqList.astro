@@ -1,0 +1,44 @@
+---
+import { getEmDashCollection } from "emdash";
+import { PortableText } from "emdash/ui";
+
+interface Props {
+	/** Audience id, matching the `audience` select values in the seed. */
+	audience: string;
+	heading?: string;
+}
+
+const { audience, heading = "Frequently asked questions" } = Astro.props;
+
+// The faqs collection is small and non-routable, so fetch once and filter here
+// rather than issuing a query per audience.
+const { entries, cacheHint } = await getEmDashCollection("faqs", { limit: 100 });
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const faqs = entries
+	.filter((faq) => {
+		const value = faq.data.audience;
+		return value === "all" || value === audience;
+	})
+	.sort((a, b) => Number(a.data.order ?? 100) - Number(b.data.order ?? 100));
+---
+
+{
+	faqs.length > 0 && (
+		<section aria-labelledby="rvs-faq-heading">
+			<h2 class="govuk-heading-l" id="rvs-faq-heading">
+				{heading}
+			</h2>
+			{faqs.map((faq) => (
+				<details class="govuk-details">
+					<summary class="govuk-details__summary">
+						<span class="govuk-details__summary-text">{faq.data.question}</span>
+					</summary>
+					<div class="govuk-details__text">
+						<PortableText value={faq.data.answer} />
+					</div>
+				</details>
+			))}
+		</section>
+	)
+}

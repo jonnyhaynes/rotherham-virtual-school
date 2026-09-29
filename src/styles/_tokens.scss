@@ -1,0 +1,81 @@
+// =============================================================================
+// Design tokens
+// =============================================================================
+// Rotherham Metropolitan Borough Council brand colours, sampled from the
+// council's own "Orbit" stylesheet, plus Virtual School accents for the
+// audience zones and the Pupil Zone sub-brand.
+//
+// These are exposed as CSS custom properties so Astro components and the
+// per-audience theme layers can consume them without recompiling Sass.
+// =============================================================================
+
+// --- Core palette (Rotherham) -----------------------------------------------
+$rvs-navy: #002554; // primary brand
+$rvs-navy-dark: #001a3e;
+$rvs-blue-deep: #010066;
+$rvs-blue: #0052ba;
+$rvs-sky: #66cbf3;
+$rvs-blue-pale: #9fcfff;
+$rvs-blue-tint: #e2ebf1;
+$rvs-yellow: #ffe13b; // focus / highlight
+$rvs-cream: #fff9d2;
+$rvs-maroon: #a0505c; // visited links
+$rvs-purple: #87189d;
+$rvs-ink: #252b36; // body text
+$rvs-grey: #616365; // secondary text
+$rvs-grey-warm: #eeece8;
+$rvs-border: #d8e4ec;
+$rvs-white: #ffffff;
+
+// --- Status ------------------------------------------------------------------
+$rvs-success: #a4d0b1;
+$rvs-warning: #f3a536;
+$rvs-error: #ae1a28;
+
+// --- Audience accents (Virtual School twist) ---------------------------------
+// Used for card top-borders and accents, never as a text background alone, so
+// every pairing keeps WCAG 2.2 AA contrast against white.
+$rvs-audience-young: $rvs-purple;
+$rvs-audience-parent: $rvs-navy;
+$rvs-audience-school: $rvs-blue;
+$rvs-audience-social: $rvs-maroon;
+$rvs-audience-other: $rvs-grey;
+
+// --- Typography --------------------------------------------------------------
+// Rotherham uses Muli (now "Mulish"). It degrades to Arial, which is also the
+// GOV.UK fallback, so nothing depends on a webfont being present.
+$rvs-font-family: "Mulish", "Muli", arial, sans-serif;
+
+// --- Layout ------------------------------------------------------------------
+$rvs-pupil-radius: 16px;
+$rvs-pupil-font-scale: 1.125;
+
+:root {
+	--rvs-navy: #{$rvs-navy};
+	--rvs-navy-dark: #{$rvs-navy-dark};
+	--rvs-blue: #{$rvs-blue};
+	--rvs-sky: #{$rvs-sky};
+	--rvs-blue-pale: #{$rvs-blue-pale};
+	--rvs-blue-tint: #{$rvs-blue-tint};
+	--rvs-yellow: #{$rvs-yellow};
+	--rvs-cream: #{$rvs-cream};
+	--rvs-maroon: #{$rvs-maroon};
+	--rvs-purple: #{$rvs-purple};
+	--rvs-ink: #{$rvs-ink};
+	--rvs-grey: #{$rvs-grey};
+	--rvs-grey-warm: #{$rvs-grey-warm};
+	--rvs-border: #{$rvs-border};
+
+	--rvs-success: #{$rvs-success};
+	--rvs-warning: #{$rvs-warning};
+	--rvs-error: #{$rvs-error};
+
+	--rvs-audience-young: #{$rvs-audience-young};
+	--rvs-audience-parent: #{$rvs-audience-parent};
+	--rvs-audience-school: #{$rvs-audience-school};
+	--rvs-audience-social: #{$rvs-audience-social};
+	--rvs-audience-other: #{$rvs-audience-other};
+
+	--rvs-font-family: #{$rvs-font-family};
+	--rvs-pupil-radius: #{$rvs-pupil-radius};
+}

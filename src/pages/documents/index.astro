@@ -1,0 +1,139 @@
+---
+import { getEmDashCollection } from "emdash";
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { entries, cacheHint } = await getEmDashCollection("documents", { limit: 200 });
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const CATEGORY_LABELS: Record<string, string> = {
+	policy: "Policies",
+	guidance: "Guidance",
+	form: "Forms and templates",
+	report: "Reports",
+	other: "Other useful links",
+};
+
+const CATEGORY_ORDER = ["policy", "guidance", "form", "report", "other"];
+
+const documents = [...entries].sort((a, b) =>
+	String(a.data.title).localeCompare(String(b.data.title)),
+);
+
+const groups = CATEGORY_ORDER.map((category) => ({
+	category,
+	label: CATEGORY_LABELS[category] ?? category,
+	items: documents.filter((doc) => doc.data.category === category),
+})).filter((group) => group.items.length > 0);
+
+const linkFor = (doc: (typeof documents)[number]) => {
+	if (doc.data.external_url) {
+		return { href: doc.data.external_url, external: true };
+	}
+	if (doc.data.file?.url) {
+		return { href: doc.data.file.url, external: false };
+	}
+	return null;
+};
+
+const formatDate = (value: unknown) =>
+	value
+		? new Date(value as string).toLocaleDateString("en-GB", {
+				month: "long",
+				year: "numeric",
+			})
+		: null;
+---
+
+<BaseLayout
+	title="Documents"
+	description="Policies, guidance, forms and reports from Rotherham Virtual School."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Documents" }]}
+>
+	<PageHeader
+		title="Documents"
+		lead="Policies, statutory guidance, forms and reports. Where a document is published nationally, we link to the original source so you always have the current version."
+	/>
+
+	{
+		groups.length === 0 ? (
+			<InsetText title="No documents yet">
+				<p class="govuk-body">
+					Documents will appear here as they are published. In the meantime, contact the
+					team if you need a specific policy or form.
+				</p>
+			</InsetText>
+		) : (
+			groups.map((group) => (
+				<section aria-labelledby={`docs-${group.category}`}>
+					<h2 class="govuk-heading-l" id={`docs-${group.category}`}>
+						{group.label}
+					</h2>
+					<ul class="rvs-doc-list">
+						{group.items.map((doc) => {
+							const link = linkFor(doc);
+							const updated = formatDate(doc.data.updated_on);
+							return (
+								<li class="rvs-doc">
+									<h3 class="govuk-heading-s rvs-doc__title">
+										{link ? (
+											<a
+												class="govuk-link"
+												href={link.href}
+												rel={link.external ? "noopener" : undefined}
+											>
+												{doc.data.title}
+											</a>
+										) : (
+											doc.data.title
+										)}
+									</h3>
+									{doc.data.summary && (
+										<p class="govuk-body rvs-doc__summary">{doc.data.summary}</p>
+									)}
+									<p class="govuk-body-s rvs-doc__meta">
+										{link?.external && <span>External link</span>}
+										{link?.external && updated && <span>, </span>}
+										{updated && <span>Updated {updated}</span>}
+										{doc.data.doc_version && <span>. Version {doc.data.doc_version}</span>}
+									</p>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			))
+		)
+	}
+</BaseLayout>
+
+<style>
+	.rvs-doc-list {
+		list-style: none;
+		padding: 0;
+		margin: 1rem 0 2rem;
+	}
+
+	.rvs-doc {
+		border-top: 1px solid var(--rvs-border);
+		padding: 1rem 0;
+	}
+
+	.rvs-doc:last-child {
+		border-bottom: 1px solid var(--rvs-border);
+	}
+
+	.rvs-doc__title {
+		margin: 0 0 0.25rem;
+	}
+
+	.rvs-doc__summary {
+		margin: 0 0 0.25rem;
+	}
+
+	.rvs-doc__meta {
+		color: var(--rvs-grey);
+		margin: 0;
+	}
+</style>

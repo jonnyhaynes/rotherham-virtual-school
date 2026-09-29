@@ -1,0 +1,103 @@
+---
+import { decodeSlug, getEmDashEntry, getSeoMeta, getSiteSettings } from "emdash";
+import { PortableText } from "emdash/ui";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { resolveSiteIdentity } from "../../utils/site";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) return Astro.redirect("/404");
+
+const { entry: event, cacheHint } = await getEmDashEntry("events", slug);
+if (!event) return Astro.redirect("/404");
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const { siteTitle } = resolveSiteIdentity(await getSiteSettings());
+
+const seo = getSeoMeta(event, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+});
+
+const dateFmt = (value: unknown, options: Intl.DateTimeFormatOptions) =>
+	value ? new Date(value as string).toLocaleString("en-GB", options) : null;
+
+const dateLabel = dateFmt(event.data.starts_at, {
+	weekday: "long",
+	day: "numeric",
+	month: "long",
+	year: "numeric",
+});
+const timeLabel =
+	event.data.ends_at
+		? `${dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" })} to ${dateFmt(event.data.ends_at, { hour: "2-digit", minute: "2-digit" })}`
+		: dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" });
+---
+
+<BaseLayout
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	canonical={seo.canonical}
+	image={seo.ogImage}
+	content={{ collection: "events", id: event.data.id, slug }}
+	breadcrumbs={[
+		{ label: "Home", href: "/" },
+		{ label: "Training and events", href: "/training-events/" },
+		{ label: event.data.title },
+	]}
+>
+	<h1 class="govuk-heading-xl" {...event.edit.title}>{event.data.title}</h1>
+
+	<dl class="govuk-summary-list rvs-event-summary">
+		{
+			dateLabel && (
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Date</dt>
+					<dd class="govuk-summary-list__value">
+						{dateLabel}
+						{timeLabel && <>, {timeLabel}</>}
+					</dd>
+				</div>
+			)
+		}
+		{
+			(event.data.location || event.data.is_online) && (
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Where</dt>
+					<dd class="govuk-summary-list__value">
+						{event.data.is_online
+							? `Online${event.data.location ? ` — ${event.data.location}` : ""}`
+							: event.data.location}
+					</dd>
+				</div>
+			)
+		}
+		{
+			event.data.audience && (
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Who it's for</dt>
+					<dd class="govuk-summary-list__value">{event.data.audience}</dd>
+				</div>
+			)
+		}
+	</dl>
+
+	{
+		event.data.booking_url && (
+			<a class="govuk-button" href={event.data.booking_url} rel="noopener">
+				Book a place
+			</a>
+		)
+	}
+
+	<div class="rvs-prose">
+		<PortableText value={event.data.content} />
+	</div>
+</BaseLayout>
+
+<style>
+	.rvs-event-summary {
+		margin-bottom: 2rem;
+	}
+</style>

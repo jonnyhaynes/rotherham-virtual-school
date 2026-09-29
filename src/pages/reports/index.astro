@@ -1,0 +1,142 @@
+---
+import { getEmDashCollection } from "emdash";
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const [outcomesResult, newsResult] = await Promise.all([
+	getEmDashCollection("outcomes", { limit: 100 }),
+	getEmDashCollection("news", { limit: 100 }),
+]);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(outcomesResult.cacheHint);
+	Astro.cache.set(newsResult.cacheHint);
+}
+
+const METRIC_LABELS: Record<string, string> = {
+	attendance: "School attendance",
+	"persistent-absence": "Persistent absence",
+	"fixed-term-exclusions": "Fixed-term exclusions",
+	"progress-reading": "Progress in reading",
+	"progress-maths": "Progress in maths",
+	"ppp-spend": "Pupil Premium Plus spend",
+	"care-leavers-in-education": "Care leavers in education, employment or training",
+};
+
+const rows = [...outcomesResult.entries].sort(
+	(a, b) => Number(a.data.order ?? 100) - Number(b.data.order ?? 100),
+);
+
+const years = [...new Set(rows.map((row) => String(row.data.academic_year)))].sort();
+
+const reportNews = [...newsResult.entries].find((item) =>
+	String(item.data.title).toLowerCase().includes("annual report"),
+);
+
+const formatDate = (value: unknown) =>
+	value
+		? new Date(value as string).toLocaleDateString("en-GB", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+			})
+		: null;
+---
+
+<BaseLayout
+	title="Outcomes"
+	description="How children in care in Rotherham are doing at school, in plain English."
+	breadcrumbs={[
+		{ label: "Home", href: "/" },
+		{ label: "Outcomes" },
+	]}
+>
+	<PageHeader
+		title="How our children are doing"
+		lead="The Virtual School monitors the progress, attainment, attendance and exclusions of children in care. These are the headline figures, explained in plain English."
+	/>
+
+	<InsetText title="These figures are illustrative, not real">
+		<p class="govuk-body">
+			This is a prototype. The example figures below are placeholder data invented to
+			demonstrate the layout — they are <strong>not</strong> Rotherham's published outcomes and
+			should not be quoted or relied on.
+		</p>
+		<p class="govuk-body">
+			When real data is used: children in care are a small group and their circumstances change
+			often, so a single figure can hide a lot. We publish these numbers so that schools,
+			carers and young people can see where we are doing well and where we still have work to
+			do.
+		</p>
+	</InsetText>
+
+	{
+		rows.length === 0 ? (
+			<p class="govuk-body">Outcome figures for this year have not been published yet.</p>
+		) : (
+			years.map((year) => (
+				<section aria-labelledby={`year-${year.replace(/\W/g, "-")}`}>
+					<h2 class="govuk-heading-l" id={`year-${year.replace(/\W/g, "-")}`}>
+						Academic year {year}
+					</h2>
+					<table class="govuk-table">
+						<caption class="govuk-table__caption govuk-table__caption--s">
+							Children in care in Rotherham, {year}
+						</caption>
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Measure</th>
+								<th scope="col" class="govuk-table__header">Rotherham children in care</th>
+								<th scope="col" class="govuk-table__header">Comparison</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							{rows
+								.filter((row) => String(row.data.academic_year) === year)
+								.map((row) => (
+									<tr class="govuk-table__row">
+										<th scope="row" class="govuk-table__header">
+											{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}
+										</th>
+										<td class="govuk-table__cell">{row.data.value}</td>
+										<td class="govuk-table__cell">{row.data.comparison}</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+					{rows
+						.filter((row) => String(row.data.academic_year) === year && row.data.note)
+						.map((row) => (
+							<p class="govuk-body">
+								<strong>{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}:</strong>{" "}
+								{row.data.note}
+							</p>
+						))}
+				</section>
+			))
+		)
+	}
+
+	<h2 class="govuk-heading-l">Annual report</h2>
+	<p class="govuk-body">
+		Our annual report sets out the full picture for the year, including attainment and progress
+		data, and our priorities for the year ahead.
+	</p>
+	{
+		reportNews ? (
+			<p class="govuk-body">
+				<a class="govuk-link" href={`/news/${reportNews.id}`}>
+					Read: {reportNews.data.title}
+				</a>
+				{formatDate(reportNews.data.published_on) && (
+					<> — published {formatDate(reportNews.data.published_on)}</>
+				)}
+			</p>
+		) : (
+			<p class="govuk-body">
+				The annual report will be published here. Contact the team if you need a copy in the
+				meantime.
+			</p>
+		)
+	}
+</BaseLayout>

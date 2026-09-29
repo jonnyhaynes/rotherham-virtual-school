@@ -1,0 +1,40 @@
+{
+  "name": "rotherham-virtual-school",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "emdash": {
+    "label": "Rotherham Virtual School",
+    "seed": "seed/seed.json"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "types": "node scripts/env-types.mjs",
+    "seed": "emdash seed seed/seed.json",
+    "emdash:types": "emdash types"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.0.0",
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.11",
+    "@aws-sdk/client-s3": "^3.1142.0",
+    "@aws-sdk/s3-request-presigner": "^3.1142.0",
+    "astro": "^7.3.2",
+    "emdash": "^1.0.1",
+    "govuk-frontend": "^6.5.1",
+    "ioredis": "^5.11.1",
+    "oxc-transform-react": "^0.145.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "unstorage": "^1.17.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^22.10.0",
+    "sass": "^1.105.0",
+    "typescript": "^5.9.0"
+  }
+}

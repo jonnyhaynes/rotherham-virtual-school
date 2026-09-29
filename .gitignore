@@ -1,0 +1,21 @@
+node_modules
+dist
+.astro
+.emdash/migrations.json
+uploads
+data.db
+data.db-*
+
+# Platform
+.vercel
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+
+# Local agent configuration (personal working preferences, not project code)
+.commandcode

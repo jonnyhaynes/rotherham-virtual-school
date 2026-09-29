@@ -1,0 +1,305 @@
+---
+import {
+	getMenuWithCacheHint,
+	getSiteSettingsWithCacheHint,
+} from "emdash";
+import { createPublicPageContext } from "emdash/page";
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
+import LiveSearch from "emdash/ui/search";
+import PrototypeNotice from "../components/PrototypeNotice.astro";
+import "../styles/main.scss";
+import { SITE_DEFAULTS, resolveSiteIdentity } from "../utils/site";
+
+export interface Crumb {
+	label: string;
+	href?: string;
+}
+
+interface Props {
+	title: string;
+	pageTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	/** Breadcrumb trail. The final item should omit `href`. */
+	breadcrumbs?: Crumb[];
+	/** EmDash content reference, enables plugin page contributions. */
+	content?: { collection: string; id: string; slug?: string | null };
+	/** Extra classes for <main>. */
+	mainClass?: string;
+}
+
+const {
+	title,
+	pageTitle,
+	description,
+	image,
+	canonical,
+	breadcrumbs = [],
+	content,
+	mainClass,
+} = Astro.props;
+
+const [settingsResult, menuResult] = await Promise.all([
+	getSiteSettingsWithCacheHint(),
+	getMenuWithCacheHint("primary"),
+]);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(settingsResult.cacheHint);
+	Astro.cache.set(menuResult.cacheHint);
+}
+
+const { siteTitle, siteTagline } = resolveSiteIdentity(settingsResult.data);
+const titleIncludesSiteName =
+	title === siteTitle ||
+	title.endsWith(` | ${siteTitle}`) ||
+	title.endsWith(` — ${siteTitle}`);
+const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
+const pageDescription = description ?? siteTagline;
+const menu = menuResult.data;
+const currentPath = Astro.url.pathname;
+
+const isCurrent = (url: string) =>
+	url === "/" ? currentPath === "/" : currentPath.startsWith(url);
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: "website",
+	title: fullTitle,
+	pageTitle: pageTitle ?? title,
+	description: pageDescription,
+	canonical,
+	image,
+	content,
+	siteName: siteTitle,
+});
+---
+
+<!doctype html>
+<html lang="en" class="govuk-template">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="theme-color" content="#002554" />
+		<!--
+			Prototype safeguards: this is an unaffiliated demonstration build, so it
+			must stay out of search engines. Remove these two tags, the PrototypeNotice
+			component below, the X-Robots-Tag header in vercel.json and the blanket
+			disallow in public/robots.txt to take the site live for real.
+		-->
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="googlebot" content="noindex, nofollow, noimageindex" />
+		<title>{fullTitle}</title>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<EmDashHead page={pageCtx} />
+	</head>
+	<body class="govuk-template__body">
+		<script is:inline>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+		<EmDashBodyStart page={pageCtx} />
+
+		<a
+			href="#main-content"
+			class="govuk-skip-link"
+			data-module="govuk-skip-link">Skip to main content</a
+		>
+
+		<header class="govuk-template__header">
+			<div class="govuk-header" data-module="govuk-header">
+				<div class="govuk-header__container govuk-width-container">
+					<div class="govuk-header__logo">
+						<a href="/" class="govuk-header__homepage-link">
+							<span class="govuk-header__logotype">{SITE_DEFAULTS.organisation}</span>
+							<span class="govuk-header__product-name">{SITE_DEFAULTS.shortName}</span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+				<div class="govuk-width-container">
+					<div class="govuk-service-navigation__container">
+						<nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+							<button
+								type="button"
+								class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
+								aria-controls="navigation"
+								hidden
+								aria-hidden="true">Menu</button
+							>
+							<ul class="govuk-service-navigation__list" id="navigation">
+								{
+									menu?.items.map((item) => (
+										<li
+											class:list={[
+												"govuk-service-navigation__item",
+												item.url && isCurrent(item.url)
+													? "govuk-service-navigation__item--active"
+													: null,
+											]}
+										>
+											<a class="govuk-service-navigation__link" href={item.url}>
+												{item.url && isCurrent(item.url) ? (
+													<strong class="govuk-service-navigation__active-fallback">
+														{item.label}
+													</strong>
+												) : (
+													item.label
+												)}
+											</a>
+										</li>
+									))
+								}
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</section>
+		</header>
+
+		<div class="govuk-width-container">
+			{
+				breadcrumbs.length > 0 && (
+					<nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+						<ol class="govuk-breadcrumbs__list">
+							{breadcrumbs.map((crumb) => (
+								<li class="govuk-breadcrumbs__list-item">
+									{crumb.href ? (
+										<a class="govuk-breadcrumbs__link" href={crumb.href}>
+											{crumb.label}
+										</a>
+									) : (
+										crumb.label
+									)}
+								</li>
+							))}
+						</ol>
+					</nav>
+				)
+			}
+			<div class="rvs-search-slot">
+				<LiveSearch
+					placeholder="Search"
+					collections={["pages", "news", "events", "documents"]}
+				/>
+			</div>
+		</div>
+
+		<main
+			class:list={["govuk-main-wrapper", mainClass]}
+			id="main-content"
+		>
+			<div class="govuk-width-container">
+				<slot />
+			</div>
+		</main>
+
+		<footer class="govuk-template__footer">
+			<div class="govuk-footer">
+				<div class="govuk-width-container">
+					<div class="govuk-footer__navigation">
+						<div class="govuk-footer__section govuk-grid-column-one-third">
+							<h2 class="govuk-footer__heading govuk-heading-m">Virtual School</h2>
+							<ul class="govuk-footer__list">
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/about/">About us</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/our-team/">Our team</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/news/">News</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/training-events/">Training and events</a>
+								</li>
+							</ul>
+						</div>
+						<div class="govuk-footer__section govuk-grid-column-one-third">
+							<h2 class="govuk-footer__heading govuk-heading-m">For</h2>
+							<ul class="govuk-footer__list">
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/children-young-people/"
+										>Children and young people</a
+									>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/parents-carers/">Parents and carers</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/schools/">Schools and teachers</a>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/social-workers/">Social workers</a>
+								</li>
+							</ul>
+						</div>
+						<div class="govuk-footer__section govuk-grid-column-one-third">
+							<h2 class="govuk-footer__heading govuk-heading-m">Rotherham Council</h2>
+							<ul class="govuk-footer__list">
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="https://www.rotherham.gov.uk/"
+										>rotherham.gov.uk</a
+									>
+								</li>
+								<li class="govuk-footer__list-item">
+									<a class="govuk-footer__link" href="/contact/">Contact the Virtual School</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<hr class="govuk-footer__section-break" />
+					<div class="govuk-footer__meta">
+						<div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+							<h2 class="govuk-visually-hidden">Support links</h2>
+							<ul class="govuk-footer__inline-list">
+								<li class="govuk-footer__inline-list-item">
+									<a class="govuk-footer__link" href="/accessibility-statement/"
+										>Accessibility statement</a
+									>
+								</li>
+								<li class="govuk-footer__inline-list-item">
+									<a class="govuk-footer__link" href="/privacy-cookies/">Privacy and cookies</a>
+								</li>
+								<li class="govuk-footer__inline-list-item">
+									<a class="govuk-footer__link" href="https://www.rotherham.gov.uk/site-map"
+										>Rotherham Council services</a
+									>
+								</li>
+							</ul>
+							<span class="govuk-footer__licence-description">
+								All content is available under the
+								<a
+									class="govuk-footer__link"
+									href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+									rel="license">Open Government Licence v3.0</a
+								>, except where otherwise stated.
+							</span>
+						</div>
+						<div class="govuk-footer__meta-item">
+							<span class="govuk-footer__copyright-logo"
+								>© {SITE_DEFAULTS.organisation}</span
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<PrototypeNotice />
+
+		<script>
+			import { initAll } from "govuk-frontend";
+
+			initAll();
+		</script>
+
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>
+
+<style>
+	.rvs-search-slot {
+		margin-top: 1rem;
+	}
+</style>

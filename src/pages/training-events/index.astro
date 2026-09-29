@@ -1,0 +1,89 @@
+---
+import { getEmDashCollection } from "emdash";
+import EventCard from "../../components/EventCard.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { entries, cacheHint } = await getEmDashCollection("events", { limit: 100 });
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const now = Date.now();
+const sorted = [...entries].sort(
+	(a, b) =>
+		new Date(a.data.starts_at ?? 0).getTime() -
+		new Date(b.data.starts_at ?? 0).getTime(),
+);
+
+const upcoming = sorted.filter(
+	(event) => new Date(event.data.starts_at ?? 0).getTime() >= now,
+);
+const past = sorted
+	.filter((event) => new Date(event.data.starts_at ?? 0).getTime() < now)
+	.reverse();
+---
+
+<BaseLayout
+	title="Training and events"
+	description="CPD, workshops and network meetings from Rotherham Virtual School."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Training and events" }]}
+>
+	<PageHeader
+		title="Training and events"
+		lead="Continuing professional development for designated teachers, social workers and other professionals supporting children in care."
+	/>
+
+	<h2 class="govuk-heading-l">Upcoming</h2>
+	{
+		upcoming.length === 0 ? (
+			<InsetText title="Nothing scheduled yet">
+				<p class="govuk-body">
+					We are finalising the programme. Contact the team if you would like to be told when
+					new dates are released.
+				</p>
+			</InsetText>
+		) : (
+			<ul class="rvs-event-list">
+				{upcoming.map((event) => (
+					<EventCard
+						title={event.data.title}
+						href={`/training-events/${event.id}`}
+						summary={event.data.summary}
+						startsAt={event.data.starts_at}
+						endsAt={event.data.ends_at}
+						location={event.data.location}
+						isOnline={event.data.is_online}
+					/>
+				))}
+			</ul>
+		)
+	}
+
+	{
+		past.length > 0 && (
+			<>
+				<h2 class="govuk-heading-l">Past sessions</h2>
+				<ul class="govuk-list">
+					{past.map((event) => (
+						<li>
+							<a class="govuk-link" href={`/training-events/${event.id}`}>
+								{event.data.title}
+							</a>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.rvs-event-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1.5rem 2rem;
+		list-style: none;
+		padding: 0;
+		margin: 1.5rem 0 0;
+	}
+</style>

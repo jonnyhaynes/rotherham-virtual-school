@@ -1,0 +1,54 @@
+---
+import { getEmDashCollection } from "emdash";
+import NewsCard from "../../components/NewsCard.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { entries, cacheHint } = await getEmDashCollection("news", { limit: 100 });
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const news = [...entries].sort(
+	(a, b) =>
+		new Date(b.data.published_on ?? 0).getTime() -
+		new Date(a.data.published_on ?? 0).getTime(),
+);
+---
+
+<BaseLayout
+	title="News"
+	description="News, updates and newsletters from Rotherham Virtual School."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "News" }]}
+>
+	<PageHeader
+		title="News"
+		lead="Updates from Rotherham Virtual School for children, carers, schools and social workers."
+	/>
+
+	{
+		news.length === 0 ? (
+			<p class="govuk-body">There is no news to show yet.</p>
+		) : (
+			<ul class="rvs-news-list">
+				{news.map((item) => (
+					<NewsCard
+						title={item.data.title}
+						href={`/news/${item.id}`}
+						summary={item.data.summary}
+						publishedOn={item.data.published_on}
+					/>
+				))}
+			</ul>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.rvs-news-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem 2rem;
+		list-style: none;
+		padding: 0;
+		margin: 1.5rem 0 0;
+	}
+</style>

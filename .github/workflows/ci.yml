@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Regenerate emdash-env.d.ts from the seed so typecheck reflects the model.
+      - run: npm run types
+
+      - run: npm run typecheck
+
+      # Build against local filesystem storage: CI has no S3 credentials.
+      - run: npm run build
+        env:
+          EMDASH_STORAGE: local

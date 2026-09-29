@@ -1,0 +1,56 @@
+---
+interface Props {
+	title: string;
+	href: string;
+	description: string;
+	accent: string;
+}
+
+const { title, href, description, accent } = Astro.props;
+---
+
+<li class="rvs-audience-card" style={`--rvs-card-accent: ${accent}`}>
+	<h3 class="rvs-audience-card__title">
+		<a class="govuk-link rvs-audience-card__link" href={href}>{title}</a>
+	</h3>
+	<p class="rvs-audience-card__description">{description}</p>
+</li>
+
+<style>
+	.rvs-audience-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background: #fff;
+		border-top: 6px solid var(--rvs-card-accent);
+		outline: 1px solid var(--rvs-border);
+		outline-offset: -1px;
+		padding: 1.25rem;
+	}
+
+	.rvs-audience-card__title {
+		margin: 0 0 0.5rem;
+	}
+
+	/* The heading link covers the whole card, so the target area is generous
+	   while the accessible link text stays meaningful. */
+	.rvs-audience-card__link::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+	}
+
+	.rvs-audience-card__description {
+		margin: 0;
+		color: var(--rvs-ink);
+	}
+
+	.rvs-audience-card:hover {
+		outline-color: var(--rvs-card-accent);
+	}
+
+	.rvs-audience-card:focus-within {
+		outline: 3px solid #0b0c0c;
+		outline-offset: 0;
+	}
+</style>

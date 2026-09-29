@@ -1,0 +1,88 @@
+---
+import FaqList from "../../components/FaqList.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import WarningText from "../../components/govuk/WarningText.astro";
+import AudienceLayout from "../../layouts/AudienceLayout.astro";
+---
+
+<AudienceLayout
+	title="Schools and designated teachers"
+	lead="Guidance for schools on the PEP cycle, Pupil Premium Plus, admissions, exclusions and training."
+	description="Designated teacher guidance, PEP deadlines, Pupil Premium Plus, training and admissions for Rotherham schools."
+	accent="var(--rvs-audience-school)"
+>
+	<h2 class="govuk-heading-l">The designated teacher</h2>
+	<p class="govuk-body">
+		Every school must have a <strong>designated teacher</strong> for looked-after and previously
+		looked-after children. Their role is set out in statutory guidance and includes:
+	</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>promoting the educational achievement of children in care at the school</li>
+		<li>making sure each child has a PEP and that it is reviewed on time</li>
+		<li>advising colleagues on how to support the child in class</li>
+		<li>making sure Pupil Premium Plus is spent on the child's identified needs</li>
+		<li>acting as the point of contact for the Virtual School and social care</li>
+	</ul>
+	<p class="govuk-body">
+		Designated teachers should have time allocated for the role. If that is not happening in your
+		school, <a class="govuk-link" href="/contact/">talk to us</a>.
+	</p>
+
+	<h2 class="govuk-heading-l">The PEP cycle</h2>
+	<p class="govuk-body">
+		Every child in care of statutory school age must have a PEP reviewed at least three times a
+		year. The PEP is a working document, not a paperwork exercise: it should reflect what is
+		actually happening for the child and what will change as a result.
+	</p>
+	<p class="govuk-body">A good PEP has:</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>a clear picture of the child's progress and attainment, with evidence</li>
+		<li>a small number of SMART targets — not a long wish list</li>
+		<li>the child's own views, in their words</li>
+		<li>a named adult responsible for each action, and a date</li>
+		<li>a clear link to how Pupil Premium Plus will be used</li>
+	</ul>
+	<WarningText>
+		PEPs must be completed within the statutory timescales. Late or thin PEPs are the most common
+		reason we have to challenge a school.
+	</WarningText>
+
+	<h2 class="govuk-heading-l">Pupil Premium Plus</h2>
+	<p class="govuk-body">
+		Pupil Premium Plus is paid to the school for children in care and previously looked-after
+		children. It is not a general budget top-up. It must be used to meet the educational needs
+		identified in the PEP, and schools should be able to show the impact.
+	</p>
+	<InsetText title="Show us the impact">
+		<p class="govuk-body">
+			When we quality assure a PEP, we look for evidence of what the funding bought and what
+			changed for the child. Keep it specific: "weekly 1:1 reading, moved up two book bands"
+			beats "extra support".
+		</p>
+	</InsetText>
+
+	<h2 class="govuk-heading-l">Admissions, exclusions and part-time timetables</h2>
+	<p class="govuk-body">
+		Children in care are a priority for school places. A school cannot refuse a place or delay
+		admission because a child is in care.
+	</p>
+	<p class="govuk-body">
+		If you are considering a fixed-term or permanent exclusion, contact the Virtual School first.
+		Officially excluded children must be in full-time alternative provision from day six.
+		Part-time timetables should be short-term, agreed with us, and reviewed.
+	</p>
+
+	<h2 class="govuk-heading-l">Attachment, trauma and inclusion</h2>
+	<p class="govuk-body">
+		Many children in care have experienced trauma. Behaviour that looks like defiance is often a
+		stress response. Small adjustments — predictable routines, a named adult, a quiet space to
+		regulate — make a disproportionate difference.
+	</p>
+	<p class="govuk-body">
+		We run Attachment Aware Schools training for staff. See
+		<a class="govuk-link" href="/training-events/">training and events</a> for the current
+		programme.
+	</p>
+
+	<FaqList audience="schools" />
+</AudienceLayout>

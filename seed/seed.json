@@ -1,0 +1,634 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "Rotherham Virtual School",
+		"description": "Content model and starter content for the Rotherham Virtual School website",
+		"author": "Rotherham Metropolitan Borough Council"
+	},
+	"settings": {
+		"title": "Rotherham Virtual School",
+		"tagline": "Champions for the education of children in care and care leavers in Rotherham"
+	},
+	"collections": [
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"description": "Additional pages written and managed by the Virtual School team",
+			"urlPattern": "/{slug}",
+			"sortOrder": 10,
+			"supports": ["drafts", "revisions", "preview", "search", "seo"],
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "summary", "label": "Summary", "type": "text", "searchable": true },
+				{ "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+			]
+		},
+		{
+			"slug": "news",
+			"label": "News",
+			"labelSingular": "News item",
+			"description": "News, newsletters and updates",
+			"urlPattern": "/news/{slug}",
+			"sortOrder": 20,
+			"supports": ["drafts", "revisions", "preview", "scheduling", "search", "seo"],
+			"titleField": "title",
+			"dateField": "published_on",
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "published_on", "label": "Published on", "type": "datetime", "required": true },
+				{ "slug": "summary", "label": "Summary", "type": "text", "searchable": true },
+				{ "slug": "featured_image", "label": "Featured image", "type": "image" },
+				{
+					"slug": "audience",
+					"label": "Audience",
+					"type": "select",
+					"defaultValue": "all",
+					"validation": {
+						"options": ["all", "young-people", "parents-carers", "schools", "social-workers", "professionals"]
+					}
+				},
+				{ "slug": "featured_on_homepage", "label": "Feature on home page", "type": "boolean", "defaultValue": false },
+				{ "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+			]
+		},
+		{
+			"slug": "events",
+			"label": "Training and events",
+			"labelSingular": "Training or event",
+			"description": "CPD sessions, workshops and events for professionals and carers",
+			"urlPattern": "/training-events/{slug}",
+			"sortOrder": 30,
+			"supports": ["drafts", "revisions", "preview", "search", "seo"],
+			"titleField": "title",
+			"dateField": "starts_at",
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "summary", "label": "Summary", "type": "text", "searchable": true },
+				{
+					"slug": "kind",
+					"label": "Type",
+					"type": "select",
+					"defaultValue": "training",
+					"validation": { "options": ["training", "event", "network"] }
+				},
+				{ "slug": "starts_at", "label": "Starts at", "type": "datetime", "required": true },
+				{ "slug": "ends_at", "label": "Ends at", "type": "datetime" },
+				{ "slug": "location", "label": "Location", "type": "string" },
+				{ "slug": "is_online", "label": "Online session", "type": "boolean", "defaultValue": false },
+				{ "slug": "booking_url", "label": "Booking link", "type": "url" },
+				{
+					"slug": "audience",
+					"label": "Audience",
+					"type": "select",
+					"defaultValue": "schools",
+					"validation": {
+						"options": ["all", "young-people", "parents-carers", "schools", "social-workers", "professionals"]
+					}
+				},
+				{ "slug": "content", "label": "Details", "type": "portableText", "searchable": true }
+			]
+		},
+		{
+			"slug": "documents",
+			"label": "Documents",
+			"labelSingular": "Document",
+			"description": "Policies, guidance, forms and reports available to download or link to",
+			"urlPattern": "/documents/{slug}",
+			"sortOrder": 40,
+			"supports": ["drafts", "revisions", "preview", "search", "seo"],
+			"titleField": "title",
+			"dateField": "updated_on",
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "summary", "label": "Summary", "type": "text", "searchable": true },
+				{
+					"slug": "category",
+					"label": "Category",
+					"type": "select",
+					"defaultValue": "guidance",
+					"validation": { "options": ["policy", "guidance", "form", "report", "other"] }
+				},
+				{
+					"slug": "audience",
+					"label": "Audience",
+					"type": "select",
+					"defaultValue": "all",
+					"validation": {
+						"options": ["all", "young-people", "parents-carers", "schools", "social-workers", "professionals"]
+					}
+				},
+				{ "slug": "file", "label": "File", "type": "file" },
+				{ "slug": "external_url", "label": "External link", "type": "url" },
+				{ "slug": "doc_version", "label": "Version", "type": "string" },
+				{ "slug": "updated_on", "label": "Last updated", "type": "datetime" }
+			]
+		},
+		{
+			"slug": "team_members",
+			"label": "Team",
+			"labelSingular": "Team member",
+			"description": "The Virtual School team, who they are and what they cover",
+			"sortOrder": 50,
+			"routable": false,
+			"titleField": "role",
+			"fields": [
+				{ "slug": "name", "label": "Name", "type": "string", "searchable": true },
+				{ "slug": "role", "label": "Role", "type": "string", "required": true, "searchable": true },
+				{ "slug": "remit", "label": "What they cover", "type": "text", "searchable": true },
+				{ "slug": "email", "label": "Email", "type": "string" },
+				{ "slug": "phone", "label": "Phone", "type": "string" },
+				{ "slug": "photo", "label": "Photo", "type": "image" },
+				{ "slug": "order", "label": "Order", "type": "number", "defaultValue": 100 }
+			]
+		},
+		{
+			"slug": "faqs",
+			"label": "FAQs",
+			"labelSingular": "FAQ",
+			"description": "Frequently asked questions, grouped by audience",
+			"sortOrder": 60,
+			"routable": false,
+			"titleField": "question",
+			"fields": [
+				{ "slug": "question", "label": "Question", "type": "string", "required": true, "searchable": true },
+				{ "slug": "answer", "label": "Answer", "type": "portableText", "searchable": true },
+				{
+					"slug": "audience",
+					"label": "Audience",
+					"type": "select",
+					"defaultValue": "all",
+					"validation": {
+						"options": ["all", "young-people", "parents-carers", "schools", "social-workers", "professionals"]
+					}
+				},
+				{ "slug": "order", "label": "Order", "type": "number", "defaultValue": 100 }
+			]
+		},
+		{
+			"slug": "outcomes",
+			"label": "Outcomes",
+			"labelSingular": "Outcome figure",
+			"description": "Headline figures for the outcomes dashboard",
+			"sortOrder": 70,
+			"routable": false,
+			"fields": [
+				{ "slug": "academic_year", "label": "Academic year", "type": "string", "required": true },
+				{
+					"slug": "metric",
+					"label": "Measure",
+					"type": "select",
+					"required": true,
+					"validation": {
+						"options": [
+							"attendance",
+							"persistent-absence",
+							"fixed-term-exclusions",
+							"progress-reading",
+							"progress-maths",
+							"ppp-spend",
+							"care-leavers-in-education"
+						]
+					}
+				},
+				{ "slug": "value", "label": "Value", "type": "string", "required": true },
+				{ "slug": "comparison", "label": "Compared with", "type": "string" },
+				{ "slug": "note", "label": "Note", "type": "text" },
+				{ "slug": "order", "label": "Order", "type": "number", "defaultValue": 100 }
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"label": "Primary navigation",
+			"items": [
+				{ "type": "custom", "label": "Children and young people", "url": "/children-young-people/" },
+				{ "type": "custom", "label": "Parents and carers", "url": "/parents-carers/" },
+				{ "type": "custom", "label": "Schools", "url": "/schools/" },
+				{ "type": "custom", "label": "Social workers", "url": "/social-workers/" },
+				{ "type": "custom", "label": "Training and events", "url": "/training-events/" },
+				{ "type": "custom", "label": "News", "url": "/news/" },
+				{ "type": "custom", "label": "Documents", "url": "/documents/" }
+			]
+		}
+	],
+	"redirects": [
+		{ "source": "/about-1/accessibility-statement/1", "destination": "/accessibility-statement/", "type": 301 },
+		{ "source": "/accessibility-statement/1", "destination": "/accessibility-statement/", "type": 301 },
+		{ "source": "/vision-statement/vision/1", "destination": "/about/", "type": 301 },
+		{ "source": "/contact-2/contact/1", "destination": "/contact/", "type": 301 },
+		{ "source": "/policies-procedures/policies/1", "destination": "/documents/", "type": 301 },
+		{ "source": "/about-1", "destination": "/about/", "type": 301 }
+	],
+	"content": {
+		"pages": [
+			{
+				"id": "page-complaints",
+				"slug": "complaints",
+				"status": "published",
+				"data": {
+					"title": "Complaints and compliments",
+					"summary": "How to tell us when something is not right, or when we have done well.",
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "We want to hear from you if you are unhappy about the support the Virtual School has provided, or if something has gone well.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [{ "_type": "span", "text": "Making a complaint", "_key": "k3" }],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Complaints about the Virtual School are handled through Rotherham Council's corporate complaints process. Contact us first and we will try to resolve your concern informally.",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						}
+					]
+				}
+			}
+		],
+		"news": [
+			{
+				"id": "news-annual-report",
+				"slug": "annual-report-published",
+				"status": "published",
+				"data": {
+					"title": "Virtual School annual report published",
+					"published_on": "2026-09-15T08:00:00.000Z",
+					"summary": "Our annual report sets out how children in care in Rotherham performed last year, and what we are doing next.",
+					"audience": "all",
+					"featured_on_homepage": true,
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "The annual report for the last academic year is now available. It covers attendance, attainment, progress and exclusions for children in care, and explains the priorities for the year ahead.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "news-care-leavers",
+				"slug": "celebrating-care-leavers",
+				"status": "published",
+				"data": {
+					"title": "Celebrating our care leavers' results",
+					"published_on": "2026-08-20T08:00:00.000Z",
+					"summary": "Congratulations to the young people who collected results this summer and are moving on to college, training or work.",
+					"audience": "young-people",
+					"featured_on_homepage": true,
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Whatever your results, there is a next step for you. Your personal adviser and the Virtual School can help you work out what comes next.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "news-attachment-aware",
+				"slug": "attachment-aware-schools",
+				"status": "published",
+				"data": {
+					"title": "More Rotherham schools achieve Attachment Aware status",
+					"published_on": "2026-07-02T08:00:00.000Z",
+					"summary": "Schools across the borough have completed training to make their classrooms more inclusive for children who have experienced trauma.",
+					"audience": "schools",
+					"featured_on_homepage": false,
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Attachment Aware Schools training helps staff understand how early experiences shape the way children respond in class, and what to do about it.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			}
+		],
+		"events": [
+			{
+				"id": "event-dt-training",
+				"slug": "designated-teacher-training-autumn",
+				"status": "published",
+				"data": {
+					"title": "Designated teacher training: autumn term",
+					"summary": "Core training for designated teachers, covering the PEP cycle, Pupil Premium Plus and working with social care.",
+					"kind": "training",
+					"starts_at": "2026-10-14T15:30:00.000Z",
+					"ends_at": "2026-10-14T17:00:00.000Z",
+					"location": "Riverside House, Main Street, Rotherham S60 1AE",
+					"is_online": false,
+					"audience": "schools",
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "This session is for designated teachers and deputy designated teachers in Rotherham schools. Please bring the PEPs you are currently working on.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "event-pep-workshop",
+				"slug": "pep-quality-workshop",
+				"status": "published",
+				"data": {
+					"title": "PEP quality assurance workshop",
+					"summary": "A practical workshop for social workers on writing and reviewing high-quality Personal Education Plans.",
+					"kind": "training",
+					"starts_at": "2026-11-05T13:00:00.000Z",
+					"ends_at": "2026-11-05T15:00:00.000Z",
+					"location": "Online (Microsoft Teams)",
+					"is_online": true,
+					"audience": "social-workers",
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "We will look at real examples of PEPs, what makes a good SMART target, and how to make sure the child's voice is properly recorded.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			}
+		],
+		"documents": [
+			{
+				"id": "doc-promoting-education",
+				"slug": "promoting-education-looked-after-children",
+				"status": "published",
+				"data": {
+					"title": "Promoting the education of looked-after and previously looked-after children",
+					"summary": "The Department for Education's statutory guidance for local authorities. This is the framework the Virtual School works to.",
+					"category": "guidance",
+					"audience": "all",
+					"external_url": "https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children",
+					"updated_on": "2024-04-01T00:00:00.000Z"
+				}
+			},
+			{
+				"id": "doc-impact-of-virtual-schools",
+				"slug": "impact-of-virtual-schools",
+				"status": "published",
+				"data": {
+					"title": "The impact of virtual schools on the education of looked-after children",
+					"summary": "Ofsted's survey report on how virtual schools improve outcomes for children in care.",
+					"category": "report",
+					"audience": "professionals",
+					"external_url": "https://www.gov.uk/government/publications/the-impact-of-virtual-schools-on-the-education-of-looked-after-children",
+					"updated_on": "2024-04-01T00:00:00.000Z"
+				}
+			},
+			{
+				"id": "doc-navsh",
+				"slug": "national-association-of-virtual-school-heads",
+				"status": "published",
+				"data": {
+					"title": "National Association of Virtual School Heads (NAVSH)",
+					"summary": "The national body for virtual school heads, with research, events and good practice.",
+					"category": "other",
+					"audience": "professionals",
+					"external_url": "https://navsh.org.uk/",
+					"updated_on": "2026-01-01T00:00:00.000Z"
+				}
+			}
+		],
+		"team_members": [
+			{
+				"id": "team-head",
+				"data": {
+					"role": "Virtual School Headteacher",
+					"remit": "Strategic lead for the education of children in care. Reports to the council and holds schools to account for the progress of children on their roll.",
+					"email": "virtualschool@rotherham.gov.uk",
+					"order": 10
+				}
+			},
+			{
+				"id": "team-primary",
+				"data": {
+					"role": "Primary phase lead",
+					"remit": "Supports primary schools, tracks progress and attendance for children in key stages 1 and 2, and attends PEP meetings.",
+					"email": "virtualschool@rotherham.gov.uk",
+					"order": 20
+				}
+			},
+			{
+				"id": "team-secondary",
+				"data": {
+					"role": "Secondary phase lead",
+					"remit": "Supports secondary schools and colleges, with a focus on key stage 3, key stage 4 and preparing for adulthood.",
+					"email": "virtualschool@rotherham.gov.uk",
+					"order": 30
+				}
+			},
+			{
+				"id": "team-pep",
+				"data": {
+					"role": "PEP coordinator",
+					"remit": "Coordinates the Personal Education Plan cycle, quality assures PEPs and supports designated teachers with the ePEP system.",
+					"email": "virtualschool@rotherham.gov.uk",
+					"order": 40
+				}
+			},
+			{
+				"id": "team-post16",
+				"data": {
+					"role": "Post-16 and care leavers lead",
+					"remit": "Works with care leavers and personal advisers on education, employment and training pathways after 16.",
+					"email": "virtualschool@rotherham.gov.uk",
+					"order": 50
+				}
+			}
+		],
+		"faqs": [
+			{
+				"id": "faq-what-is-vs",
+				"data": {
+					"question": "What is a virtual school?",
+					"audience": "all",
+					"order": 10,
+					"answer": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "A virtual school is not a building and children do not attend it. Every local authority in England must have one. It is a team of professionals who champion the education of children in care and make sure schools, carers and social workers are working together.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "faq-what-is-pep",
+				"data": {
+					"question": "What is a PEP?",
+					"audience": "all",
+					"order": 20,
+					"answer": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "A Personal Education Plan (PEP) is a legal document that records what a child needs to do well in education, what support they will get, and who is responsible for it. Every child in care of school age must have a PEP that is reviewed at least three times a year.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "faq-ppp",
+				"data": {
+					"question": "What is Pupil Premium Plus?",
+					"audience": "schools",
+					"order": 30,
+					"answer": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Pupil Premium Plus (PP+) is additional funding paid to schools for children in care and previously looked-after children. It is meant to be spent on the specific educational needs identified in the child's PEP.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			},
+			{
+				"id": "faq-ask-for-help",
+				"data": {
+					"question": "How do I ask for help with a child's education?",
+					"audience": "parents-carers",
+					"order": 40,
+					"answer": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Start with your child's school or their social worker. If you are still worried, email the Virtual School and someone will get back to you.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				}
+			}
+		],
+		"outcomes": [
+			{
+				"id": "out-attendance",
+				"data": {
+					"academic_year": "2025/26",
+					"metric": "attendance",
+					"value": "94.1%",
+					"comparison": "All Rotherham pupils: 95.0%",
+					"note": "Attendance for children in care has improved for the third year running.",
+					"order": 10
+				}
+			},
+			{
+				"id": "out-persistent-absence",
+				"data": {
+					"academic_year": "2025/26",
+					"metric": "persistent-absence",
+					"value": "12.4%",
+					"comparison": "All Rotherham pupils: 8.9%",
+					"note": "Children in care are still more likely to be persistently absent, so this is a priority for the year ahead.",
+					"order": 20
+				}
+			},
+			{
+				"id": "out-exclusions",
+				"data": {
+					"academic_year": "2025/26",
+					"metric": "fixed-term-exclusions",
+					"value": "1 in 9",
+					"comparison": "All Rotherham pupils: 1 in 22",
+					"note": "We work with schools to reduce exclusions by putting support in place early.",
+					"order": 30
+				}
+			},
+			{
+				"id": "out-care-leavers",
+				"data": {
+					"academic_year": "2025/26",
+					"metric": "care-leavers-in-education",
+					"value": "58%",
+					"comparison": "National average: 55%",
+					"note": "The proportion of Rotherham care leavers in education, employment or training.",
+					"order": 40
+				}
+			}
+		]
+	}
+}

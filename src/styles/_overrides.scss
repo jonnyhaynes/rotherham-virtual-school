@@ -1,0 +1,111 @@
+// =============================================================================
+// Global refinements layered over GOV.UK Frontend
+// =============================================================================
+// Keep this file small and genuine: component-specific styling belongs in the
+// component's own <style> block. Only rules that apply site-wide live here.
+
+// Body copy rendered from EmDash Portable Text or hand-authored pages.
+.rvs-prose {
+	> *:last-child {
+		margin-bottom: 0;
+	}
+
+	h2 {
+		margin-top: 2rem;
+	}
+
+	h3,
+	h4 {
+		margin-top: 1.5rem;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 1.5rem;
+	}
+}
+
+// Long words (school names, URLs) should never force a horizontal scrollbar.
+.rvs-prose,
+.rvs-break-words {
+	overflow-wrap: anywhere;
+}
+
+// =============================================================================
+// Prototype safeguards
+// =============================================================================
+// The prototype notice bar is fixed to the bottom of the viewport, so reserve
+// space for it while it is on screen. The class is set on <html> by the bar.
+html.rvs-has-prototype-bar body {
+	padding-bottom: 6rem;
+}
+
+// =============================================================================
+// Pupil Zone theme
+// =============================================================================
+// A deliberately warmer sub-brand for content written for children and young
+// people. Same components, bigger and softer: larger body text, generous line
+// height, rounded surfaces and a purple accent. Everything still inherits the
+// GOV.UK type scale and focus styles, so accessibility is unchanged.
+.rvs-pupil {
+	--rvs-pupil-accent: var(--rvs-audience-young);
+
+	.govuk-body,
+	.govuk-body-l,
+	p,
+	li {
+		font-size: 1.25rem;
+		line-height: 1.6;
+	}
+
+	.govuk-heading-xl {
+		line-height: 1.05;
+	}
+
+	.govuk-list--bullet li {
+		margin-bottom: 0.5rem;
+	}
+
+	.govuk-inset-text {
+		border-left-width: 10px;
+		border-left-color: var(--rvs-pupil-accent);
+		background: #fff;
+		border-radius: var(--rvs-pupil-radius);
+		padding: 1.25rem;
+	}
+
+	.govuk-link {
+		text-underline-offset: 0.15em;
+	}
+
+	.rvs-pupil-card {
+		display: block;
+		background: #fff;
+		border: 2px solid var(--rvs-border);
+		border-radius: var(--rvs-pupil-radius);
+		padding: 1.25rem;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.rvs-pupil-card:hover {
+		border-color: var(--rvs-pupil-accent);
+		text-decoration: underline;
+	}
+
+	.rvs-pupil-card__title {
+		margin: 0 0 0.5rem;
+		color: var(--rvs-navy);
+	}
+
+	.rvs-pupil-card__text {
+		margin: 0;
+	}
+}
+

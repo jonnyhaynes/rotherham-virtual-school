@@ -1,0 +1,129 @@
+---
+import { getEmDashCollection, getSiteSettings } from "emdash";
+import AudienceCard from "../components/AudienceCard.astro";
+import ContactPanel from "../components/ContactPanel.astro";
+import HeroBanner from "../components/HeroBanner.astro";
+import NewsCard from "../components/NewsCard.astro";
+import InsetText from "../components/govuk/InsetText.astro";
+import { AUDIENCES } from "../data/audiences";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { resolveSiteIdentity } from "../utils/site";
+
+const { siteTagline } = resolveSiteIdentity(await getSiteSettings());
+
+const { entries: newsEntries, cacheHint } = await getEmDashCollection("news", {
+	limit: 50,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const latestNews = [...newsEntries]
+	.sort(
+		(a, b) =>
+			new Date(b.data.published_on ?? 0).getTime() -
+			new Date(a.data.published_on ?? 0).getTime(),
+	)
+	.slice(0, 3);
+---
+
+<BaseLayout title="Home" description={siteTagline}>
+	<HeroBanner
+		title="Rotherham Virtual School"
+		lead="We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham — wherever they live and whatever school they go to."
+	/>
+
+	<section class="rvs-section" aria-labelledby="who-are-you">
+		<h2 class="govuk-heading-l" id="who-are-you">Who are you?</h2>
+		<p class="govuk-body-l">
+			Choose the option that fits you best. Each section is written for you.
+		</p>
+		<ul class="rvs-audience-grid">
+			{AUDIENCES.map((audience) => <AudienceCard {...audience} />)}
+		</ul>
+	</section>
+
+	<section class="rvs-section" aria-labelledby="what-we-do">
+		<h2 class="govuk-heading-l" id="what-we-do">What we do</h2>
+		<p class="govuk-body">
+			A virtual school is not a building and children do not attend it. We are a team of
+			professionals who work with schools, carers and social workers to make sure the children
+			we support get the education they deserve.
+		</p>
+		<ul class="govuk-list govuk-list--bullet">
+			<li>Make sure every child is in the right school and is making progress</li>
+			<li>Provide training and share effective practice with schools, carers and social workers</li>
+			<li>Monitor the progress, attainment, attendance and exclusion of children in care</li>
+			<li>Support transitions between schools, year groups and on to college or training</li>
+		</ul>
+		<InsetText title="Are you worried about a child?">
+			<p class="govuk-body">
+				If you are worried about a child or young person's safety, contact Rotherham's
+				Children's Social Care team.
+			</p>
+			<p class="govuk-body">
+				<a
+					class="govuk-link"
+					href="https://www.rotherham.gov.uk/child-protection/report-concern-child-young-person"
+					>Report a concern about a child or young person</a
+				>
+			</p>
+		</InsetText>
+	</section>
+
+	{
+		latestNews.length > 0 && (
+			<section class="rvs-section" aria-labelledby="latest-news">
+				<h2 class="govuk-heading-l" id="latest-news">
+					Latest news
+				</h2>
+				<ul class="rvs-news-grid">
+					{latestNews.map((item) => (
+						<NewsCard
+							title={item.data.title}
+							href={`/news/${item.id}`}
+							summary={item.data.summary}
+							publishedOn={item.data.published_on}
+						/>
+					))}
+				</ul>
+				<p class="govuk-body">
+					<a class="govuk-link" href="/news/">
+						See all news
+					</a>
+				</p>
+			</section>
+		)
+	}
+
+	<section class="rvs-section" aria-labelledby="contact">
+		<h2 class="govuk-heading-l" id="contact">Get in touch</h2>
+		<ContactPanel />
+	</section>
+</BaseLayout>
+
+<style>
+	.rvs-section {
+		padding: 2rem 0;
+	}
+
+	.rvs-section + .rvs-section {
+		border-top: 1px solid var(--rvs-border);
+	}
+
+	.rvs-audience-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.25rem;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.rvs-news-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem 2rem;
+		margin: 1.5rem 0;
+		padding: 0;
+		list-style: none;
+	}
+</style>

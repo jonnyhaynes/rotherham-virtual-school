@@ -1,0 +1,43 @@
+---
+import ContactPanel from "../components/ContactPanel.astro";
+import BaseLayout, { type Crumb } from "./BaseLayout.astro";
+
+/**
+ * Layout for the Pupil Zone. Wraps BaseLayout with the `rvs-pupil` theme class,
+ * which enlarges body text, rounds surfaces and switches to the young people
+ * accent colour. Same components and accessibility underneath.
+ */
+interface Props {
+	title: string;
+	lead?: string | null;
+	description?: string | null;
+	breadcrumbs?: Crumb[];
+}
+
+const { title, lead, description, breadcrumbs } = Astro.props;
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	breadcrumbs={breadcrumbs ?? [{ label: "Home", href: "/" }, { label: title }]}
+	mainClass="rvs-pupil"
+>
+	<h1 class="govuk-heading-xl">{title}</h1>
+	{lead && <p class="govuk-body-l">{lead}</p>}
+
+	<slot />
+
+	<div class="rvs-pupil-help">
+		<ContactPanel
+			heading="Not sure who to talk to?"
+			text="You can talk to your carer, your social worker, your teacher or the Virtual School. It is okay to ask for help."
+		/>
+	</div>
+</BaseLayout>
+
+<style>
+	.rvs-pupil-help {
+		margin-top: 2.5rem;
+	}
+</style>

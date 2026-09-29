@@ -1,0 +1,72 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+	title="About us"
+	description="What a virtual school is, our vision, and the duties we work to."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "About us" }]}
+>
+	<PageHeader
+		title="About Rotherham Virtual School"
+		lead="We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham."
+	/>
+
+	<h2 class="govuk-heading-l">What a virtual school is</h2>
+	<p class="govuk-body">
+		A virtual school is not a building and children do not attend it. Every local authority in
+		England must have a Virtual School Head, whose job is to promote the educational achievement
+		of the children the authority looks after.
+	</p>
+	<p class="govuk-body">
+		Rotherham Virtual School works with the schools our children attend — in Rotherham and
+		anywhere else in the country — as well as with carers, social workers and other services.
+	</p>
+
+	<h2 class="govuk-heading-l">Our vision</h2>
+	<p class="govuk-body">
+		Children in care should have the same opportunity to succeed at school as any other child,
+		and better support than most, because of what they have been through. We will:
+	</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>
+			put the child's own views and aspirations at the centre of decisions about their education
+		</li>
+		<li>hold high expectations and refuse to accept low attainment as inevitable</li>
+		<li>make sure every child is in a good school that can meet their needs</li>
+		<li>act early when something starts to go wrong, rather than after the event</li>
+		<li>work in partnership with carers, schools and social care</li>
+	</ul>
+
+	<h2 class="govuk-heading-l">What we are responsible for</h2>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>Making sure children are in the right school and are making progress</li>
+		<li>
+			Providing training and sharing effective practice with schools, carers and social workers
+		</li>
+		<li>
+			Monitoring the progress, attainment, attendance and exclusion of children in care
+		</li>
+		<li>Overseeing Personal Education Plans and Pupil Premium Plus</li>
+		<li>Supporting transitions, including into care, between schools and on to post-16</li>
+	</ul>
+
+	<h2 class="govuk-heading-l">The law and guidance we work to</h2>
+	<p class="govuk-body">
+		Our work is set out in the Children Act 1989 and in the Department for Education's statutory
+		guidance.
+	</p>
+	<InsetText title="Statutory guidance">
+		<p class="govuk-body">
+			<a
+				class="govuk-link"
+				href="https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children"
+				rel="noopener">Promoting the education of looked-after and previously looked-after children</a
+			>
+			(Department for Education) sets out the duties of local authorities, schools and Virtual
+			School Heads.
+		</p>
+	</InsetText>
+</BaseLayout>

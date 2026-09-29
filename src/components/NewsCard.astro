@@ -1,0 +1,53 @@
+---
+interface Props {
+	title: string;
+	href: string;
+	summary?: string | null;
+	/** EmDash datetime fields arrive as ISO strings. */
+	publishedOn?: string | Date | null;
+}
+
+const { title, href, summary, publishedOn } = Astro.props;
+
+const published = publishedOn ? new Date(publishedOn) : null;
+const dateLabel = published
+	? published.toLocaleDateString("en-GB", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		})
+	: null;
+---
+
+<li class="rvs-news-card">
+	{dateLabel && (
+		<time class="rvs-news-card__date" datetime={published?.toISOString()}>
+			{dateLabel}
+		</time>
+	)}
+	<h3 class="govuk-heading-m rvs-news-card__title">
+		<a class="govuk-link" href={href}>{title}</a>
+	</h3>
+	{summary && <p class="govuk-body rvs-news-card__summary">{summary}</p>}
+</li>
+
+<style>
+	.rvs-news-card {
+		border-top: 4px solid var(--rvs-blue);
+		padding: 1rem 0 0;
+	}
+
+	.rvs-news-card__date {
+		display: block;
+		color: var(--rvs-grey);
+		margin-bottom: 0.25rem;
+	}
+
+	.rvs-news-card__title {
+		margin: 0 0 0.5rem;
+	}
+
+	.rvs-news-card__summary {
+		margin: 0;
+	}
+</style>

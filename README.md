@@ -1,0 +1,207 @@
+# Rotherham Virtual School — website
+
+> ## ⚠️ This is a prototype, not a live website
+>
+> This repository is an **exploratory prototype / demonstration build**. It is **not** the live
+> website of Rotherham Virtual School, and it is **not affiliated with, commissioned by or endorsed
+> by** Rotherham Metropolitan Borough Council or Rotherham Virtual School.
+>
+> Nothing here is production-ready: the content was written for demonstration purposes, the
+> statistics on the outcomes page are **invented placeholder figures** rather than real data, and
+> some details are known to be unverified or unresolved (see [Outstanding items](#outstanding-items)).
+>
+> Do not deploy this as the Virtual School's real website without the council's involvement and
+> consent.
+
+A prototype rebuild of the Rotherham Virtual School website, exploring how an accessible,
+GOV.UK-informed service site could work for a local authority virtual school — arranged around the
+audiences it serves rather than a flat set of links.
+
+The current live site is a single page with four links. This prototype proposes an audience-first
+information architecture and a content-managed build.
+
+- **Framework:** Astro 7 (server output) + TypeScript
+- **CMS:** [EmDash](https://emdashcms.com) — Astro-native, database-backed, with an admin UI
+- **Design system:** GOV.UK Design System (`govuk-frontend`), themed with Rotherham's brand palette
+- **Styling:** SCSS with design tokens exposed as CSS custom properties
+- **Hosting:** Vercel (`@astrojs/vercel`), with libSQL/Turso for content and S3-compatible storage
+  for media
+
+## Design approach
+
+Three layers, described in the plan at `~/.commandcode/plans/rotherham-virtual-school-website.md`:
+
+1. **GOV.UK structure** — skip link, header, service navigation, breadcrumbs, buttons, inset and
+   warning text, details, summary lists, tables. This buys WCAG 2.2 AA compliance for free.
+2. **Rotherham identity** — the council's own palette and type (sampled from the Orbit stylesheet
+   that powers `rotherham.gov.uk`), a full-bleed photographic hero, and a card-grid "who are you?"
+   router.
+3. **The Virtual School twist** — an audience router, a distinct **Pupil Zone** sub-brand written
+   for children, a plain-English outcomes page, and inline glossary definitions of jargon.
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+Visit <http://localhost:4321>. The admin UI is at
+<http://localhost:4321/_emdash/admin> — the first visit runs EmDash's setup wizard.
+
+Content lives in an EmDash database. Locally that is a SQLite-compatible file (`data.db`), created
+and migrated on first run.
+
+```bash
+npm run seed      # apply the content model and starter content from seed/seed.json
+npm run types     # regenerate emdash-env.d.ts from the seed
+```
+
+`npm run types` exists because `npx emdash types` talks to the HTTP API and needs an authenticated
+admin session; this generates the types offline instead, so CI never needs credentials.
+
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the Astro dev server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview the production build |
+| `npm run typecheck` | `astro check` — types and diagnostics across all `.astro` files |
+| `npm run types` | Regenerate `emdash-env.d.ts` from the seed |
+| `npm run seed` | Apply `seed/seed.json` to the database |
+
+## Project structure
+
+```
+astro.config.mjs        Astro config: Vercel adapter, libSQL, S3/local storage, sessions
+vercel.json             Prototype safeguard: X-Robots-Tag header on every route
+seed/seed.json          Content model (collections, fields, menus, redirects) + starter content
+scripts/env-types.mjs   Offline emdash-env.d.ts generation
+src/layouts/            BaseLayout, AudienceLayout, PupilLayout
+src/components/         Audience cards, hero, news/event cards, FAQ list, prototype notice
+src/components/govuk/   Thin wrappers over GOV.UK Frontend markup
+src/pages/              Routes (see below)
+src/styles/             Tokens, GOV.UK overrides, the Pupil Zone theme
+src/data/audiences.ts   The five audiences that drive the information architecture
+```
+
+### Routes
+
+```
+/                              Home: hero, audience router, what we do, news, contact
+/children-young-people/        Pupil Zone (separate sub-brand)
+/parents-carers/               Parents and carers
+/schools/                      Schools and designated teachers
+/social-workers/               Social workers
+/professionals/                Other professionals
+/our-team/                     Team roles and remits
+/training-events/              Training and events, with detail pages
+/news/                         News, with detail pages
+/documents/                    Policies, guidance, forms and reports
+/reports/                      Outcomes dashboard (placeholder figures)
+/about/  /contact/             About and contact
+/accessibility-statement/      Statutory accessibility statement (draft)
+/privacy-cookies/              Privacy and cookies notice (draft)
+/[slug]                        Generic CMS-managed pages
+```
+
+## Content model
+
+Defined in `seed/seed.json` and applied to the database:
+
+| Collection | Purpose |
+|---|---|
+| `pages` | Ad-hoc pages managed by the team |
+| `news` | News and newsletters |
+| `events` | Training, workshops and network meetings (`kind` distinguishes them) |
+| `documents` | Policies, guidance, forms, reports — either an uploaded file or an external link |
+| `team_members` | Who's who, with remits (no personal names in the seed) |
+| `faqs` | Questions grouped by audience |
+| `outcomes` | Headline figures for the outcomes dashboard |
+
+Field and collection slugs must be `snake_case`; EmDash reserves some slugs (for example `version`,
+`status`, `created_at`).
+
+**All starter content is illustrative.** Team entries are role-based rather than named individuals,
+and the outcome figures were invented to demonstrate the layout.
+
+## Deployment
+
+EmDash requires `output: "server"`, so this deploys as a server-rendered app rather than a static
+export. On Vercel, set:
+
+| Variable | Purpose |
+|---|---|
+| `LIBSQL_DATABASE_URL` | Turso (or other libSQL) database URL |
+| `LIBSQL_AUTH_TOKEN` | libSQL auth token |
+| `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_PUBLIC_URL` | Media storage (Vercel's filesystem is ephemeral, so S3-compatible storage is required) |
+| `REDIS_URL` | Session store — **required on Vercel**, which provides no default session driver. EmDash keeps signed-in admin users in the Astro session, so without this, admin login fails. |
+| `EMDASH_ENCRYPTION_KEY` | Encrypts plugin secrets. Back it up separately: losing it makes those values unreadable. |
+
+Use a **separate database per environment** so a preview deployment can never migrate or modify
+production content.
+
+Two EmDash caveats on serverless: the built-in scheduler only runs while a process is alive, so
+scheduled publishing needs a Vercel Cron route; and sandboxed plugins need a long-running
+`workerd` runner, so use native plugins.
+
+## Accessibility
+
+Targeting **WCAG 2.2 AA**, against the Public Sector Bodies (Websites and Mobile Applications)
+(No. 2) Accessibility Regulations 2018. The build uses semantic landmarks, a skip link, keyboard-
+operable navigation, visible focus (Rotherham's yellow accent), and the GOV.UK type scale.
+
+The accessibility statement at `/accessibility-statement/` is a **draft** and contains
+`[TODO before launch]` markers for its compliance status, testing description and dates.
+
+**Not yet done:** automated axe-core testing, manual screen-reader passes, contrast verification on
+every audience accent colour, and a plain-language review of the Pupil Zone content. These are
+listed under outstanding items.
+
+## Outstanding items
+
+- [ ] Complete the EmDash setup wizard and create the admin account (locally and in production)
+- [ ] Provision Turso, S3-compatible storage and Redis; set all environment variables
+- [ ] Add a Vercel Cron route so EmDash's scheduler runs
+- [ ] Replace all illustrative content with real, verified content
+- [ ] Replace the invented outcome figures with real published data (or remove the page)
+- [ ] Confirm names, roles and contact details for the team page
+- [ ] Complete the accessibility statement (compliance status, testing description, dates)
+- [ ] Have the council's Data Protection Officer review the privacy and cookies notice
+- [ ] Run axe-core in CI and do manual keyboard and screen-reader testing
+- [ ] Verify colour contrast for every audience accent colour
+- [ ] Point the domain at the deployment only with the council's agreement
+
+## Licence
+
+**Code:** MIT — see [LICENSE](LICENSE). You are free to reuse the code.
+
+**Content:** the text, names, statistics, branding and any Rotherham Council assets relating to
+Rotherham Virtual School are included **for demonstration purposes only**, are **not** covered by
+the MIT licence, and should not be reused elsewhere without permission. The Rotherham brand
+palette and logo are the property of Rotherham Metropolitan Borough Council. GOV.UK Frontend is
+MIT-licensed and is used under its own terms.
+
+## Disclaimer
+
+Provided as-is, with no warranty of any kind. This is unaffiliated prototype work and does not
+represent Rotherham Council or Rotherham Virtual School. If you are looking for the real service,
+use [rotherham.gov.uk](https://www.rotherham.gov.uk/).
+
+## Prototype safeguards
+
+Because this is a prototype rather than the Virtual School's real website, it is deliberately kept
+out of search engines and clearly labelled:
+
+- A dismissible **notice bar** is fixed to the bottom of every page
+  (`src/components/PrototypeNotice.astro`).
+- `<meta name="robots">` is set to `noindex, nofollow`, with `noimageindex` for Googlebot
+  (`src/layouts/BaseLayout.astro`).
+- `robots.txt` disallows all crawlers (`public/robots.txt`).
+- An **`X-Robots-Tag` HTTP header** is sent for every route (`vercel.json`) — the most reliable of
+  the mechanisms, as it does not depend on a crawler parsing the page.
+- `sitemap-index.xml` is still generated, but is not advertised and is disallowed.
+
+To take the site live for real, remove the notice bar, the two `robots` meta tags, the
+`X-Robots-Tag` header in `vercel.json`, and replace `public/robots.txt` with a normal policy.

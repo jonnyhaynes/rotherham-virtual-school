@@ -1,0 +1,38 @@
+// =============================================================================
+// Global stylesheet
+// =============================================================================
+// GOV.UK Frontend provides the structural layer; the Virtual School's own
+// components live alongside their Astro components and consume the tokens
+// exposed as CSS custom properties by ./_tokens.scss.
+// =============================================================================
+
+@use "govuk-frontend/dist/govuk" with (
+	$govuk-functional-colours: (
+		// Rotherham navy drives the header, footer and buttons.
+		brand: #002554,
+		text: #252b36,
+		secondary-text: #616365,
+		link: #002554,
+		link-hover: #001a3e,
+		link-visited: #a0505c,
+		link-active: #252b36,
+		// Rotherham's accent yellow, used for keyboard focus.
+		focus: #ffe13b,
+		error: #ae1a28,
+		success: #a4d0b1,
+		// Pale Rotherham blue for the page template and surface backgrounds.
+		template-background: #e2ebf1,
+		surface-background: #e2ebf1
+	),
+	// Muli/Mulish matches the council site and degrades to Arial, which is also
+	// the GOV.UK fallback.
+	$govuk-font-family: (
+		"Mulish",
+		"Muli",
+		arial,
+		sans-serif
+	)
+);
+
+@use "./tokens";
+@use "./overrides";

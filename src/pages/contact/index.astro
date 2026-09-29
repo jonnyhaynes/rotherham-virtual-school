@@ -1,0 +1,72 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import ContactPanel from "../../components/ContactPanel.astro";
+import WarningText from "../../components/govuk/WarningText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_DEFAULTS } from "../../utils/site";
+---
+
+<BaseLayout
+	title="Contact us"
+	description="How to contact Rotherham Virtual School."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact us" }]}
+>
+	<PageHeader
+		title="Contact us"
+		lead="Get in touch with the Virtual School team. If you are not sure who you need, use the team inbox and we will pass your message on."
+	/>
+
+	<WarningText title="Emergency">
+		If a child is in immediate danger, call 999. To report a concern about a child's safety,
+		contact Rotherham's Children's Social Care team — do not use the Virtual School inbox.
+	</WarningText>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<h2 class="govuk-heading-l">Virtual School team</h2>
+			<dl class="govuk-summary-list">
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Email</dt>
+					<dd class="govuk-summary-list__value">
+						<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
+					</dd>
+				</div>
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Post</dt>
+					<dd class="govuk-summary-list__value">
+						Rotherham Virtual School<br />
+						Riverside House<br />
+						Main Street<br />
+						Rotherham<br />
+						S60 1AE
+					</dd>
+				</div>
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Who's who</dt>
+					<dd class="govuk-summary-list__value">
+						<a class="govuk-link" href="/our-team/">See the team and what they cover</a>
+					</dd>
+				</div>
+			</dl>
+
+			<h2 class="govuk-heading-l">Other useful contacts</h2>
+			<ul class="govuk-list">
+				<li>
+					<a
+						class="govuk-link"
+						href="https://www.rotherham.gov.uk/child-protection/report-concern-child-young-person"
+						rel="noopener">Report a concern about a child or young person</a
+					>
+				</li>
+				<li>
+					<a class="govuk-link" href="https://www.rotherham.gov.uk/" rel="noopener"
+						>Rotherham Council</a
+					>
+				</li>
+			</ul>
+		</div>
+		<div class="govuk-grid-column-one-third">
+			<ContactPanel />
+		</div>
+	</div>
+</BaseLayout>

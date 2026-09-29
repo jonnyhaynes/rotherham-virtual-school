@@ -1,0 +1,102 @@
+---
+import PageHeader from "../../components/PageHeader.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_DEFAULTS } from "../../utils/site";
+---
+
+<BaseLayout
+	title="Accessibility statement"
+	description="Accessibility statement for the Rotherham Virtual School website."
+	breadcrumbs={[
+		{ label: "Home", href: "/" },
+		{ label: "Accessibility statement" },
+	]}
+>
+	<PageHeader
+		title="Accessibility statement"
+		lead="This statement applies to the Rotherham Virtual School website."
+		meta="[TODO before launch: insert the date this statement was prepared and the date it was last reviewed.]"
+	/>
+
+	<p class="govuk-body">
+		We want as many people as possible to be able to use this website. For example, that means
+		you should be able to:
+	</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>change colours, contrast levels and fonts using your browser or device settings</li>
+		<li>zoom in up to 400% without the text spilling off the screen</li>
+		<li>navigate most of the website using just a keyboard</li>
+		<li>navigate most of the website using speech recognition software</li>
+		<li>listen to most of the website using a screen reader</li>
+	</ul>
+	<p class="govuk-body">
+		We have also tried to make the website text as simple as possible to understand.
+		<a class="govuk-link" href="https://mcmw.abilitynet.org.uk/" rel="noopener">AbilityNet</a>
+		has advice on making your device easier to use if you have a disability.
+	</p>
+
+	<h2 class="govuk-heading-l">How accessible this website is</h2>
+	<p class="govuk-body">
+		This website is built on the GOV.UK Design System. We aim to meet the Web Content
+		Accessibility Guidelines version 2.2 AA standard.
+	</p>
+	<InsetText title="Known limitations">
+		<p class="govuk-body">
+			[TODO before launch: list any known accessibility limitations, for example third-party
+			documents (PDFs) that are not accessible, or content that has not yet been reviewed.]
+		</p>
+	</InsetText>
+
+	<h2 class="govuk-heading-l">What to do if you cannot access parts of this website</h2>
+	<p class="govuk-body">
+		If you need information from this website in a different format, such as large print, easy
+		read, audio recording or braille:
+	</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>
+			email
+			<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
+		</li>
+	</ul>
+	<p class="govuk-body">We will consider your request and get back to you.</p>
+
+	<h2 class="govuk-heading-l">Reporting accessibility problems</h2>
+	<p class="govuk-body">
+		If you find any problems that are not listed on this page, or you think we are not meeting
+		accessibility requirements, please contact us using the details above.
+	</p>
+
+	<h2 class="govuk-heading-l">Enforcement procedure</h2>
+	<p class="govuk-body">
+		The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public
+		Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018
+		(the "accessibility regulations"). If you are not happy with how we respond to your
+		complaint,
+		<a
+			class="govuk-link"
+			href="https://www.equalityadvisoryservice.com/"
+			rel="noopener">contact the Equality Advisory and Support Service (EASS)</a
+		>.
+	</p>
+
+	<h2 class="govuk-heading-l">Technical information about this website's accessibility</h2>
+	<p class="govuk-body">
+		Rotherham Metropolitan Borough Council is committed to making its website accessible, in
+		accordance with the accessibility regulations.
+	</p>
+
+	<h3 class="govuk-heading-m">Compliance status</h3>
+	<p class="govuk-body">
+		[TODO before launch: state whether the website is fully compliant, partially compliant or
+		non-compliant, and list any content that does not meet the standard with a reason and a
+		target date for fixing it.]
+	</p>
+
+	<h3 class="govuk-heading-m">How we tested this website</h3>
+	<p class="govuk-body">
+		[TODO before launch: describe the testing carried out — for example automated testing with
+		axe-core, manual keyboard testing, and testing with screen readers such as NVDA, JAWS and
+		VoiceOver.]
+	</p>
+</BaseLayout>

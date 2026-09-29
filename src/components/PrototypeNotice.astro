@@ -1,0 +1,112 @@
+---
+/**
+ * Prototype notification bar.
+ *
+ * This repository is an unaffiliated demonstration build, so every page carries
+ * a visible label confirming it is not the live Virtual School website. The bar
+ * is dismissible, and the choice is remembered in localStorage.
+ *
+ * To take the site live for real, remove this component from BaseLayout along
+ * with the robots directives described in the README.
+ */
+---
+
+<div
+	class="rvs-prototype"
+	id="rvs-prototype"
+	role="region"
+	aria-label="Prototype notice"
+	hidden
+>
+	<div class="govuk-width-container rvs-prototype__inner">
+		<p class="rvs-prototype__text">
+			<strong>Prototype.</strong> This is a demonstration build, not the live Rotherham Virtual
+			School website. It is not affiliated with, commissioned by or endorsed by Rotherham
+			Metropolitan Borough Council.
+		</p>
+		<button type="button" class="rvs-prototype__dismiss" data-prototype-dismiss>
+			Dismiss
+		</button>
+	</div>
+</div>
+
+<script is:inline>
+	(function () {
+		var KEY = "rvs-prototype-dismissed";
+		var bar = document.getElementById("rvs-prototype");
+		if (!bar) return;
+
+		var dismissed = false;
+		try {
+			dismissed = window.localStorage.getItem(KEY) === "1";
+		} catch (error) {
+			// localStorage unavailable (private mode, blocked storage) — show the bar.
+			dismissed = false;
+		}
+
+		if (dismissed) {
+			bar.remove();
+			return;
+		}
+
+		bar.hidden = false;
+		document.documentElement.classList.add("rvs-has-prototype-bar");
+
+		bar.addEventListener("click", function (event) {
+			var target = event.target;
+			if (!target || !target.hasAttribute("data-prototype-dismiss")) return;
+			try {
+				window.localStorage.setItem(KEY, "1");
+			} catch (error) {
+				/* Nothing to do: the bar stays hidden for this page view. */
+			}
+			bar.remove();
+			document.documentElement.classList.remove("rvs-has-prototype-bar");
+		});
+	})();
+</script>
+
+<style>
+	.rvs-prototype {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		background: #0b0c0c;
+		color: #fff;
+		border-top: 4px solid var(--rvs-yellow);
+	}
+
+	.rvs-prototype__inner {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem 1.5rem;
+		align-items: center;
+		justify-content: space-between;
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
+	}
+
+	.rvs-prototype__text {
+		margin: 0;
+		max-width: 70ch;
+		font-size: 1rem;
+		line-height: 1.4;
+	}
+
+	.rvs-prototype__dismiss {
+		font: inherit;
+		color: #fff;
+		background: transparent;
+		border: 2px solid #fff;
+		border-radius: 4px;
+		padding: 0.35rem 0.85rem;
+		cursor: pointer;
+	}
+
+	.rvs-prototype__dismiss:hover {
+		background: #fff;
+		color: #0b0c0c;
+	}
+</style>

@@ -1,0 +1,81 @@
+---
+import FaqList from "../../components/FaqList.astro";
+import InsetText from "../../components/govuk/InsetText.astro";
+import AudienceLayout from "../../layouts/AudienceLayout.astro";
+---
+
+<AudienceLayout
+	title="Parents and carers"
+	lead="If you are caring for a child in care, or a child who was previously looked after, the Virtual School is here to help with their education."
+	description="How the Virtual School supports your child's education, what the PEP is, and how to ask for help."
+	accent="var(--rvs-audience-parent)"
+>
+	<h2 class="govuk-heading-l">What we do for your child</h2>
+	<p class="govuk-body">
+		We are not a school. We are a small team inside Rotherham Council whose job is to make sure
+		children in care get the education they are entitled to — wherever they go to school.
+	</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>We check that your child is in the right school and making progress</li>
+		<li>We make sure their school understands what support they need</li>
+		<li>We help when things go wrong, such as poor attendance or a risk of exclusion</li>
+		<li>We help plan for the move to a new school, to secondary school, or to college</li>
+	</ul>
+
+	<h2 class="govuk-heading-l">The PEP: what to expect</h2>
+	<p class="govuk-body">
+		Every child in care of school age has a <strong>Personal Education Plan</strong> (PEP). It is
+		a legal document that records what your child needs to do well, what help they will get, and
+		who is responsible for making it happen.
+	</p>
+	<p class="govuk-body">The PEP is reviewed at least three times a year. At the meeting:</p>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>the school reports on progress, attendance and any concerns</li>
+		<li>your child's social worker updates the care plan</li>
+		<li>your child's views should be recorded and taken seriously</li>
+		<li>everyone agrees SMART targets for the next term</li>
+	</ul>
+	<InsetText title="You have a say">
+		<p class="govuk-body">
+			As the carer, you should be invited to the PEP meeting and you can ask for a copy. If you
+			cannot attend, ask for your views to be sent in before the meeting.
+		</p>
+	</InsetText>
+
+	<h2 class="govuk-heading-l">Extra funding for your child's school</h2>
+	<p class="govuk-body">
+		Schools receive extra money called <strong>Pupil Premium Plus</strong> for every child in
+		care. It is meant to pay for the specific things written in your child's PEP, such as
+		tutoring, therapy, books, or equipment.
+	</p>
+	<p class="govuk-body">
+		It is not paid to you, and it is not extra pocket money — but you can ask the school how they
+		are spending it, and what difference it is making.
+	</p>
+
+	<h2 class="govuk-heading-l">Attendance and moving school</h2>
+	<p class="govuk-body">
+		Children in care are more likely to miss school than other children. We track attendance
+		closely and will contact the school early if it starts to slip, so we can sort out the reason
+		rather than blame your child.
+	</p>
+	<p class="govuk-body">
+		If your child has to move school, they should not lose any school days. Contact us as soon as
+		you know a move is likely and we will start arranging the next place.
+	</p>
+
+	<h2 class="govuk-heading-l">Who's who</h2>
+	<ul class="govuk-list govuk-list--bullet">
+		<li>
+			<strong>Designated teacher</strong> — a teacher at your child's school responsible for
+			children in care.
+		</li>
+		<li><strong>Social worker</strong> — leads on your child's care plan and attends the PEP.</li>
+		<li>
+			<strong>Virtual School</strong> — the team that oversees your child's education. See
+			<a class="govuk-link" href="/our-team/">our team</a>.
+		</li>
+	</ul>
+
+	<FaqList audience="parents-carers" />
+</AudienceLayout>

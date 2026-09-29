@@ -1,0 +1,13 @@
+---
+interface Props {
+	/** Optional heading, rendered above the inset text. */
+	title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="govuk-inset-text">
+	{title && <h2 class="govuk-heading-s">{title}</h2>}
+	<slot />
+</div>

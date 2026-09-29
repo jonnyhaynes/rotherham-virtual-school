@@ -1,0 +1,5 @@
+# Prototype only: this is an unaffiliated demonstration build and must stay out
+# of search engines. To take the site live for real, replace this file with a
+# normal policy (allow crawling, and advertise the sitemap).
+User-agent: *
+Disallow: /
