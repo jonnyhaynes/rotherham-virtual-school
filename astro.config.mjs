@@ -9,9 +9,19 @@ import { libsql } from "emdash/db";
 // filesystem, which Vercel cannot provide (its filesystem is ephemeral).
 const onVercel = Boolean(process.env.VERCEL);
 
+// Database credentials. The Vercel Turso integration injects
+// TURSO_DATABASE_URL / TURSO_AUTH_TOKEN, so those are the primary names;
+// LIBSQL_* are accepted as aliases and match EmDash's own documentation.
+// (EmDash's migration command also defaults to TURSO_AUTH_TOKEN.)
+const databaseUrl =
+	process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_DATABASE_URL;
+const databaseAuthToken =
+	process.env.TURSO_AUTH_TOKEN ?? process.env.LIBSQL_AUTH_TOKEN;
+
 // Storage driver. Vercel must use S3-compatible storage (AWS S3, Backblaze B2,
 // Supabase Storage, ...). EMDASH_STORAGE=local is an escape hatch for a local
-// production build; on Vercel it would lose every upload.
+// production build; on Vercel it would lose every upload, because the
+// serverless filesystem is read-only and discarded between requests.
 const storageDriver = process.env.EMDASH_STORAGE ?? (onVercel ? "s3" : "local");
 const useS3 = storageDriver === "s3";
 
@@ -19,20 +29,23 @@ const useS3 = storageDriver === "s3";
 // EmDash throw an opaque error from deep inside the adapter. A half-configured
 // Vercel project otherwise produces a confusing build failure.
 if (onVercel) {
+	// Names are collected first, then filtered by whether they are actually
+	// set. (Pushing names conditionally instead would report S3 as missing even
+	// when it is configured.)
 	const required = [
 		"EMDASH_ENCRYPTION_KEY",
-		"LIBSQL_DATABASE_URL",
-		"LIBSQL_AUTH_TOKEN",
 		"REDIS_URL",
+		...(useS3
+			? [
+					"S3_ENDPOINT",
+					"S3_BUCKET",
+					"S3_ACCESS_KEY_ID",
+					"S3_SECRET_ACCESS_KEY",
+				]
+			: []),
 	];
-	if (useS3) {
-		required.push(
-			"S3_ENDPOINT",
-			"S3_BUCKET",
-			"S3_ACCESS_KEY_ID",
-			"S3_SECRET_ACCESS_KEY",
-		);
-	}
+	if (!databaseUrl) required.push("TURSO_DATABASE_URL");
+	if (!databaseAuthToken) required.push("TURSO_AUTH_TOKEN");
 
 	const missing = required.filter((key) => !process.env[key]);
 	if (missing.length > 0) {
@@ -44,7 +57,7 @@ if (onVercel) {
 				...missing.map((key) => `  - ${key}`),
 				"",
 				"Vercel's filesystem is ephemeral, so this project needs:",
-				"  - a remote database (libSQL/Turso) for content",
+				"  - a remote database (Turso) for content",
 				"  - S3-compatible storage for media",
 				"  - Redis for admin sessions (Vercel provides no session driver)",
 				"",
@@ -56,11 +69,11 @@ if (onVercel) {
 	}
 }
 
-// Content database. Locally this is a libSQL file; on Vercel it must be a
-// remote libSQL server, because nothing is written to disk between requests.
+// Locally this is a libSQL file; on Vercel it must be a remote libSQL server,
+// because nothing is written to disk between requests.
 const database = libsql({
-	url: process.env.LIBSQL_DATABASE_URL ?? "file:./data.db",
-	authToken: process.env.LIBSQL_AUTH_TOKEN,
+	url: databaseUrl ?? "file:./data.db",
+	authToken: databaseAuthToken,
 });
 
 const storage = useS3

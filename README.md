@@ -150,11 +150,16 @@ EmDash requires `output: "server"`, so this deploys as a server-rendered app rat
 export. **Vercel's filesystem is ephemeral**, which means three external services are mandatory —
 there is no zero-dependency deployment:
 
-| Service | Why it is required | Used by |
+| Service | Why it is required | Vercel variables |
 |---|---|---|
-| **Remote database** — Turso (libSQL), or Postgres | Content lives in a database. A SQLite file on Vercel is lost between requests. | `LIBSQL_DATABASE_URL`, `LIBSQL_AUTH_TOKEN` |
+| **Remote database** — Turso (libSQL), or Postgres | Content lives in a database. A SQLite file on Vercel is lost between requests. | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` (the Turso integration injects these; `LIBSQL_DATABASE_URL` / `LIBSQL_AUTH_TOKEN` are accepted as aliases) |
 | **S3-compatible storage** — AWS S3, Backblaze B2, Supabase Storage, … | Media must survive the serverless filesystem. (Vercel Blob is *not* S3-compatible, so EmDash's `s3()` adapter cannot use it.) | `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_PUBLIC_URL` |
 | **Redis** — Upstash or Vercel KV | EmDash keeps signed-in admin users in the Astro session. The Vercel adapter provides **no** session driver, so without this, admin login fails. | `REDIS_URL` |
+
+> **The Supabase integration does not supply S3 credentials.** It injects Postgres and Supabase API
+> keys, which EmDash's `s3()` adapter cannot use. Supabase Storage *is* S3-compatible, but you must
+> create a bucket and generate its S3 access keys separately (Supabase → *Project Settings* →
+> *Storage* → *S3 Connection*), then set the `S3_*` variables yourself.
 
 Plus `EMDASH_ENCRYPTION_KEY` (encrypts plugin secrets — generate with `npx emdash secrets generate`
 and back it up separately; losing it makes those values unreadable).
