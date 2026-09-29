@@ -144,25 +144,59 @@ Field and collection slugs must be `snake_case`; EmDash reserves some slugs (for
 **All starter content is illustrative.** Team entries are role-based rather than named individuals,
 and the outcome figures were invented to demonstrate the layout.
 
-## Deployment
+## Deploying to Vercel
 
 EmDash requires `output: "server"`, so this deploys as a server-rendered app rather than a static
-export. On Vercel, set:
+export. **Vercel's filesystem is ephemeral**, which means three external services are mandatory —
+there is no zero-dependency deployment:
 
-| Variable | Purpose |
-|---|---|
-| `LIBSQL_DATABASE_URL` | Turso (or other libSQL) database URL |
-| `LIBSQL_AUTH_TOKEN` | libSQL auth token |
-| `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_PUBLIC_URL` | Media storage (Vercel's filesystem is ephemeral, so S3-compatible storage is required) |
-| `REDIS_URL` | Session store — **required on Vercel**, which provides no default session driver. EmDash keeps signed-in admin users in the Astro session, so without this, admin login fails. |
-| `EMDASH_ENCRYPTION_KEY` | Encrypts plugin secrets. Back it up separately: losing it makes those values unreadable. |
+| Service | Why it is required | Used by |
+|---|---|---|
+| **Remote database** — Turso (libSQL), or Postgres | Content lives in a database. A SQLite file on Vercel is lost between requests. | `LIBSQL_DATABASE_URL`, `LIBSQL_AUTH_TOKEN` |
+| **S3-compatible storage** — AWS S3, Backblaze B2, Supabase Storage, … | Media must survive the serverless filesystem. (Vercel Blob is *not* S3-compatible, so EmDash's `s3()` adapter cannot use it.) | `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_PUBLIC_URL` |
+| **Redis** — Upstash or Vercel KV | EmDash keeps signed-in admin users in the Astro session. The Vercel adapter provides **no** session driver, so without this, admin login fails. | `REDIS_URL` |
 
-Use a **separate database per environment** so a preview deployment can never migrate or modify
-production content.
+Plus `EMDASH_ENCRYPTION_KEY` (encrypts plugin secrets — generate with `npx emdash secrets generate`
+and back it up separately; losing it makes those values unreadable).
 
-Two EmDash caveats on serverless: the built-in scheduler only runs while a process is alive, so
-scheduled publishing needs a Vercel Cron route; and sandboxed plugins need a long-running
-`workerd` runner, so use native plugins.
+All four DB/storage/Redis providers above have free tiers, and Turso, Upstash, Neon and Supabase are
+available from the Vercel Marketplace.
+
+The build **fails fast with a list of missing variables** rather than an opaque adapter error, so a
+half-configured project tells you what it needs.
+
+### Steps
+
+1. **Provision the services.** In the Vercel dashboard, *Storage* → Marketplace, add:
+   - **Turso** (the database EmDash supports natively)
+   - **Upstash for Redis** (sessions)
+   - an S3-compatible store for media — Supabase, or AWS S3 / Backblaze B2
+
+   This step needs a human: the CLI's `vercel integration accept-terms` requires an interactive
+   terminal and confirmation of the providers' legal terms.
+2. **Import the repository** at <https://vercel.com/new> and connect it to the provider resources —
+   Vercel injects the variables automatically for marketplace integrations.
+3. **Add `EMDASH_ENCRYPTION_KEY`** manually (it has no integration).
+4. **Deploy**, then verify (below).
+
+### Verifying a deployment
+
+- `GET /health` returns `{"status":"ok","checks":{"app":"ok","database":"ok"}}`, or `503` with
+  `database: "unreachable"`. It checks the database, not just the process.
+- `npx emdash migrate --check` must report no pending migrations.
+- Sign in at `/_emdash/admin` (this is the check that catches a missing `REDIS_URL`), publish a
+  disposable draft, and confirm the public page shows the change.
+
+### Known limitations on Vercel
+
+- **Scheduled publishing does not run.** EmDash's scheduler only ticks while a process is alive.
+  The work is done by `runScheduledTasks`, which is **not exported** from the `emdash` package and
+  has no public subpath, so wiring a Vercel Cron job would mean importing EmDash internals — not
+  worth the brittleness for a prototype. Scheduled drafts therefore need publishing by hand.
+- **Sandboxed plugins are unavailable** (they need a long-running `workerd` runner). Use native
+  plugins.
+- **Use a separate database per environment** so a preview deployment can never migrate or modify
+  production content.
 
 ## Accessibility
 
@@ -191,8 +225,12 @@ complete.
 ## Outstanding items
 
 - [ ] Complete the EmDash setup wizard and create the admin account (locally and in production)
-- [ ] Provision Turso, S3-compatible storage and Redis; set all environment variables
-- [ ] Add a Vercel Cron route so EmDash's scheduler runs
+- [ ] Provision Turso, S3-compatible storage and Redis, and set the environment variables — see
+      [Deploying to Vercel](#deploying-to-vercel). Needs a human: the marketplace integrations
+      require accepting the providers' terms
+- [ ] Import the repo at <https://vercel.com/new> and deploy
+- [ ] Publish scheduled drafts by hand — EmDash's scheduler cannot run on Vercel (see
+      [Known limitations](#known-limitations-on-vercel))
 - [ ] Replace all illustrative content with real, verified content
 - [ ] Replace or obtain a licence for the council-derived wording describing the Virtual School's
       duties — see [LICENSE](LICENSE) section 2 for the files affected
