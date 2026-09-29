@@ -9,9 +9,10 @@ data.db-*
 # Platform
 .vercel
 
-# Environment
-.env
-.env.*
+# Environment. The negation must come last: git honours the final matching
+# pattern, so a later `.env*` would otherwise re-ignore .env.example.
+# `.env.local` (written by the Vercel CLI) is covered by `.env*`.
+.env*
 !.env.example
 
 # OS
