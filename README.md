@@ -187,6 +187,20 @@ complete.
 - [ ] Have the council's Data Protection Officer review the privacy and cookies notice
 - [ ] Point the domain at the deployment only with the council's agreement
 
+## Known build warning
+
+`npm run build` logs one warning:
+
+```
+/assets/images/govuk-crest.svg referenced in ... didn't resolve at build time
+```
+
+This is expected and harmless. GOV.UK Frontend's footer styles reference the GOV.UK crest from a
+rule (`.govuk-footer__copyright-logo`) that this project deliberately does not use — a council
+service should not carry GOV.UK branding. No element on the site has that class, so the graphic is
+never requested by a browser; only the build-time reference is unresolved. The crest file is not
+included in this repository.
+
 ## Licence
 
 This repository contains material owned by more than one party. See [LICENSE](LICENSE) for the full
@@ -202,9 +216,10 @@ you any rights to it.
 **Council-derived content and branding — Rotherham Metropolitan Borough Council.** The description
 of the Virtual School's purpose and duties is reproduced or adapted from the service's published
 website (see `LICENSE` for the files), as are the service name and the Rotherham brand identity.
-This is **not** covered by the paragraph above, is included for demonstration purposes only, and is
-reproduced **without any licence from the council**. Replace it with licensed or original wording
-before any real use.
+This includes `public/brand/rmbc-logo.svg`, the council's logo, taken from the council's public
+[`rothgov/images`](https://github.com/rothgov/images) repository. This is **not** covered by the
+paragraph above, is included for demonstration purposes only, and is reproduced **without any
+licence from the council**. Replace it with licensed or original wording before any real use.
 
 **Third-party components.** This project depends on open source packages licensed to you directly
 by their authors — principally Astro, EmDash, GOV.UK Frontend and React, all MIT. Those licences are
