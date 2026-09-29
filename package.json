@@ -2,6 +2,7 @@
   "name": "rotherham-virtual-school",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "emdash": {
     "label": "Rotherham Virtual School",

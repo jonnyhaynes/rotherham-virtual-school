@@ -175,13 +175,18 @@ listed under outstanding items.
 
 ## Licence
 
-**Code:** MIT — see [LICENSE](LICENSE). You are free to reuse the code.
+**Proprietary — all rights reserved.** See [LICENSE](LICENSE). This code is the exclusive property
+of Jonny Haynes. **No permission is granted** to use, copy, modify, distribute or otherwise exploit
+it, in whole or in part, for any purpose — including using it to build or host a website. Viewing
+the source on GitHub does not grant you any rights to it.
 
-**Content:** the text, names, statistics, branding and any Rotherham Council assets relating to
-Rotherham Virtual School are included **for demonstration purposes only**, are **not** covered by
-the MIT licence, and should not be reused elsewhere without permission. The Rotherham brand
-palette and logo are the property of Rotherham Metropolitan Borough Council. GOV.UK Frontend is
-MIT-licensed and is used under its own terms.
+**Third-party components.** This project depends on open source packages licensed to you directly
+by their authors — principally Astro, EmDash, GOV.UK Frontend and React, all MIT. Those licences are
+unaffected by the notice above, and nothing here restricts rights you hold under them.
+
+**Content and branding.** The text, names, statistics and Rotherham Council assets are included for
+demonstration purposes only and remain the property of Rotherham Metropolitan Borough Council or
+their respective owners.
 
 ## Disclaimer
 
