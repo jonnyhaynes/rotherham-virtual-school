@@ -165,6 +165,8 @@ listed under outstanding items.
 - [ ] Provision Turso, S3-compatible storage and Redis; set all environment variables
 - [ ] Add a Vercel Cron route so EmDash's scheduler runs
 - [ ] Replace all illustrative content with real, verified content
+- [ ] Replace or obtain a licence for the council-derived wording describing the Virtual School's
+      duties — see [LICENSE](LICENSE) section 2 for the files affected
 - [ ] Replace the invented outcome figures with real published data (or remove the page)
 - [ ] Confirm names, roles and contact details for the team page
 - [ ] Complete the accessibility statement (compliance status, testing description, dates)
@@ -175,18 +177,26 @@ listed under outstanding items.
 
 ## Licence
 
-**Proprietary — all rights reserved.** See [LICENSE](LICENSE). This code is the exclusive property
-of Jonny Haynes. **No permission is granted** to use, copy, modify, distribute or otherwise exploit
-it, in whole or in part, for any purpose — including using it to build or host a website. Viewing
-the source on GitHub does not grant you any rights to it.
+This repository contains material owned by more than one party. See [LICENSE](LICENSE) for the full
+text.
+
+**Code and original content — proprietary, all rights reserved.** The source code, and all content
+written for this prototype (page copy, information architecture, component design, the Pupil Zone
+concept, the placeholder statistics), is the exclusive property of Jonny Haynes. **No permission is
+granted** to use, copy, modify, distribute or otherwise exploit it, in whole or in part, for any
+purpose — including using it to build or host a website. Viewing the source on GitHub does not grant
+you any rights to it.
+
+**Council-derived content and branding — Rotherham Metropolitan Borough Council.** The description
+of the Virtual School's purpose and duties is reproduced or adapted from the service's published
+website (see `LICENSE` for the files), as are the service name and the Rotherham brand identity.
+This is **not** covered by the paragraph above, is included for demonstration purposes only, and is
+reproduced **without any licence from the council**. Replace it with licensed or original wording
+before any real use.
 
 **Third-party components.** This project depends on open source packages licensed to you directly
 by their authors — principally Astro, EmDash, GOV.UK Frontend and React, all MIT. Those licences are
-unaffected by the notice above, and nothing here restricts rights you hold under them.
-
-**Content and branding.** The text, names, statistics and Rotherham Council assets are included for
-demonstration purposes only and remain the property of Rotherham Metropolitan Borough Council or
-their respective owners.
+unaffected by the above, and nothing here restricts rights you hold under them.
 
 ## Disclaimer
 

@@ -1,45 +1,83 @@
 Rotherham Virtual School — website
-Copyright (c) 2026 Jonny Haynes. All rights reserved.
+Copyright (c) 2026 Jonny Haynes (code and original content). All rights reserved.
 
-PROPRIETARY SOFTWARE — ALL RIGHTS RESERVED
+PROPRIETARY SOFTWARE AND CONTENT — ALL RIGHTS RESERVED
 
-This repository and every file within it (the "Software") is the exclusive
+This repository contains three distinct bodies of material, owned by different
+parties. Sections 1 to 3 set out which is which.
+
+
+1. CODE AND ORIGINAL CONTENT — JONNY HAYNES
+
+All source code in this repository, together with all content written for this
+prototype — including the page copy not listed in section 2, the information
+architecture, the component and layout design, the Pupil Zone concept, the
+placeholder statistics, and all other original material — is the exclusive
 property of Jonny Haynes.
 
 No licence or permission, express or implied, is granted to any person to use,
 copy, modify, adapt, translate, merge, publish, distribute, redistribute,
-sublicense, sell, lease, rent or otherwise exploit the Software, in whole or in
-part, for any purpose, commercial or otherwise.
+sublicense, sell, lease, rent or otherwise exploit this material, in whole or
+in part, for any purpose, commercial or otherwise.
 
 Without limiting the paragraph above, you must not:
 
-  - use the Software to build, host or operate any website, product or service;
-  - copy or incorporate the Software, in whole or in part, into another work;
-  - create derivative works from, or otherwise build upon, the Software; or
+  - use this material to build, host or operate any website, product or service;
+  - copy or incorporate it, in whole or in part, into another work;
+  - create derivative works from, or otherwise build upon, it; or
   - remove, obscure or alter this notice or any other proprietary notice.
 
-The Software being visible on a public hosting platform does not grant you any
-rights to it. Any rights you have in relation to that platform are limited to
-what the platform's own terms require, and do not extend to using the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OF OR OTHER DEALINGS IN THE SOFTWARE.
+2. COUNCIL-DERIVED CONTENT AND BRANDING — ROTHERHAM METROPOLITAN BOROUGH COUNCIL
 
-THIRD-PARTY COMPONENTS
+The following material is the property of Rotherham Metropolitan Borough Council
+and/or Rotherham Virtual School. It is NOT covered by section 1, and no rights
+in it are granted or transferred by this notice:
 
-This Software depends on third-party open source packages that are licensed to
+  - the description of the Virtual School's purpose and duties, reproduced or
+    adapted from the service's published website. This text appears in:
+        src/pages/index.astro
+        src/pages/about/index.astro
+        src/pages/parents-carers/index.astro
+        src/utils/site.ts
+        seed/seed.json
+  - the service name "Rotherham Virtual School"; and
+  - the Rotherham brand identity, including the council name, the council's
+    brand palette, and any council logo or brand asset.
+
+This material is included for demonstration purposes only, and is reproduced
+without any licence from the council. It is not licensed for reuse. Replace it
+with licensed or original wording before any real use. (The hexadecimal colour
+values of the brand palette are factual and are not themselves protected.)
+
+
+3. THIRD-PARTY COMPONENTS — THEIR RESPECTIVE AUTHORS
+
+This project depends on third-party open source packages that are licensed to
 you directly by their respective authors, principally Astro, EmDash, GOV.UK
-Frontend (govuk-frontend) and React, each under the MIT licence. Nothing in
-this notice restricts rights you hold under those licences, and nothing in this
-notice grants rights their authors have not granted. If you obtain those
-packages, you must comply with their terms.
+Frontend (govuk-frontend) and React, each under the MIT licence. Those licences
+are unaffected by sections 1 and 2, and nothing in this notice restricts rights
+you hold under them, or grants rights their authors have not granted. If you
+obtain those packages, you must comply with their terms.
 
-The Rotherham brand palette, the council logo, and any content or assets
-supplied by Rotherham Metropolitan Borough Council remain the property of
-Rotherham Metropolitan Borough Council and are not covered by this notice.
+
+VISIBILITY ON A PUBLIC PLATFORM
+
+The material in this repository being visible on a public hosting platform does
+not grant you any rights to it. Any rights you have in relation to that platform
+are limited to what the platform's own terms require, and do not extend to using
+the material.
+
+
+NO WARRANTY
+
+THE MATERIAL IN THIS REPOSITORY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE MATERIAL OR THE USE OF OR OTHER DEALINGS IN THE
+MATERIAL.
+
 
 For permission requests, contact the copyright holder.
