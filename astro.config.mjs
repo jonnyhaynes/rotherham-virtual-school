@@ -116,6 +116,12 @@ export default defineConfig({
 	],
 	// GOV.UK Frontend ships a legacy IE "zero hack" media query that
 	// LightningCSS refuses to minify, so use esbuild for CSS minification.
+	//
+	// Note: sanitize-html (an EmDash dependency) is left to the default SSR
+	// handling on purpose, so Vercel's dependency tracing copies it and its
+	// dependency tree into the serverless function. Bundling it stops those
+	// dependencies being traced and the function fails with MODULE_NOT_FOUND.
+	// Its ESM/CJS problem is fixed by the `overrides` entry in package.json.
 	vite: {
 		build: {
 			cssMinify: "esbuild",
