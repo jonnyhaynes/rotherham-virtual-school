@@ -89,8 +89,9 @@ const pageUrl = Astro.url.pathname;
 			or credit card details.
 		</p>
 
-		<div class="govuk-form-group">
+		<div class="govuk-form-group" data-feedback-group>
 			<label class="govuk-label" for="rvs-feedback-message">What were you doing?</label>
+			<p class="govuk-error-message" id="rvs-feedback-message-error" data-feedback-error hidden></p>
 			<textarea
 				class="govuk-textarea"
 				id="rvs-feedback-message"
@@ -99,6 +100,8 @@ const pageUrl = Astro.url.pathname;
 		</div>
 
 		<button type="submit" class="govuk-button">Send</button>
+
+		<p class="govuk-visually-hidden" role="status" data-feedback-status></p>
 	</form>
 </div>
 
@@ -115,12 +118,45 @@ const pageUrl = Astro.url.pathname;
 		var form = root.querySelector("#rvs-feedback-form");
 		var triggers = root.querySelectorAll('[data-feedback="not-useful"], [data-feedback="report"]');
 		var yesButton = root.querySelector('[data-feedback="useful"]');
+		var group = root.querySelector("[data-feedback-group]");
+		var error = root.querySelector("[data-feedback-error]");
+		var status = root.querySelector("[data-feedback-status]");
+		var field = root.querySelector("#rvs-feedback-message");
 
+		// The success text is set rather than assumed: a failed send used to
+		// overwrite this element, so a later success showed the failure message
+		// as the confirmation.
 		function showThanks() {
 			if (prompt) prompt.hidden = true;
 			if (report) report.hidden = true;
 			if (form) form.hidden = true;
-			if (thanks) thanks.hidden = false;
+			if (thanks) {
+				thanks.textContent = "Thank you for your feedback";
+				thanks.hidden = false;
+			}
+		}
+
+		function showError(message) {
+			if (!error || !group || !field) return;
+			error.textContent = "";
+			var prefix = document.createElement("span");
+			prefix.className = "govuk-visually-hidden";
+			prefix.textContent = "Error: ";
+			error.appendChild(prefix);
+			error.appendChild(document.createTextNode(message));
+			error.hidden = false;
+			group.classList.add("govuk-form-group--error");
+			field.classList.add("govuk-textarea--error");
+			field.setAttribute("aria-describedby", "rvs-feedback-message-error");
+		}
+
+		function clearError() {
+			if (!error || !group || !field) return;
+			error.hidden = true;
+			error.textContent = "";
+			group.classList.remove("govuk-form-group--error");
+			field.classList.remove("govuk-textarea--error");
+			field.removeAttribute("aria-describedby");
 		}
 
 		function showForm() {
@@ -129,7 +165,6 @@ const pageUrl = Astro.url.pathname;
 			triggers.forEach(function (trigger) {
 				trigger.setAttribute("aria-expanded", "true");
 			});
-			var field = form.querySelector("textarea");
 			if (field) field.focus();
 		}
 
@@ -141,12 +176,38 @@ const pageUrl = Astro.url.pathname;
 			trigger.addEventListener("click", showForm);
 		});
 
+		if (field) {
+			field.addEventListener("input", clearError);
+		}
+
 		if (form) {
 			form.addEventListener("submit", function (event) {
 				event.preventDefault();
-				var field = form.querySelector("textarea");
 				var button = form.querySelector('button[type="submit"]');
-				if (button) button.disabled = true;
+
+				// Submitted empty: say what is missing and put the cursor there,
+				// rather than sending a request the server will reject with a
+				// message this page then threw away.
+				if (field && field.value.trim() === "") {
+					showError("Enter what you were doing before you send.");
+					field.focus();
+					return;
+				}
+
+				clearError();
+				if (button) {
+					button.disabled = true;
+					button.setAttribute("aria-busy", "true");
+				}
+				if (status) status.textContent = "Sending your feedback";
+
+				function settle() {
+					if (button) {
+						button.disabled = false;
+						button.removeAttribute("aria-busy");
+					}
+					if (status) status.textContent = "";
+				}
 
 				fetch(form.action, {
 					method: "POST",
@@ -158,12 +219,29 @@ const pageUrl = Astro.url.pathname;
 					}),
 				})
 					.then(function (response) {
-						if (!response.ok) throw new Error("Request failed");
-						showThanks();
+						if (response.ok) {
+							settle();
+							showThanks();
+							return null;
+						}
+						// The API answers validation failures with the reason. Show
+						// that against the field so the user knows what to change.
+						return response
+							.json()
+							.catch(function () {
+								return {};
+							})
+							.then(function (body) {
+								throw new Error(body && body.error ? body.error : "");
+							});
 					})
-					.catch(function () {
-						if (button) button.disabled = false;
-						if (thanks) {
+					.catch(function (failure) {
+						settle();
+						var reason = failure && failure.message ? failure.message : "";
+						if (reason) {
+							showError(reason);
+							if (field) field.focus();
+						} else if (thanks) {
 							thanks.textContent =
 								"Sorry, there was a problem sending your feedback. Please try again.";
 							thanks.hidden = false;
@@ -312,6 +390,37 @@ const pageUrl = Astro.url.pathname;
 	@media (min-width: 40.0625em) {
 		.rvs-feedback__form {
 			padding: 30px 30px 0;
+		}
+	}
+
+	/* Sending: the button disables while the request is in flight and keeps its
+	   "Send" label, with a spinner so a slow connection does not look like a
+	   dead button. `role="status"` announces the same thing to a screen reader,
+	   because a disabled button says nothing on its own. */
+	.rvs-feedback__form .govuk-button[aria-busy="true"]::after {
+		content: "";
+		display: inline-block;
+		width: 1em;
+		height: 1em;
+		margin-left: 10px;
+		vertical-align: -2px;
+		border: 3px solid currentColor;
+		border-right-color: transparent;
+		border-radius: 50%;
+		animation: rvs-feedback-spin 0.7s linear infinite;
+	}
+
+	@keyframes rvs-feedback-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	/* A rotating indicator is motion, so it gets an authored alternative: the
+	   ring stays as a static busy mark, the rotation stops. */
+	@media (prefers-reduced-motion: reduce) {
+		.rvs-feedback__form .govuk-button[aria-busy="true"]::after {
+			animation: none;
 		}
 	}
 </style>

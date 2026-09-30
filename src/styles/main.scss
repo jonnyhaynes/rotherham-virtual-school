@@ -71,3 +71,15 @@ select,
 textarea {
 	font-family: inherit;
 }
+
+// A tap on a control should act immediately instead of waiting out the
+// double-tap-zoom delay. Pinch-zoom still works, so nothing is taken away.
+a,
+button,
+input,
+select,
+summary,
+textarea,
+[role="button"] {
+	touch-action: manipulation;
+}

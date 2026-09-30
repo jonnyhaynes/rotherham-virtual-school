@@ -357,8 +357,25 @@ const pageCtx = createPublicPageContext({
 		cursor: pointer;
 	}
 
+	/* The hover rule set a thickness without an underline, so hovering this
+	   button changed nothing on screen. */
 	.rvs-search-toggle:hover {
+		text-decoration: underline;
 		text-decoration-thickness: 3px;
+	}
+
+	/* Every other control on the page takes GOV.UK's focus treatment — the
+	   Rotherham yellow block with the ink underline. Without this the browser's
+	   own 1px ring was the only indicator, which reads as a different
+	   interface. Measured before: `outline: 1px auto rgb(0, 95, 204)`. */
+	.rvs-search-toggle:focus-visible {
+		outline: 3px solid transparent;
+		color: var(--rvs-ink);
+		background-color: var(--rvs-yellow);
+		box-shadow:
+			0 -2px var(--rvs-yellow),
+			0 4px var(--rvs-ink);
+		text-decoration: none;
 	}
 
 	.rvs-search-toggle__icon {
@@ -440,6 +457,23 @@ const pageCtx = createPublicPageContext({
 			render();
 		});
 
+		// Escape closes the opened menu and returns focus to the toggle.
+		document.addEventListener("keydown", function (event) {
+			if (event.key !== "Escape" || !open || desktop.matches) return;
+			open = false;
+			render();
+			button.focus();
+		});
+
+		// A click outside the menu closes it. Clicks inside `nav` include the
+		// toggle, which the handler above already deals with.
+		document.addEventListener("click", function (event) {
+			if (!open || desktop.matches) return;
+			if (nav.contains(event.target)) return;
+			open = false;
+			render();
+		});
+
 		// Crossing the breakpoint always returns to the collapsed state, so the
 		// menu is never left open at a width where the toggle is hidden.
 		var onChange = function () {
@@ -478,6 +512,15 @@ const pageCtx = createPublicPageContext({
 				setOpen(false);
 				toggle.focus();
 			}
+		});
+
+		// A click anywhere outside the panel and its toggle closes it. Clicks on
+		// the toggle are left to the handler above, so pressing the button does
+		// not close and immediately reopen.
+		document.addEventListener("click", function (event) {
+			if (toggle.getAttribute("aria-expanded") !== "true") return;
+			if (toggle.contains(event.target) || panel.contains(event.target)) return;
+			setOpen(false);
 		});
 	})();
 </script>
