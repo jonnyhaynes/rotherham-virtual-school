@@ -17,10 +17,16 @@ const {
 	value = "",
 	inputId = "rvs-search-input",
 } = Astro.props;
+
+// The header's panel and the results page both render a search landmark, and an
+// unnamed `search` role form cannot be told from another. Naming each form from
+// its own visible label keeps them distinguishable; the id is derived from the
+// input's so two forms on one page never collide.
+const labelId = `${inputId}-label`;
 ---
 
-<form class="rvs-search" action="/search" method="get" role="search">
-	<label class="govuk-label rvs-search__label" for={inputId}>{label}</label>
+<form class="rvs-search" action="/search" method="get" role="search" aria-labelledby={labelId}>
+	<label class="govuk-label rvs-search__label" id={labelId} for={inputId}>{label}</label>
 	<div class="rvs-search__item-wrapper">
 		<input
 			class="rvs-search__input"

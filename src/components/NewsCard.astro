@@ -5,9 +5,16 @@ interface Props {
 	summary?: string | null;
 	/** EmDash datetime fields arrive as ISO strings. */
 	publishedOn?: string | Date | null;
+	/**
+	 * Heading level for the card title. The card sits directly under the page
+	 * heading on the news index and under a section heading on the home page, so
+	 * it cannot hardcode one level without skipping a rank somewhere.
+	 */
+	level?: 2 | 3;
 }
 
-const { title, href, summary, publishedOn } = Astro.props;
+const { title, href, summary, publishedOn, level = 3 } = Astro.props;
+const Heading = `h${level}`;
 
 const published = publishedOn ? new Date(publishedOn) : null;
 const dateLabel = published
@@ -25,9 +32,9 @@ const dateLabel = published
 			{dateLabel}
 		</time>
 	)}
-	<h3 class="govuk-heading-m rvs-news-card__title">
+	<Heading class="govuk-heading-m rvs-news-card__title">
 		<a class="govuk-link" href={href}>{title}</a>
-	</h3>
+	</Heading>
 	{summary && <p class="govuk-body rvs-news-card__summary">{summary}</p>}
 </li>
 

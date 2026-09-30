@@ -28,13 +28,14 @@ const news = [...entries].sort(
 		news.length === 0 ? (
 			<p class="govuk-body">There is no news to show yet.</p>
 		) : (
-			<ul class="rvs-news-list">
+			<ul class="rvs-news-list" role="list">
 				{news.map((item) => (
 					<NewsCard
 						title={item.data.title}
 						href={`/news/${item.id}`}
 						summary={item.data.summary}
 						publishedOn={item.data.published_on}
+						level={2}
 					/>
 				))}
 			</ul>

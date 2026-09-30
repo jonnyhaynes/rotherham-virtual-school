@@ -70,7 +70,7 @@ const formatDate = (value: unknown) =>
 					<h2 class="govuk-heading-l" id={`docs-${group.category}`}>
 						{group.label}
 					</h2>
-					<ul class="rvs-doc-list">
+					<ul class="rvs-doc-list" role="list">
 						{group.items.map((doc) => {
 							const link = linkFor(doc);
 							const updated = formatDate(doc.data.updated_on);

@@ -33,7 +33,7 @@ const team = [...entries].sort(
 				</p>
 			</InsetText>
 		) : (
-			<ul class="rvs-team">
+			<ul class="rvs-team" role="list">
 				{team.map((member) => (
 					<li class="rvs-team__member">
 						{member.data.photo?.src && (

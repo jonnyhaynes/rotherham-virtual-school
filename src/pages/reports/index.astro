@@ -81,15 +81,20 @@ const formatDate = (value: unknown) =>
 					</h2>
 					{/* Three columns of outcome data cannot compress below ~362px, so
 					    below that the table scrolls rather than pushing the whole page
-					    wide. The wrapper is focusable so it can be scrolled by keyboard. */}
+					    wide. The wrapper is focusable so it can be scrolled by keyboard.
+					    It is named from the table's own caption rather than the section
+					    heading: two regions sharing one name is not a unique landmark. */}
 					<div
 						class="rvs-table-scroll"
 						role="region"
-						aria-labelledby={`year-${year.replace(/\W/g, "-")}`}
+						aria-labelledby={`caption-${year.replace(/\W/g, "-")}`}
 						tabindex="0"
 					>
 						<table class="govuk-table rvs-data-table">
-							<caption class="govuk-table__caption govuk-table__caption--s">
+							<caption
+								class="govuk-table__caption govuk-table__caption--s"
+								id={`caption-${year.replace(/\W/g, "-")}`}
+							>
 								Children in care in Rotherham, {year}
 							</caption>
 							<thead class="govuk-table__head">

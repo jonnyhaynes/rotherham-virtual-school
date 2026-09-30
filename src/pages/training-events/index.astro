@@ -43,7 +43,7 @@ const past = sorted
 				</p>
 			</InsetText>
 		) : (
-			<ul class="rvs-event-list">
+			<ul class="rvs-event-list" role="list">
 				{upcoming.map((event) => (
 					<EventCard
 						title={event.data.title}
@@ -63,7 +63,7 @@ const past = sorted
 		past.length > 0 && (
 			<>
 				<h2 class="govuk-heading-l">Past sessions</h2>
-				<ul class="govuk-list">
+				<ul class="govuk-list" role="list">
 					{past.map((event) => (
 						<li>
 							<a class="govuk-link" href={`/training-events/${event.id}`}>

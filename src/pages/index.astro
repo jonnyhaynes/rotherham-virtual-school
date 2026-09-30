@@ -37,7 +37,7 @@ const latestNews = [...newsEntries]
 		<p class="govuk-body-l">
 			Choose the option that fits you best. Each section is written for you.
 		</p>
-		<ul class="rvs-audience-grid">
+		<ul class="rvs-audience-grid" role="list">
 			{AUDIENCES.map((audience) => <AudienceCard {...audience} />)}
 		</ul>
 	</section>
@@ -76,7 +76,7 @@ const latestNews = [...newsEntries]
 				<h2 class="govuk-heading-l" id="latest-news">
 					Latest news
 				</h2>
-				<ul class="rvs-news-grid">
+				<ul class="rvs-news-grid" role="list">
 					{latestNews.map((item) => (
 						<NewsCard
 							title={item.data.title}

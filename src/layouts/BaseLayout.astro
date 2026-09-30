@@ -137,7 +137,7 @@ const pageCtx = createPublicPageContext({
 								aria-expanded="false"
 								hidden>Menu</button
 							>
-							<ul class="govuk-service-navigation__list" id="navigation">
+							<ul class="govuk-service-navigation__list" id="navigation" role="list">
 								{
 									menu?.items.map((item) => (
 										<li
@@ -205,7 +205,7 @@ const pageCtx = createPublicPageContext({
 			{
 				breadcrumbs.length > 0 && (
 					<nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
-						<ol class="govuk-breadcrumbs__list">
+						<ol class="govuk-breadcrumbs__list" role="list">
 							{breadcrumbs.map((crumb) => (
 								<li class="govuk-breadcrumbs__list-item">
 									{crumb.href ? (
@@ -253,7 +253,7 @@ const pageCtx = createPublicPageContext({
 					<div class="govuk-footer__navigation">
 						<div class="govuk-footer__section govuk-grid-column-one-third">
 							<h2 class="govuk-footer__heading govuk-heading-m">Virtual School</h2>
-							<ul class="govuk-footer__list">
+							<ul class="govuk-footer__list" role="list">
 								<li class="govuk-footer__list-item">
 									<a class="govuk-footer__link" href="/about/">About us</a>
 								</li>
@@ -273,7 +273,7 @@ const pageCtx = createPublicPageContext({
 						</div>
 						<div class="govuk-footer__section govuk-grid-column-one-third">
 							<h2 class="govuk-footer__heading govuk-heading-m">For</h2>
-							<ul class="govuk-footer__list">
+							<ul class="govuk-footer__list" role="list">
 								<li class="govuk-footer__list-item">
 									<a class="govuk-footer__link" href="/children-young-people/"
 										>Children and young people</a
@@ -295,7 +295,7 @@ const pageCtx = createPublicPageContext({
 						</div>
 						<div class="govuk-footer__section govuk-grid-column-one-third">
 							<h2 class="govuk-footer__heading govuk-heading-m">Rotherham Council</h2>
-							<ul class="govuk-footer__list">
+							<ul class="govuk-footer__list" role="list">
 								<li class="govuk-footer__list-item">
 									<a class="govuk-footer__link" href="https://www.rotherham.gov.uk/"
 										>rotherham.gov.uk</a

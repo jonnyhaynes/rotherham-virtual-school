@@ -67,7 +67,14 @@ if (query) {
 		lead="Search for guidance, news, training and documents across the Virtual School website."
 	/>
 
-	<SearchForm value={query} inputId="rvs-search-page-input" />
+	{/* Named apart from the header's search panel, which is also on this page.
+	    Two `search` landmarks with the same name cannot be told apart, by sight
+	    or by screen reader, so this one says where it is. */}
+	<SearchForm
+		value={query}
+		inputId="rvs-search-page-input"
+		label="Search the Virtual School website"
+	/>
 
 	{
 		query && (
@@ -91,7 +98,7 @@ if (query) {
 				)}
 
 				{results.length > 0 && (
-					<ul class="govuk-list rvs-search-results__list">
+					<ul class="govuk-list rvs-search-results__list" role="list">
 						{results.map((result) => (
 							<li class="rvs-search-results__item">
 								<h3 class="govuk-heading-s rvs-search-results__title">
