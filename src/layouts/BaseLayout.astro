@@ -126,16 +126,16 @@ const pageCtx = createPublicPageContext({
 				</div>
 			</div>
 
-			<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+			<section aria-label="Service information" class="govuk-service-navigation" data-rvs-nav>
 				<div class="govuk-width-container">
 					<div class="govuk-service-navigation__container">
 						<nav aria-label="Menu" class="govuk-service-navigation__wrapper">
 							<button
 								type="button"
-								class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
+								class="govuk-service-navigation__toggle"
 								aria-controls="navigation"
-								hidden
-								aria-hidden="true">Menu</button
+								aria-expanded="false"
+								hidden>Menu</button
 							>
 							<ul class="govuk-service-navigation__list" id="navigation">
 								{
@@ -396,6 +396,62 @@ const pageCtx = createPublicPageContext({
 		margin: 1rem 0 0;
 	}
 </style>
+
+<script is:inline>
+	// Service navigation disclosure.
+	//
+	// GOV.UK expands its service navigation from the tablet breakpoint (641px),
+	// but this nav carries five items that need 717px before the search toggle
+	// has any room. Between 641px and ~880px the list therefore wrapped to two
+	// lines, orphaning the last item and pushing the search toggle onto a third
+	// row — the header grew from 131px to 245px.
+	//
+	// The component's breakpoint is a single `--govuk-breakpoint-tablet` custom
+	// property on :root, shared with every GOV.UK grid rule, so it cannot be
+	// changed for one component. The disclosure is driven here instead, with the
+	// same markup, classes and accessibility model, at a width the content fits.
+	(function () {
+		var nav = document.querySelector("[data-rvs-nav]");
+		if (!nav) return;
+		var button = nav.querySelector(".govuk-service-navigation__toggle");
+		var list = nav.querySelector(".govuk-service-navigation__list");
+		if (!button || !list) return;
+
+		// Must match the 55em breakpoint in the stylesheet.
+		var desktop = window.matchMedia("(min-width: 55em)");
+		var open = false;
+
+		function render() {
+			if (desktop.matches) {
+				button.hidden = true;
+				button.setAttribute("aria-hidden", "true");
+				button.setAttribute("aria-expanded", "false");
+				list.hidden = false;
+				return;
+			}
+			button.hidden = false;
+			button.removeAttribute("aria-hidden");
+			button.setAttribute("aria-expanded", String(open));
+			list.hidden = !open;
+		}
+
+		button.addEventListener("click", function () {
+			open = !open;
+			render();
+		});
+
+		// Crossing the breakpoint always returns to the collapsed state, so the
+		// menu is never left open at a width where the toggle is hidden.
+		var onChange = function () {
+			open = false;
+			render();
+		};
+		if (desktop.addEventListener) desktop.addEventListener("change", onChange);
+		else desktop.addListener(onChange);
+
+		render();
+	})();
+</script>
 
 <script is:inline>
 	(function () {

@@ -79,7 +79,9 @@ const {
 		display: table-cell;
 		box-sizing: border-box;
 		width: 100%;
-		height: 2.5rem;
+		/* 2.75rem is 44px, a comfortable touch target next to the 2.5rem (40px)
+		   GOV.UK input. The submit button matches so the pair stays flush. */
+		height: 2.75rem;
 		margin: 0;
 		padding: 0 0.5rem;
 		border: 2px solid var(--rvs-ink);
@@ -110,8 +112,8 @@ const {
 
 	.rvs-search__submit {
 		position: relative;
-		width: 2.5rem;
-		height: 2.5rem;
+		width: 2.75rem;
+		height: 2.75rem;
 		padding: 0;
 		border: 0;
 		border-radius: 0;

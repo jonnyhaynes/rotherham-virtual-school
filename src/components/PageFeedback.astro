@@ -274,6 +274,9 @@ const pageUrl = Astro.url.pathname;
 		border: 1px solid var(--rvs-ink);
 		box-shadow: 0 3px 0 var(--rvs-ink);
 		padding: 8px 10px;
+		/* These are the page's primary feedback controls; keep them a
+		   comfortable touch target rather than a cursor-sized one. */
+		min-height: 44px;
 		cursor: pointer;
 	}
 

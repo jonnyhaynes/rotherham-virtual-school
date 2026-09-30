@@ -79,31 +79,41 @@ const formatDate = (value: unknown) =>
 					<h2 class="govuk-heading-l" id={`year-${year.replace(/\W/g, "-")}`}>
 						Academic year {year}
 					</h2>
-					<table class="govuk-table rvs-data-table">
-						<caption class="govuk-table__caption govuk-table__caption--s">
-							Children in care in Rotherham, {year}
-						</caption>
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Measure</th>
-								<th scope="col" class="govuk-table__header">Rotherham children in care</th>
-								<th scope="col" class="govuk-table__header">Comparison</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							{rows
-								.filter((row) => String(row.data.academic_year) === year)
-								.map((row) => (
-									<tr class="govuk-table__row">
-										<th scope="row" class="govuk-table__header">
-											{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}
-										</th>
-										<td class="govuk-table__cell">{row.data.value}</td>
-										<td class="govuk-table__cell">{row.data.comparison}</td>
-									</tr>
-								))}
-						</tbody>
-					</table>
+					{/* Three columns of outcome data cannot compress below ~362px, so
+					    below that the table scrolls rather than pushing the whole page
+					    wide. The wrapper is focusable so it can be scrolled by keyboard. */}
+					<div
+						class="rvs-table-scroll"
+						role="region"
+						aria-labelledby={`year-${year.replace(/\W/g, "-")}`}
+						tabindex="0"
+					>
+						<table class="govuk-table rvs-data-table">
+							<caption class="govuk-table__caption govuk-table__caption--s">
+								Children in care in Rotherham, {year}
+							</caption>
+							<thead class="govuk-table__head">
+								<tr class="govuk-table__row">
+									<th scope="col" class="govuk-table__header">Measure</th>
+									<th scope="col" class="govuk-table__header">Rotherham children in care</th>
+									<th scope="col" class="govuk-table__header">Comparison</th>
+								</tr>
+							</thead>
+							<tbody class="govuk-table__body">
+								{rows
+									.filter((row) => String(row.data.academic_year) === year)
+									.map((row) => (
+										<tr class="govuk-table__row">
+											<th scope="row" class="govuk-table__header">
+												{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}
+											</th>
+											<td class="govuk-table__cell">{row.data.value}</td>
+											<td class="govuk-table__cell">{row.data.comparison}</td>
+										</tr>
+									))}
+							</tbody>
+						</table>
+					</div>
 					{rows
 						.filter((row) => String(row.data.academic_year) === year && row.data.note)
 						.map((row) => (

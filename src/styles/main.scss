@@ -52,6 +52,11 @@
 html {
 	font-family: tokens.$rvs-font-family;
 
+	// The design is light-only. Declaring that stops a browser set to dark mode
+	// rendering native parts of the interface — scrollbars, the search field's
+	// clear button, unstyled form controls — dark against the light page.
+	color-scheme: light;
+
 	// Grayscale antialiasing at the root only, never per component.
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;

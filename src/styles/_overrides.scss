@@ -81,12 +81,70 @@ main .govuk-list {
 }
 
 // =============================================================================
+// Service navigation disclosure
+// =============================================================================
+// GOV.UK expands its service navigation inline from the tablet breakpoint
+// (641px), but this nav carries five items needing 717px before the search
+// toggle has room. Between 641px and ~880px the list wrapped to two lines,
+// orphaning the last item and pushing the toggle onto a third row; the header
+// grew from 131px to 245px. The breakpoint is one global
+// `--govuk-breakpoint-tablet` property shared with every GOV.UK grid rule, so
+// the disclosure is re-driven in BaseLayout at 55em instead.
+//
+// These rules support that: the collapsed state must beat GOV.UK's
+// `display: flex`, and the opened menu must use GOV.UK's mobile stack (one item
+// per line) rather than a horizontally wrapping row.
+
+[data-rvs-nav] .govuk-service-navigation__list[hidden] {
+	display: none;
+}
+
+@media (max-width: 54.99em) {
+	[data-rvs-nav] .govuk-service-navigation__list {
+		display: block;
+	}
+
+	[data-rvs-nav] .govuk-service-navigation__item {
+		display: block;
+		margin: 10px 0;
+		padding: 0;
+	}
+}
+
+// The toggle is the only control on the collapsed menu, so give it a touch
+// target. GOV.UK sizes it to its 25px line box.
+[data-rvs-nav] .govuk-service-navigation__toggle {
+	min-height: 44px;
+}
+
+// =============================================================================
 // Prototype safeguards
 // =============================================================================
 // The prototype notice bar is fixed to the bottom of the viewport, so reserve
 // space for it while it is on screen. The class is set on <html> by the bar.
+// The safe-area inset is added to both the reserved space and the bar's own
+// padding, so the two stay in step on devices that report one.
 html.rvs-has-prototype-bar body {
-	padding-bottom: 100px;
+	padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+
+// =============================================================================
+// Safe areas
+// =============================================================================
+// BaseLayout sets `viewport-fit=cover`, so the page extends under the notch and
+// the home indicator. In landscape the notch would otherwise sit over the left
+// edge of every full-bleed band, and the fixed notice bar would sit under the
+// home indicator. Both insets resolve to 0 where there is no cutout.
+.govuk-header,
+.govuk-service-navigation,
+.govuk-footer,
+.rvs-prototype {
+	padding-left: env(safe-area-inset-left, 0px);
+	padding-right: env(safe-area-inset-right, 0px);
+}
+
+.rvs-prototype {
+	padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 // =============================================================================
@@ -167,5 +225,18 @@ html.rvs-has-prototype-bar body {
 // Outcomes table, documents metadata, anywhere numbers are read as data.
 .rvs-data-table {
 	font-variant-numeric: tabular-nums;
+}
+
+// Three columns of outcomes cannot compress below ~362px, so on the narrowest
+// screens the table scrolls rather than widening the page. Scroll (rather than
+// stacking the cells) keeps the columns aligned, which is the whole point of
+// the table. Focusable so it can be scrolled without a pointer.
+.rvs-table-scroll {
+	overflow-x: auto;
+}
+
+.rvs-table-scroll:focus-visible {
+	outline: 3px solid var(--rvs-yellow);
+	outline-offset: 2px;
 }
 
