@@ -32,9 +32,22 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 </section>
 
 <style>
+	/* The band's own gradient, with the legibility scrim layered over it along
+	   the same 135° axis. The scrim used to run horizontally while the base ran
+	   diagonally, so the bottom corner got the least scrim and the lightest base
+	   at once and showed as a pale wedge. Sharing the axis keeps the darkening
+	   proportional at every point, which leaves the sky accent readable at the
+	   far corner (6.3:1 against white) and 12.5:1 where the lead sits. */
 	.rvs-hero {
 		position: relative;
-		background: linear-gradient(135deg, #002554 0%, #0052ba 70%, #66cbf3 100%);
+		background:
+			linear-gradient(
+				135deg,
+				rgba(0, 19, 43, 0.94) 0%,
+				rgba(0, 19, 43, 0.86) 45%,
+				rgba(0, 19, 43, 0.55) 100%
+			),
+			linear-gradient(135deg, var(--rvs-navy) 0%, #0052ba 60%, #66cbf3 100%);
 		color: #fff;
 		isolation: isolate;
 	}
@@ -48,16 +61,9 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 		z-index: -2;
 	}
 
-	/* Keeps the heading legible over any photograph. */
 	.rvs-hero__inner {
 		position: relative;
-		background: linear-gradient(
-			90deg,
-			rgba(0, 19, 43, 0.88) 0%,
-			rgba(0, 19, 43, 0.7) 55%,
-			rgba(0, 19, 43, 0.35) 100%
-		);
-		padding: 40px 0;
+		padding-block: var(--rvs-space-8);
 	}
 
 	/* Light type on a dark ground reads optically thinner and brighter than the
@@ -72,7 +78,7 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 	}
 
 	.rvs-hero__lead {
-		margin: 20px 0 0;
+		margin: var(--rvs-space-4) 0 0;
 		/* 58rem is 928px, roughly 65ch at 24px. Fixed width rather than ch so the
 		   measure cannot change with the font and reflow the hero on load. */
 		max-width: 58rem;
@@ -84,7 +90,7 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 
 	@media (min-width: 40.0625em) {
 		.rvs-hero__inner {
-			padding: 60px 0;
+			padding-block: 60px;
 		}
 	}
 </style>

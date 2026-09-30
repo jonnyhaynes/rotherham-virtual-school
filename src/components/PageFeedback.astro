@@ -21,7 +21,7 @@ const { title = "Is this page useful?" } = Astro.props;
 const pageUrl = Astro.url.pathname;
 ---
 
-<div class="govuk-feedback rvs-feedback">
+<div class="govuk-feedback rvs-feedback rvs-band">
 	<div class="rvs-feedback__prompt-content">
 		<div class="rvs-feedback__prompt-questions" data-feedback-prompt>
 			<h2 class="govuk-heading-s rvs-feedback__prompt-question">{title}</h2>
@@ -265,9 +265,16 @@ const pageUrl = Astro.url.pathname;
 </script>
 
 <style>
-	/* Pulled out to the full width so the band meets the footer flush, matching
-	   GOV.UK's own feedback component. */
+	/*
+		The band meets the footer flush and runs the full width of the viewport.
+		It used to bleed with negative margins, which only reached 15px past the
+		width container, so it read as a band that was almost the right width
+		rather than a band. The background now paints to the edges while the
+		gutters below keep the content on the same lane as the rest of the page.
+	*/
 	.rvs-feedback {
+		--rvs-band-bg: var(--govuk-surface-background-colour, #f4f8fb);
+
 		margin: 30px -15px 0;
 		padding-bottom: 20px;
 	}

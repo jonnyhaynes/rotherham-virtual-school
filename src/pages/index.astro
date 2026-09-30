@@ -27,11 +27,12 @@ const latestNews = [...newsEntries]
 
 <BaseLayout title="Home" description={siteTagline}>
 	<HeroBanner
+		slot="hero"
 		title="Rotherham Virtual School"
 		lead="We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham — wherever they live and whatever school they go to."
 	/>
 
-	<section class="rvs-section" aria-labelledby="who-are-you">
+	<section class="rvs-section rvs-section--opening" aria-labelledby="who-are-you">
 		<h2 class="govuk-heading-l" id="who-are-you">Who are you?</h2>
 		<p class="govuk-body-l">
 			Choose the option that fits you best. Each section is written for you.
@@ -101,28 +102,48 @@ const latestNews = [...newsEntries]
 </BaseLayout>
 
 <style>
+	/*
+		Section rhythm, on GOV.UK's 5px ladder rather than the bespoke rem values
+		that used to sit here. The separating rule between sections is gone: at
+		0/5/10/15/20/25/30/40/50/60, space alone separates the groups, and a rule
+		on top of generous space only says it twice.
+	*/
 	.rvs-section {
-		padding: 2rem 0;
+		padding-block: var(--rvs-space-5);
 	}
 
-	.rvs-section + .rvs-section {
-		border-top: 1px solid var(--rvs-border);
+	/*
+		The who-are-you router is the page's decision, so it rides tight under the
+		hero band instead of starting a new thought below it. The gap above it is
+		smaller than the gaps between the later sections, which is what makes the
+		band and the router read as one opening.
+	*/
+	.rvs-section--opening {
+		padding-block-start: var(--rvs-space-4);
 	}
 
-	.rvs-audience-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.25rem;
-		margin: 1.5rem 0 0;
-		padding: 0;
-		list-style: none;
+	@media (min-width: 40.0625em) {
+		.rvs-section {
+			padding-block: var(--rvs-space-8);
+		}
+
+		.rvs-section--opening {
+			padding-block-start: var(--rvs-space-6);
+		}
 	}
+
+	/*
+		The audience grid's composition lives in `_overrides.scss`. Astro scopes a
+		page's styles to elements that page renders, and the grid's children are
+		`<li>`s rendered by `AudienceCard`, so `:nth-child` rules written here
+		matched nothing and every card fell back to one track.
+	*/
 
 	.rvs-news-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.5rem 2rem;
-		margin: 1.5rem 0;
+		gap: var(--rvs-space-5) var(--rvs-space-6);
+		margin: var(--rvs-space-5) 0;
 		padding: 0;
 		list-style: none;
 	}

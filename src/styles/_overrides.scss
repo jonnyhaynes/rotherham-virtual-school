@@ -137,6 +137,58 @@ html.rvs-has-prototype-bar body {
 }
 
 // =============================================================================
+// Full-bleed bands
+// =============================================================================
+// A band keeps its content on the same lane as the rest of the page but paints
+// its background out to the viewport edges. Lifting the element out of the
+// width container would drag its content with it, and `width: 100vw` overhangs
+// by the scrollbar width and pulls the band's centre off the page's. Painting a
+// shadow behind the box and clipping it horizontally avoids both. The vertical
+// inset of 0 keeps the clip to the element's own height, so a band that grows
+// (the feedback form opening, an error message appearing) still clips correctly.
+.rvs-band {
+	background-color: var(--rvs-band-bg);
+	box-shadow: 0 0 0 100vmax var(--rvs-band-bg);
+	clip-path: inset(0 -100vmax);
+}
+
+// =============================================================================
+// Audience router grid
+// =============================================================================
+// Five audiences. Auto-fit sized the cards to whatever fitted, which left the
+// second row two cards short of the row above it, so the site's primary router
+// ended on a hole. Six tracks with spans instead: three across the first row and
+// two across the second, both rows flush to the same edges.
+//
+// This lives here rather than in the page because Astro scopes a page's styles
+// to elements that page renders, and these children are `<li>`s rendered by
+// AudienceCard. Written in the page, the `:nth-child` selectors matched nothing
+// and all five cards collapsed into single tracks, overflowing at tablet.
+.rvs-audience-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--rvs-space-4);
+	margin: var(--rvs-space-4) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 40.0625em) {
+	.rvs-audience-grid {
+		grid-template-columns: repeat(6, 1fr);
+		margin-block-start: var(--rvs-space-5);
+	}
+
+	.rvs-audience-grid > :nth-child(-n + 3) {
+		grid-column: span 2;
+	}
+
+	.rvs-audience-grid > :nth-child(n + 4) {
+		grid-column: span 3;
+	}
+}
+
+// =============================================================================
 // Safe areas
 // =============================================================================
 // BaseLayout sets `viewport-fit=cover`, so the page extends under the notch and

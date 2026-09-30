@@ -234,6 +234,13 @@ const pageCtx = createPublicPageContext({
 			]}
 			id="main-content"
 		>
+			{/*
+				The hero band renders outside the width container. It carries its own
+				`govuk-width-container` for the heading and lead, which only does its
+				job once the band itself is free of the outer one.
+			*/}
+			<slot name="hero" />
+
 			<div class="govuk-width-container">
 				<slot />
 				{showFeedback && <PageFeedback />}

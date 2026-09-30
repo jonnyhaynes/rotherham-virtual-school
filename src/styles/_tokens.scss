@@ -61,6 +61,17 @@ $rvs-font-family: "Mulish", "Mulish Fallback", arial, sans-serif;
 // --- Layout ------------------------------------------------------------------
 $rvs-pupil-radius: 16px;
 
+// Spacing scale: GOV.UK's 5px ladder, named by unit the way `govuk-spacing()`
+// is. Page-level styles are plain CSS and cannot call the Sass helper, so the
+// steps the layout consumes are emitted as custom properties below. Anything
+// not a multiple of five here would be the two-systems problem again.
+$rvs-space-3: 15px;
+$rvs-space-4: 20px;
+$rvs-space-5: 25px;
+$rvs-space-6: 30px;
+$rvs-space-8: 40px;
+$rvs-space-10: 50px;
+
 // Only the tokens that components actually consume are emitted as custom
 // properties. The rest of the palette stays available as Sass variables above,
 // where it is used to configure GOV.UK Frontend and the zone themes.
@@ -71,6 +82,13 @@ $rvs-pupil-radius: 16px;
 	--rvs-ink: #{$rvs-ink};
 	--rvs-grey: #{$rvs-grey};
 	--rvs-border: #{$rvs-border};
+
+	--rvs-space-3: #{$rvs-space-3};
+	--rvs-space-4: #{$rvs-space-4};
+	--rvs-space-5: #{$rvs-space-5};
+	--rvs-space-6: #{$rvs-space-6};
+	--rvs-space-8: #{$rvs-space-8};
+	--rvs-space-10: #{$rvs-space-10};
 
 	--rvs-audience-young: #{$rvs-audience-young};
 	--rvs-audience-parent: #{$rvs-audience-parent};
