@@ -1,0 +1,36 @@
+// =============================================================================
+// Font faces (self-hosted)
+// =============================================================================
+// Mulish is the current name for Muli, the typeface Rotherham Council uses.
+//
+// Self-hosted rather than loaded from a third-party CDN. A public-sector site
+// should not send visitor IP addresses to Google as a side effect of rendering
+// its own text, and the German courts have already treated that as a breach.
+// The file sits in the repository and is served from our own origin.
+//
+// One file covers every weight: Mulish ships as a variable font, so the weight
+// axis is declared as a range rather than downloading a file per weight.
+//
+// Background: this family was previously declared in the font stack but never
+// actually loaded, so the site silently rendered in a locally-installed Muli
+// or, for everyone else, Arial. See the typography finding in
+// .commandcode/design/review-report.md.
+//
+// Licensed under the SIL Open Font License 1.1 — see public/fonts/Mulish-OFL.txt.
+// Copyright 2016 The Mulish Project Authors (https://github.com/googlefonts/mulish).
+
+@font-face {
+	font-family: "Mulish";
+	font-style: normal;
+	// Variable font: one file serves the regular and bold weights we use.
+	font-weight: 400 700;
+	// Swap rather than block: body text renders immediately in the fallback and
+	// upgrades when the font arrives, so first paint is never held up.
+	font-display: swap;
+	src: url("/fonts/mulish-latin.woff2") format("woff2");
+	// Latin subset, matching the ranges the font was cut for.
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+		U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+		U+2215, U+FEFF, U+FFFD;
+}

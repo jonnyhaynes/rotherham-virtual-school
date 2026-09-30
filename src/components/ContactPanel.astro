@@ -15,11 +15,13 @@ const {
 
 <aside class="rvs-contact-panel" aria-labelledby="rvs-contact-heading">
 	<h2 class="govuk-heading-m" id="rvs-contact-heading">{heading}</h2>
-	<p>{text}</p>
-	<ul class="rvs-contact-panel__list">
+	<p class="govuk-body">{text}</p>
+	<ul class="govuk-list rvs-contact-panel__list">
 		<li>
 			Email
-			<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
+			<a class="govuk-link rvs-break-words" href={`mailto:${SITE_DEFAULTS.email}`}
+				>{SITE_DEFAULTS.email}</a
+			>
 		</li>
 		<li><a class="govuk-link" href="/contact/">All contact details and who's who</a></li>
 	</ul>

@@ -9,6 +9,7 @@
 // bug waiting to happen — see `success` below for why.
 // =============================================================================
 
+@use "./fonts";
 @use "./tokens" as tokens;
 
 @use "govuk-frontend/dist/govuk" with (
@@ -32,9 +33,36 @@
 		template-background: tokens.$rvs-blue-tint,
 		surface-background: tokens.$rvs-blue-tint
 	),
-	// Muli/Mulish matches the council site and degrades to Arial, which is also
-	// the GOV.UK fallback.
+	// Mulish matches the council site. It is self-hosted in ./_fonts.scss, and
+	// the stack degrades to Arial, which is also the GOV.UK fallback.
 	$govuk-font-family: tokens.$rvs-font-family
 );
 
 @use "./overrides";
+
+// =============================================================================
+// Global type foundation
+// =============================================================================
+// GOV.UK Frontend applies `font-family` only through its own typography
+// classes. It never sets it on `html` or `body`. Any element authored without
+// one of those classes therefore fell through to the browser's default font,
+// which is a serif — the cause of the serif headings and body copy in the
+// typography finding. Setting the family here, once, means no element can
+// fall through again.
+html {
+	font-family: tokens.$rvs-font-family;
+
+	// Grayscale antialiasing at the root only, never per component.
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+// Form controls do not inherit `font-family` by default in every browser, so
+// an unclassed input or button would still pick up the platform default.
+button,
+input,
+optgroup,
+select,
+textarea {
+	font-family: inherit;
+}

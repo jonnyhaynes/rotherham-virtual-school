@@ -3,6 +3,9 @@
  * Full-bleed photographic hero, mirroring Rotherham.gov.uk's service headers.
  * Falls back to a Rotherham navy/sky gradient when no photograph is supplied,
  * so the page never depends on an image being present.
+ *
+ * Type comes from the GOV.UK scale (`govuk-heading-xl` / `govuk-body-l`) rather
+ * than bespoke sizes, and this file only overrides what the dark surface needs.
  */
 interface Props {
 	title: string;
@@ -22,8 +25,8 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 	}
 	<div class="rvs-hero__inner">
 		<div class="govuk-width-container">
-			<h1 class="rvs-hero__title">{title}</h1>
-			{lead && <p class="rvs-hero__lead">{lead}</p>}
+			<h1 class="govuk-heading-xl rvs-hero__title">{title}</h1>
+			{lead && <p class="govuk-body-l rvs-hero__lead">{lead}</p>}
 		</div>
 	</div>
 </section>
@@ -54,31 +57,33 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 			rgba(0, 19, 43, 0.7) 55%,
 			rgba(0, 19, 43, 0.35) 100%
 		);
-		padding: 2.5rem 0;
+		padding: 40px 0;
 	}
 
+	/* Light type on a dark ground reads optically thinner and brighter than the
+	   same size on white, so both blocks get more line-height and a trace of
+	   letter-spacing than the GOV.UK defaults. */
 	.rvs-hero__title {
 		margin: 0;
-		color: #fff;
-		font-size: 2.25rem;
-		line-height: 1.1;
 		max-width: 30ch;
+		color: #fff;
+		line-height: 1.15;
+		letter-spacing: 0.01em;
 	}
 
 	.rvs-hero__lead {
-		margin: 1rem 0 0;
-		max-width: 60ch;
-		font-size: 1.25rem;
-		line-height: 1.4;
+		margin: 20px 0 0;
+		// Kept inside the 60–75ch readable band.
+		max-width: 65ch;
+		color: #fff;
+		line-height: 1.5;
+		letter-spacing: 0.01em;
+		text-wrap: pretty;
 	}
 
 	@media (min-width: 40.0625em) {
 		.rvs-hero__inner {
-			padding: 4rem 0;
-		}
-
-		.rvs-hero__title {
-			font-size: 3rem;
+			padding: 60px 0;
 		}
 	}
 </style>

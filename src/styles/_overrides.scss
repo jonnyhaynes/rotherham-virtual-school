@@ -4,19 +4,52 @@
 // Keep this file small and genuine: component-specific styling belongs in the
 // component's own <style> block. Only rules that apply site-wide live here.
 
+// --- Type mechanics ---------------------------------------------------------
+// Headings break with intention rather than leaving one orphaned word; prose
+// descriptions avoid ugly last lines. Neither is applied to long-form, where
+// the browser ignores `balance` past a few lines anyway.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.govuk-heading-xl,
+.govuk-heading-l,
+.govuk-heading-m,
+.govuk-heading-s {
+	text-wrap: balance;
+}
+
+// Long words, URLs and email addresses must never force a horizontal scrollbar.
+// `break-word` only breaks a token that would otherwise overflow, so ordinary
+// prose wrapping is untouched. This is the safety net behind the 320px reflow
+// finding; `.rvs-break-words` is the explicit opt-in.
+body,
+.govuk-body,
+.govuk-body-l,
+.govuk-body-s,
+.govuk-list,
+.govuk-link,
+.rvs-prose,
+.rvs-break-words {
+	overflow-wrap: break-word;
+}
+
 // Body copy rendered from EmDash Portable Text or hand-authored pages.
 .rvs-prose {
 	> *:last-child {
 		margin-bottom: 0;
 	}
 
+	// On the GOV.UK 5px ladder, expressed through its own spacing scale.
 	h2 {
-		margin-top: 2rem;
+		margin-top: 40px;
 	}
 
 	h3,
 	h4 {
-		margin-top: 1.5rem;
+		margin-top: 30px;
 	}
 
 	img {
@@ -27,14 +60,8 @@
 	table {
 		width: 100%;
 		border-collapse: collapse;
-		margin-bottom: 1.5rem;
+		margin-bottom: 30px;
 	}
-}
-
-// Long words (school names, URLs) should never force a horizontal scrollbar.
-.rvs-prose,
-.rvs-break-words {
-	overflow-wrap: anywhere;
 }
 
 // =============================================================================
@@ -43,7 +70,7 @@
 // The prototype notice bar is fixed to the bottom of the viewport, so reserve
 // space for it while it is on screen. The class is set on <html> by the bar.
 html.rvs-has-prototype-bar body {
-	padding-bottom: 6rem;
+	padding-bottom: 100px;
 }
 
 // =============================================================================
@@ -56,12 +83,20 @@ html.rvs-has-prototype-bar body {
 .rvs-pupil {
 	--rvs-pupil-accent: var(--rvs-audience-young);
 
+	// Larger reading size for this audience, but still an explicit step.
 	.govuk-body,
-	.govuk-body-l,
 	p,
 	li {
 		font-size: 1.25rem;
 		line-height: 1.6;
+	}
+
+	// The lead must stay clearly above body copy. It previously shared the
+	// 1.25rem rule, which flattened the pair to a 1.00 ratio and made the lead
+	// smaller than the same lead on every other page.
+	.govuk-body-l {
+		font-size: 1.5rem;
+		line-height: 1.4;
 	}
 
 	.govuk-heading-xl {
@@ -69,7 +104,7 @@ html.rvs-has-prototype-bar body {
 	}
 
 	.govuk-list--bullet li {
-		margin-bottom: 0.5rem;
+		margin-bottom: 10px;
 	}
 
 	.govuk-inset-text {
@@ -77,7 +112,7 @@ html.rvs-has-prototype-bar body {
 		border-left-color: var(--rvs-pupil-accent);
 		background: #fff;
 		border-radius: var(--rvs-pupil-radius);
-		padding: 1.25rem;
+		padding: 20px;
 	}
 
 	.govuk-link {
@@ -89,7 +124,7 @@ html.rvs-has-prototype-bar body {
 		background: #fff;
 		border: 2px solid var(--rvs-border);
 		border-radius: var(--rvs-pupil-radius);
-		padding: 1.25rem;
+		padding: 20px;
 		text-decoration: none;
 		color: inherit;
 	}
@@ -100,12 +135,21 @@ html.rvs-has-prototype-bar body {
 	}
 
 	.rvs-pupil-card__title {
-		margin: 0 0 0.5rem;
+		margin: 0 0 10px;
 		color: var(--rvs-navy);
 	}
 
 	.rvs-pupil-card__text {
 		margin: 0;
 	}
+}
+
+// =============================================================================
+// Data tables
+// =============================================================================
+// Figures must line up in a column so they can be compared by scanning.
+// Outcomes table, documents metadata, anywhere numbers are read as data.
+.rvs-data-table {
+	font-variant-numeric: tabular-nums;
 }
 

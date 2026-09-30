@@ -21,7 +21,7 @@ const dateLabel = published
 
 <li class="rvs-news-card">
 	{dateLabel && (
-		<time class="rvs-news-card__date" datetime={published?.toISOString()}>
+		<time class="govuk-body-s rvs-news-card__date" datetime={published?.toISOString()}>
 			{dateLabel}
 		</time>
 	)}
@@ -34,20 +34,21 @@ const dateLabel = published
 <style>
 	.rvs-news-card {
 		border-top: 4px solid var(--rvs-blue);
-		padding: 1rem 0 0;
+		padding: 15px 0 0;
 	}
 
 	.rvs-news-card__date {
 		display: block;
-		color: var(--rvs-grey);
-		margin-bottom: 0.25rem;
+		margin-bottom: 5px;
+		color: var(--govuk-secondary-text-colour, #616365);
 	}
 
 	.rvs-news-card__title {
-		margin: 0 0 0.5rem;
+		margin: 0 0 10px;
 	}
 
 	.rvs-news-card__summary {
 		margin: 0;
+		text-wrap: pretty;
 	}
 </style>
