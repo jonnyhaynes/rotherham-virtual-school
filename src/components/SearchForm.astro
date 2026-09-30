@@ -86,7 +86,12 @@ const {
 		border-right: 0;
 		border-radius: 0;
 		background: #fff;
-		font: inherit;
+		font-family: inherit;
+		/*
+		 * GOV.UK's input size. Without this the field inherits the 16px root
+		 * font and reads smaller than the body copy beside it.
+		 */
+		font-size: 1.1875rem;
 	}
 
 	.rvs-search__input:focus {

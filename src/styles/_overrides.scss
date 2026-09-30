@@ -36,6 +36,17 @@ body,
 	overflow-wrap: break-word;
 }
 
+// --- Measure ----------------------------------------------------------------
+// Without a cap, body copy runs the full 960px container — measured at ~84
+// characters per line, well past the readable band. GOV.UK's own body copy
+// measures 53–60ch because it sits in a two-thirds grid column; this caps
+// prose at 65ch to land inside the 60–75ch band. Applied here rather than by
+// wrapping every page in grid columns, which would squeeze the card grids.
+main .govuk-body,
+main .govuk-list {
+	max-width: 65ch;
+}
+
 // Body copy rendered from EmDash Portable Text or hand-authored pages.
 .rvs-prose {
 	> *:last-child {
