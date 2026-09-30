@@ -1,0 +1,148 @@
+---
+import { search } from "emdash";
+import SearchForm from "../../components/SearchForm.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const query = (Astro.url.searchParams.get("q") ?? "").trim();
+
+// The CMS collections are routable in different places, so map them explicitly
+// rather than guessing a URL from the collection name.
+const COLLECTION_ROUTES: Record<string, (slug: string) => string> = {
+	pages: (slug) => `/${slug}`,
+	news: (slug) => `/news/${slug}`,
+	events: (slug) => `/training-events/${slug}`,
+	documents: (slug) => `/documents/${slug}`,
+};
+
+const COLLECTION_LABELS: Record<string, string> = {
+	pages: "Page",
+	news: "News",
+	events: "Training and events",
+	documents: "Document",
+};
+
+interface Result {
+	href: string;
+	title: string;
+	snippet?: string;
+	label: string;
+}
+
+let results: Result[] = [];
+let failed = false;
+
+if (query) {
+	try {
+		const response = await search(query, { limit: 20 });
+		results = response.items.flatMap((item) => {
+			const build = COLLECTION_ROUTES[item.collection];
+			const slug = item.slug ?? item.id;
+			if (!build || !slug) return [];
+			return [
+				{
+					href: build(slug),
+					title: item.title ?? slug,
+					// Sanitised by EmDash: HTML metacharacters escaped, with only
+					// <mark> allowed through for the matched terms.
+					snippet: item.snippet,
+					label: COLLECTION_LABELS[item.collection] ?? item.collection,
+				},
+			];
+		});
+	} catch {
+		failed = true;
+	}
+}
+---
+
+<BaseLayout
+	title={query ? `Search results for “${query}”` : "Search"}
+	description="Search the Rotherham Virtual School website."
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Search" }]}
+	showFeedback={false}
+>
+	<PageHeader
+		title="Search"
+		lead="Search for guidance, news, training and documents across the Virtual School website."
+	/>
+
+	<SearchForm value={query} inputId="rvs-search-page-input" />
+
+	{
+		query && (
+			<div class="rvs-search-results">
+				<h2 class="govuk-heading-l">
+					{results.length === 1
+						? `1 result for “${query}”`
+						: `${results.length} results for “${query}”`}
+				</h2>
+
+				{failed && (
+					<p class="govuk-body">
+						Sorry, there was a problem running your search. Please try again.
+					</p>
+				)}
+
+				{!failed && results.length === 0 && (
+					<p class="govuk-body">
+						Nothing matched your search. Try a different word, or browse using the menu.
+					</p>
+				)}
+
+				{results.length > 0 && (
+					<ul class="govuk-list rvs-search-results__list">
+						{results.map((result) => (
+							<li class="rvs-search-results__item">
+								<h3 class="govuk-heading-s rvs-search-results__title">
+									<a class="govuk-link" href={result.href}>
+										{result.title}
+									</a>
+								</h3>
+								<p class="govuk-body-s rvs-search-results__type">{result.label}</p>
+								{result.snippet && (
+									<p
+										class="govuk-body rvs-search-results__snippet"
+										set:html={result.snippet}
+									/>
+								)}
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.rvs-search-results {
+		margin-top: 2.5rem;
+	}
+
+	.rvs-search-results__list {
+		margin-top: 1.5rem;
+	}
+
+	.rvs-search-results__item {
+		border-top: 1px solid var(--rvs-border);
+		padding: 1.25rem 0;
+	}
+
+	.rvs-search-results__item:last-child {
+		border-bottom: 1px solid var(--rvs-border);
+	}
+
+	.rvs-search-results__title {
+		margin: 0 0 0.25rem;
+	}
+
+	.rvs-search-results__type {
+		color: var(--rvs-grey);
+		margin: 0 0 0.5rem;
+	}
+
+	.rvs-search-results__snippet {
+		margin: 0;
+	}
+</style>

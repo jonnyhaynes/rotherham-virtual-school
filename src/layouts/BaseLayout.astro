@@ -5,9 +5,9 @@ import {
 } from "emdash";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
-import LiveSearch from "emdash/ui/search";
 import PageFeedback from "../components/PageFeedback.astro";
 import PrototypeNotice from "../components/PrototypeNotice.astro";
+import SearchForm from "../components/SearchForm.astro";
 import "../styles/main.scss";
 import { SITE_DEFAULTS, resolveSiteIdentity } from "../utils/site";
 
@@ -222,15 +222,16 @@ const pageCtx = createPublicPageContext({
 				)
 			}
 			<div class="rvs-search-panel" id="rvs-search-panel" hidden>
-				<LiveSearch
-					placeholder="Search Rotherham Virtual School"
-					collections={["pages", "news", "events", "documents"]}
-				/>
+				<SearchForm />
 			</div>
 		</div>
 
 		<main
-			class:list={["govuk-main-wrapper", mainClass]}
+			class:list={[
+				"govuk-main-wrapper",
+				showFeedback ? "rvs-main-wrapper--feedback" : null,
+				mainClass,
+			]}
 			id="main-content"
 		>
 			<div class="govuk-width-container">
@@ -366,6 +367,12 @@ const pageCtx = createPublicPageContext({
 
 	.rvs-search-panel {
 		padding: 0 0 1.5rem;
+	}
+
+	/* The feedback band runs the full width and must meet the footer flush, so
+	   drop the main wrapper's bottom padding on pages that show it. */
+	.rvs-main-wrapper--feedback {
+		padding-bottom: 0;
 	}
 
 	/* Council logo in the header. Uses the reversed (white) variant, which is
