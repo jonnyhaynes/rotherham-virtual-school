@@ -246,6 +246,11 @@ complete.
 - [ ] Run axe-core in CI and do manual keyboard and screen-reader testing
 - [ ] Review the Pupil Zone content for plain-language readability
 - [ ] Have the council's Data Protection Officer review the privacy and cookies notice
+- [ ] Wire the page-feedback endpoint (`src/pages/api/feedback.ts`) to a real destination — it
+      currently only writes to the server log, which is ephemeral on Vercel
+- [ ] Decide whether to reinstate the Open Government Licence statement in the footer. It was
+      removed from this prototype, but the council's own site carries one, and OGL attribution is
+      normally expected for council content
 - [ ] Point the domain at the deployment only with the council's agreement
 
 ## Known build warning

@@ -1,0 +1,199 @@
+---
+/**
+ * "Is this page useful?" feedback, following the pattern GOV.UK uses at the
+ * foot of its content pages. Built with Design System classes rather than
+ * GOV.UK's own gem-c-feedback styles, so it stays consistent with the rest of
+ * the site and with the GOV.UK Frontend the project already ships.
+ *
+ * TODO before launch: submissions currently only reach the server log. The
+ * endpoint in src/pages/api/feedback.ts needs a real destination (an inbox or a
+ * form service) before this is shown to the public.
+ */
+interface Props {
+	title?: string;
+}
+
+const { title = "Is this page useful?" } = Astro.props;
+const pageUrl = Astro.url.pathname;
+---
+
+<div class="govuk-feedback rvs-feedback">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<h2 class="govuk-feedback__title">{title}</h2>
+			<div class="govuk-feedback__body">
+				<div class="govuk-button-group" data-feedback-prompt>
+					<button
+						type="button"
+						class="govuk-button govuk-button--secondary"
+						data-feedback="useful"
+					>
+						Yes<span class="govuk-visually-hidden">, this page is useful</span>
+					</button>
+					<button
+						type="button"
+						class="govuk-button govuk-button--secondary"
+						data-feedback="not-useful"
+						aria-controls="rvs-feedback-form"
+						aria-expanded="false"
+					>
+						No<span class="govuk-visually-hidden">, this page is not useful</span>
+					</button>
+					<button
+						type="button"
+						class="govuk-link rvs-feedback__link-button"
+						data-feedback="report"
+						aria-controls="rvs-feedback-form"
+						aria-expanded="false"
+					>
+						Report a problem with this page
+					</button>
+				</div>
+
+				<p class="govuk-body rvs-feedback__thanks" data-feedback-thanks role="alert" hidden>
+					Thank you for your feedback.
+				</p>
+
+				<form
+					class="rvs-feedback__form"
+					id="rvs-feedback-form"
+					method="post"
+					action="/api/feedback"
+					hidden
+				>
+					<input type="hidden" name="url" value={pageUrl} />
+
+					{/* Honeypot: hidden from people, irresistible to bots. */}
+					<div class="govuk-visually-hidden" aria-hidden="true">
+						<label for="rvs-feedback-website">Leave this field blank</label>
+						<input
+							id="rvs-feedback-website"
+							name="website"
+							type="text"
+							tabindex="-1"
+							autocomplete="off"
+						/>
+					</div>
+
+					<h3 class="govuk-heading-m">Help us improve this page</h3>
+					<p class="govuk-body">
+						Do not include personal or financial information, for example a National Insurance
+						number or credit card details.
+					</p>
+
+					<div class="govuk-form-group">
+						<label class="govuk-label" for="rvs-feedback-message">What were you doing?</label>
+						<textarea
+							class="govuk-textarea"
+							id="rvs-feedback-message"
+							name="message"
+							rows="5"></textarea>
+					</div>
+
+					<button type="submit" class="govuk-button">Send</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script is:inline>
+	(function () {
+		var script = document.currentScript;
+		var root = script ? script.closest(".rvs-feedback") : null;
+		if (!root) root = document.querySelector(".rvs-feedback");
+		if (!root) return;
+
+		var prompt = root.querySelector("[data-feedback-prompt]");
+		var thanks = root.querySelector("[data-feedback-thanks]");
+		var form = root.querySelector("#rvs-feedback-form");
+		var triggers = root.querySelectorAll('[data-feedback="not-useful"], [data-feedback="report"]');
+		var yesButton = root.querySelector('[data-feedback="useful"]');
+
+		function showThanks() {
+			if (prompt) prompt.hidden = true;
+			if (form) form.hidden = true;
+			if (thanks) thanks.hidden = false;
+		}
+
+		function showForm() {
+			if (!form) return;
+			form.hidden = false;
+			triggers.forEach(function (trigger) {
+				trigger.setAttribute("aria-expanded", "true");
+			});
+			var field = form.querySelector("textarea");
+			if (field) field.focus();
+		}
+
+		if (yesButton) {
+			yesButton.addEventListener("click", showThanks);
+		}
+
+		triggers.forEach(function (trigger) {
+			trigger.addEventListener("click", showForm);
+		});
+
+		if (form) {
+			form.addEventListener("submit", function (event) {
+				event.preventDefault();
+				var field = form.querySelector("textarea");
+				var button = form.querySelector('button[type="submit"]');
+				if (button) button.disabled = true;
+
+				fetch(form.action, {
+					method: "POST",
+					headers: { "content-type": "application/json", accept: "application/json" },
+					body: JSON.stringify({
+						url: form.querySelector('[name="url"]').value,
+						website: form.querySelector('[name="website"]').value,
+						message: field ? field.value : "",
+					}),
+				})
+					.then(function (response) {
+						if (!response.ok) throw new Error("Request failed");
+						showThanks();
+					})
+					.catch(function () {
+						if (button) button.disabled = false;
+						if (thanks) {
+							thanks.textContent =
+								"Sorry, there was a problem sending your feedback. Please try again.";
+							thanks.hidden = false;
+						}
+					});
+			});
+		}
+	})();
+</script>
+
+<style>
+	.rvs-feedback {
+		margin-top: 3rem;
+		border-top: 2px solid var(--rvs-navy);
+	}
+
+	.rvs-feedback .govuk-feedback__title {
+		margin-bottom: 1rem;
+	}
+
+	/* A button styled as a link, so "Report a problem" sits in the button group
+	   but reads as a tertiary action. */
+	.rvs-feedback__link-button {
+		font: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	.rvs-feedback__thanks {
+		font-weight: 700;
+	}
+
+	.rvs-feedback__form {
+		margin-top: 1rem;
+		max-width: 40rem;
+	}
+</style>

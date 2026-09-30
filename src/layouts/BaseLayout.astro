@@ -6,6 +6,7 @@ import {
 import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
 import LiveSearch from "emdash/ui/search";
+import PageFeedback from "../components/PageFeedback.astro";
 import PrototypeNotice from "../components/PrototypeNotice.astro";
 import "../styles/main.scss";
 import { SITE_DEFAULTS, resolveSiteIdentity } from "../utils/site";
@@ -27,6 +28,8 @@ interface Props {
 	content?: { collection: string; id: string; slug?: string | null };
 	/** Extra classes for <main>. */
 	mainClass?: string;
+	/** Show the "Is this page useful?" block. Off for pages with nothing to rate. */
+	showFeedback?: boolean;
 }
 
 const {
@@ -38,6 +41,7 @@ const {
 	breadcrumbs = [],
 	content,
 	mainClass,
+	showFeedback = true,
 } = Astro.props;
 
 const [settingsResult, menuResult] = await Promise.all([
@@ -158,6 +162,40 @@ const pageCtx = createPublicPageContext({
 								}
 							</ul>
 						</nav>
+
+						<button
+							type="button"
+							class="rvs-search-toggle"
+							aria-controls="rvs-search-panel"
+							aria-expanded="false"
+							data-search-toggle
+						>
+							<svg
+								class="rvs-search-toggle__icon"
+								width="20"
+								height="20"
+								viewBox="0 0 27 27"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<circle
+									cx="12.0161"
+									cy="11.0161"
+									r="8.51613"
+									stroke="currentColor"
+									stroke-width="3"></circle>
+								<line
+									x1="17.8668"
+									y1="17.3587"
+									x2="26.4475"
+									y2="25.9393"
+									stroke="currentColor"
+									stroke-width="3"></line>
+							</svg>
+							Search
+						</button>
 					</div>
 				</div>
 			</section>
@@ -183,9 +221,9 @@ const pageCtx = createPublicPageContext({
 					</nav>
 				)
 			}
-			<div class="rvs-search-slot">
+			<div class="rvs-search-panel" id="rvs-search-panel" hidden>
 				<LiveSearch
-					placeholder="Search"
+					placeholder="Search Rotherham Virtual School"
 					collections={["pages", "news", "events", "documents"]}
 				/>
 			</div>
@@ -197,6 +235,7 @@ const pageCtx = createPublicPageContext({
 		>
 			<div class="govuk-width-container">
 				<slot />
+				{showFeedback && <PageFeedback />}
 			</div>
 		</main>
 
@@ -279,26 +318,9 @@ const pageCtx = createPublicPageContext({
 									>
 								</li>
 							</ul>
-							<span class="govuk-footer__licence-description">
-								All content is available under the
-								<a
-									class="govuk-footer__link"
-									href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-									rel="license">Open Government Licence v3.0</a
-								>, except where otherwise stated.
-							</span>
-						</div>
-						<div class="govuk-footer__meta-item rvs-footer-brand">
-							<img
-								class="rvs-footer-brand__logo"
-								src="/brand/rmbc-logo.svg"
-								alt=""
-								width="132"
-								height="46"
-							/>
-							<span class="govuk-footer__copyright"
-								>© {SITE_DEFAULTS.organisation}</span
-							>
+							<p class="govuk-body-s rvs-footer__copyright">
+								© {SITE_DEFAULTS.organisation}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -318,8 +340,32 @@ const pageCtx = createPublicPageContext({
 </html>
 
 <style>
-	.rvs-search-slot {
-		margin-top: 1rem;
+	/* Search toggle, following the pattern GOV.UK uses in its own header: a
+	   button that reveals a search panel below rather than a permanently
+	   visible field. */
+	.rvs-search-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0 0 0 auto;
+		padding: 15px 0;
+		border: 0;
+		background: none;
+		color: var(--govuk-link-colour, #002554);
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.rvs-search-toggle:hover {
+		text-decoration-thickness: 3px;
+	}
+
+	.rvs-search-toggle__icon {
+		flex: 0 0 auto;
+	}
+
+	.rvs-search-panel {
+		padding: 0 0 1.5rem;
 	}
 
 	/* Council logo in the header. Uses the reversed (white) variant, which is
@@ -338,19 +384,37 @@ const pageCtx = createPublicPageContext({
 		}
 	}
 
-	/* Council logo in the footer. */
-	.rvs-footer-brand {
-		text-align: center;
-	}
-
-	.rvs-footer-brand__logo {
-		display: block;
-		height: 46px;
-		width: auto;
-		margin: 0 auto 0.5rem;
-	}
-
-	.govuk-footer__copyright {
-		display: block;
+	.rvs-footer__copyright {
+		color: var(--govuk-secondary-text-colour, #616365);
+		margin: 1rem 0 0;
 	}
 </style>
+
+<script is:inline>
+	(function () {
+		var toggle = document.querySelector("[data-search-toggle]");
+		var panel = document.getElementById("rvs-search-panel");
+		if (!toggle || !panel) return;
+
+		function setOpen(open) {
+			panel.hidden = !open;
+			toggle.setAttribute("aria-expanded", String(open));
+			if (open) {
+				var input = panel.querySelector("input");
+				if (input) input.focus();
+			}
+		}
+
+		toggle.addEventListener("click", function () {
+			setOpen(toggle.getAttribute("aria-expanded") !== "true");
+		});
+
+		// Escape closes the panel and returns focus to the toggle.
+		document.addEventListener("keydown", function (event) {
+			if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+	})();
+</script>
