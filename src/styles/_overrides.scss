@@ -117,6 +117,14 @@ main .govuk-list {
 	min-height: 44px;
 }
 
+// GOV.UK ships no hover state for this control — zero hover rules in its
+// stylesheet — so the menu toggle looked inert under a pointer while the search
+// toggle beside it underlines. Same treatment as that control.
+[data-rvs-nav] .govuk-service-navigation__toggle:hover {
+	text-decoration: underline;
+	text-decoration-thickness: 3px;
+}
+
 // =============================================================================
 // Prototype safeguards
 // =============================================================================
