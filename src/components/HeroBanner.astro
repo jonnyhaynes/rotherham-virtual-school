@@ -65,7 +65,7 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 	   letter-spacing than the GOV.UK defaults. */
 	.rvs-hero__title {
 		margin: 0;
-		max-width: 30ch;
+		max-width: 54rem;
 		color: #fff;
 		line-height: 1.15;
 		letter-spacing: 0.01em;
@@ -73,8 +73,9 @@ const { title, lead, imageSrc, imageAlt = "" } = Astro.props;
 
 	.rvs-hero__lead {
 		margin: 20px 0 0;
-		/* Capped inside the 60–75ch readable band. */
-		max-width: 65ch;
+		/* 58rem is 928px, roughly 65ch at 24px. Fixed width rather than ch so the
+		   measure cannot change with the font and reflow the hero on load. */
+		max-width: 58rem;
 		color: #fff;
 		line-height: 1.5;
 		letter-spacing: 0.01em;

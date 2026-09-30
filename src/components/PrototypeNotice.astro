@@ -91,7 +91,9 @@
 
 	.rvs-prototype__text {
 		margin: 0;
-		max-width: 70ch;
+		/* 42rem is 672px, roughly 70ch at 16px. Fixed width rather than ch so the
+		   notice keeps the same measure in the fallback font. */
+		max-width: 42rem;
 	}
 
 	.rvs-prototype__dismiss {

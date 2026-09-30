@@ -53,9 +53,10 @@ $rvs-audience-social: $rvs-maroon;
 $rvs-audience-other: $rvs-grey;
 
 // --- Typography --------------------------------------------------------------
-// Rotherham uses Muli (now "Mulish"). It degrades to Arial, which is also the
-// GOV.UK fallback, so nothing depends on a webfont being present.
-$rvs-font-family: "Mulish", "Muli", arial, sans-serif;
+// Rotherham uses Muli (now "Mulish"), self-hosted from ./_fonts.scss.
+// "Mulish Fallback" is Arial re-declared with Mulish's metrics, so the swap from
+// fallback to webfont does not reflow the page; it is not an installed family.
+$rvs-font-family: "Mulish", "Mulish Fallback", arial, sans-serif;
 
 // --- Layout ------------------------------------------------------------------
 $rvs-pupil-radius: 16px;

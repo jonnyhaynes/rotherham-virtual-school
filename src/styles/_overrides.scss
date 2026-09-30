@@ -38,13 +38,18 @@ body,
 
 // --- Measure ----------------------------------------------------------------
 // Without a cap, body copy runs the full 960px container — measured at ~84
-// characters per line, well past the readable band. GOV.UK's own body copy
-// measures 53–60ch because it sits in a two-thirds grid column; this caps
-// prose at 65ch to land inside the 60–75ch band. Applied here rather than by
-// wrapping every page in grid columns, which would squeeze the card grids.
+// characters per line, well past the readable band.
+//
+// The cap is in rem, not ch, on purpose. A `ch` cap resolves against whichever
+// font is active, so the same 65ch is a different width in the fallback than in
+// Mulish — which rewraps every paragraph at the moment the webfont loads and
+// shifts the page. A fixed width cannot move.
+//
+// 46rem is 736px, which renders at roughly 65ch in Mulish at 19px, inside the
+// readable 60–75ch band.
 main .govuk-body,
 main .govuk-list {
-	max-width: 65ch;
+	max-width: 46rem;
 }
 
 // Body copy rendered from EmDash Portable Text or hand-authored pages.
