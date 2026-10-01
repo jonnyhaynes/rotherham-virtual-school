@@ -64,19 +64,20 @@ body,
 }
 
 // -----------------------------------------------------------------------------
-// Hero: steady height, uniform illustration, blending ground
+// Hero: the scene is a full-height panel down the right
 // -----------------------------------------------------------------------------
-// Heroes sized to their content, so a longer lead or a differently proportioned
-// illustration made each page's hero a different height and the page jumped as
-// you moved between sections. Give the hero a floor height and the illustration
-// one fixed box, take the frame off, and let its light backdrop multiply into the
-// ground so it sits in the colour rather than on top of it.
+// The hero illustrations are opaque 16:9 scenes, not the transparent brand art,
+// so on desktop each runs the full height of the hero and meets the screen edge,
+// while the copy holds the page container's measure on the left. Below the
+// desktop breakpoint the design system stacks the scene above the copy, where it
+// reads as a full-width banner.
 
-// The floor applies to every illustrated hero (home and the audience landings),
-// not the compact ones, and is a multiple of the spacing scale rather than a
-// magic number.
-.rvs-hero:not(.rvs-hero--compact) .rvs-hero__inner {
-	min-height: calc(var(--space-9) * 7);
+// The band's height on desktop: a spacing multiple, not a magic number. It is a
+// floor, so every illustrated hero is this size wherever the copy fits and the
+// scene stops scaling once the viewport is wide enough; it only grows past it on
+// narrow windows where a long headline and lead genuinely need the room.
+.rvs-hero:not(.rvs-hero--compact) {
+	--rvs-hero-band: calc(var(--space-8) * 8);
 }
 
 .rvs-hero__art {
@@ -84,27 +85,75 @@ body,
 }
 
 .rvs-hero__art img {
-	height: 320px;
-	object-fit: contain;
+	display: block;
+	width: 100%;
+	height: 220px;
+	object-fit: cover;
 	border-radius: 0;
-	mix-blend-mode: multiply;
 }
 
-@media (max-width: 640px) {
+@container (max-width: 700px) {
+	// The design system lifts the scene above the copy on a small hero; this
+	// service reads it better as a full-bleed banner closing the hero, so it sits
+	// below the copy and bleeds past the inner's side and bottom padding.
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__art {
+		order: 1;
+		justify-self: stretch;
+		width: auto;
+		max-width: none;
+		margin: 0 calc(var(--space-4) * -1) calc(var(--space-7) * -1);
+	}
+
+	// Below the copy the scene is a banner, not a panel, so it keeps its own
+	// aspect ratio instead of being held to a fixed height and cropped.
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__art img {
+		height: auto;
+	}
+}
+
+@container (min-width: 701px) {
 	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__inner {
-		min-height: 0;
+		// A floor rather than a fixed height, so the band is the same size the
+		// length of the copy allows and only grows if a lead genuinely needs it.
+		min-height: var(--rvs-hero-band);
+		max-width: none;
+		margin: 0;
+		padding: 0;
+		gap: 0;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: stretch;
 	}
 
-	.rvs-hero__art img {
-		height: 220px;
+	// The copy takes the page container's measure inside the left half, and stops
+	// short of the scene so the two never touch. It sits toward the top of the
+	// band, its own padding setting it off the edge.
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__text {
+		padding: var(--space-6) var(--space-6) var(--space-7) max(var(--space-4), calc(100% - var(--page-width) / 2));
+	}
+
+	// The scene is taken out of flow. In flow its intrinsic 3:2 height tracks its
+	// width and drives the grid track, so it overflowed the band (a track never
+	// shrinks below its content) and, when capped, left accent colour showing
+	// beneath it. Absolutely covering the cell means it always fits the band
+	// exactly, however tall the band turns out and however wide the viewport.
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__art {
+		position: relative;
+		justify-self: stretch;
+		max-width: none;
+	}
+
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__art img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
 	}
 }
 
-// The hero ground and the hills divider's back hill share one colour, so the
-// divider blends into the hero instead of showing a pale-blue band on a tinted
-// section: teal for young people, coral for carers, yellow for schools, purple
-// for social workers. Home (no `data-audience`) keeps the brand pale blue, whose
-// hills already match. The `-50` tints all clear 4.5:1 with navy text.
+// The ground each hero sits on. Home (no `data-audience`) keeps the brand pale
+// blue; every audience hero takes its section's soft accent — teal for young
+// people, coral for carers, yellow for schools, purple for social workers. The
+// `-50` tints all clear 4.5:1 with navy text.
 .rvs-hero--home {
 	--rvs-hero-ground: var(--pale-blue);
 }
@@ -114,10 +163,6 @@ body,
 [data-audience] .rvs-hero {
 	--rvs-hero-ground: var(--rvs-accent-soft);
 	background-color: var(--rvs-hero-ground);
-}
-
-.rvs-hero .rvs-divider .rvs-fill-pale {
-	fill: var(--rvs-hero-ground, var(--pale-blue));
 }
 
 // --- Prototype safeguards ---------------------------------------------------
@@ -203,8 +248,23 @@ html.rvs-has-prototype-bar body {
 	gap: var(--space-5) var(--space-6);
 }
 
+// From the tablet breakpoint the top band is four columns: the mark in the
+// first, the three link groups filling the rest. The flex row is swapped for a
+// grid so the mark takes an even share of the width rather than being sized to
+// its artwork, and the navigation spans the three columns beside it.
 @media (min-width: 641px) {
+	.rvs-footer__top {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: var(--space-5) var(--space-6);
+	}
+
+	.rvs-footer__top > .rvs-logo {
+		justify-self: start;
+	}
+
 	.rvs-footer__nav {
+		grid-column: span 3;
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
@@ -239,6 +299,20 @@ html.rvs-has-prototype-bar body {
 	display: block;
 	height: 46px;
 	width: auto;
+}
+
+// The Colouring Code house colophon, supplied to the footer's `credit` slot. It
+// signs off beneath the copyright, the position the credit holds on the other
+// Colouring Code sites. The link is set in the inverse link colour rather than
+// GOV.UK's own: the default teal is far too dark to read on navy.
+.rvs-footer__credit {
+	margin: var(--space-2) 0 0;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.rvs-footer__credit a {
+	color: var(--link-inverse);
 }
 
 // The contact panel's line of reassurance, which the reference component does

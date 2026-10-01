@@ -5,14 +5,16 @@ import Logo from "./Logo.astro";
  * Footer — the single site footer on navy. Ported from `bundle.js`, laid out so
  * it reads as one band rather than two:
  *
- *   - the brand and the navigation columns share the top row;
+ *   - the top row is four columns: the mark, then the three navigation columns;
  *   - the support links and the council partner sit in a thin bottom bar;
- *   - the copyright closes it.
+ *   - the copyright closes it, with the house colophon beneath.
  *
  * The design system's reference footer carries only the support links; this
  * service's footer has always carried its navigation in columns, so that is kept
- * as a site extension. The Rotherham Metropolitan Borough Council logo is not
- * part of the design system and is supplied to the `partner` slot.
+ * as a site extension. Two things are not part of the design system and are
+ * supplied by the site: the Rotherham Metropolitan Borough Council logo goes in
+ * the `partner` slot, and the Colouring Code house credit goes in the `credit`
+ * slot, which sits below the copyright so the credit ends the page.
  */
 interface Group {
 	heading: string;
@@ -45,7 +47,12 @@ const resolvedCopyright =
 <footer class:list={["rvs-footer", className]}>
 	<div class="rvs-footer__inner">
 		<div class="rvs-footer__top">
-			<Logo variant="stacked" reversed={true} height={40} href={logoHref} />
+			{/*
+				The mark alone, not the design system's stacked lock-up: at this
+				size the name would dominate the band, and it is already on the
+				page in the navigation and the copyright. Reversed for navy.
+			*/}
+			<Logo variant="mark" reversed={true} height={96} href={logoHref} />
 
 			{
 				navigationGroups.length > 0 && (
@@ -103,5 +110,13 @@ const resolvedCopyright =
 		}
 
 		<p class="rvs-footer__meta">{resolvedCopyright}</p>
+
+		{
+			Astro.slots.has("credit") && (
+				<p class="rvs-footer__credit">
+					<slot name="credit" />
+				</p>
+			)
+		}
 	</div>
 </footer>

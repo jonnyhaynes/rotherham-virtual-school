@@ -37,7 +37,11 @@ interface Props {
 	headline?: string | null;
 	lead: string;
 	eyebrow?: string | null;
-	illustration?: { name?: "home" | "children" | "parents-carers" | "schools"; src?: string; alt?: string };
+	illustration?: {
+		name?: "home" | "young-people" | "parents-carers" | "schools" | "social-workers" | "professionals";
+		src?: string;
+		alt?: string;
+	};
 	breadcrumbs?: { label: string; href?: string }[];
 	description?: string | null;
 }

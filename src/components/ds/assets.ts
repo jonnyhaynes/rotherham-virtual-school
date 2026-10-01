@@ -20,12 +20,12 @@ export const ASSETS: Record<string, string> = {
 	mark: "/assets/rvs/rvs-mark.svg",
 	"mark-reversed": "/assets/rvs/rvs-mark-reversed.svg",
 	"app-icon": "/assets/rvs/rvs-app-icon.svg",
-	"illustration-home": "/assets/rvs/illustration-home.svg",
-	"illustration-children": "/assets/rvs/illustration-children.svg",
-	// The design system's audience id is `parents-carers`, but its asset file is
-	// `illustration-carers`; `Illustration` maps the former onto the latter.
-	"illustration-parents-carers": "/assets/rvs/illustration-carers.svg",
-	"illustration-schools": "/assets/rvs/illustration-schools.svg",
+	"illustration-home": "/assets/rvs/illustration-home.webp",
+	"illustration-young-people": "/assets/rvs/illustration-young-people.webp",
+	"illustration-parents-carers": "/assets/rvs/illustration-parents-carers.webp",
+	"illustration-schools": "/assets/rvs/illustration-schools.webp",
+	"illustration-social-workers": "/assets/rvs/illustration-social-workers.webp",
+	"illustration-professionals": "/assets/rvs/illustration-professionals.webp",
 	pattern: "/assets/rvs/brand-pattern.svg",
 };
 

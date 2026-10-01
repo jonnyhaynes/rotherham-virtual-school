@@ -1,7 +1,6 @@
 ---
 import Breadcrumbs from "./Breadcrumbs.astro";
 import BrandPattern from "./BrandPattern.astro";
-import SectionDivider from "./SectionDivider.astro";
 import { ASSETS, uid } from "./assets";
 
 /**
@@ -30,7 +29,13 @@ interface Props {
 	eyebrow?: string | null;
 	lead?: string | null;
 	illustration?: {
-		name?: "home" | "children" | "parents-carers" | "schools";
+		name?:
+			| "home"
+			| "young-people"
+			| "parents-carers"
+			| "schools"
+			| "social-workers"
+			| "professionals";
 		src?: string;
 		alt?: string;
 		width?: number;
@@ -95,5 +100,4 @@ const showPattern = !illustration && variant !== "compact";
 			) : null
 		}
 	</div>
-	{variant === "home" && <SectionDivider variant="hills" height={40} />}
 </section>

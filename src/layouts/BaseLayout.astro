@@ -3,9 +3,11 @@ import { getSiteSettingsWithCacheHint } from "emdash";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
 import PrototypeNotice from "../components/PrototypeNotice.astro";
+import YorkshireRose from "../components/YorkshireRose.astro";
 import ContactPanel from "../components/ds/ContactPanel.astro";
 import DsFooter from "../components/ds/Footer.astro";
 import DsHeader from "../components/ds/Header.astro";
+import SectionDivider from "../components/ds/SectionDivider.astro";
 import SkipLink from "../components/ds/SkipLink.astro";
 import { DS_FOOTER_LINKS, DS_FOOTER_NAV, DS_NAV } from "../data/ds-nav";
 import "../styles/main.scss";
@@ -35,6 +37,12 @@ interface Props {
 	 * strip never appears twice.
 	 */
 	showContact?: boolean;
+	/**
+	 * Show the decorative band of the brand motif at the foot of the page. On by
+	 * default so the motif runs through the whole site; off where a page already
+	 * carries its own motif (the 404's pattern block), so none shows two.
+	 */
+	showMotif?: boolean;
 	/** Sets `data-audience` on `<main>`, which drives the accent tokens. */
 	audience?: Audience;
 }
@@ -48,6 +56,7 @@ const {
 	content,
 	mainClass,
 	showContact = true,
+	showMotif = true,
 	audience,
 } = Astro.props;
 
@@ -140,6 +149,10 @@ const pageCtx = createPublicPageContext({
 			</div>
 		</main>
 
+		{/* One band of the brand motif closes every page, so the motif runs
+		    consistently across the site. Decorative; see `showMotif`. */}
+		{showMotif && <SectionDivider variant="pattern" />}
+
 		<DsFooter links={DS_FOOTER_LINKS} navigationGroups={DS_FOOTER_NAV}>
 			{/*
 				The council logo goes in the footer's `partner` slot: the design
@@ -154,6 +167,18 @@ const pageCtx = createPublicPageContext({
 				height="46"
 				loading="lazy"
 			/>
+			{/*
+				The Colouring Code house credit goes in the footer's `credit`
+				slot — the same line the other Colouring Code sites sign off with.
+				The rose is decorative, so the credit still reads as a sentence.
+			*/}
+			<span slot="credit">
+				Forged in Yorkshire{" "}
+				<YorkshireRose />{" "}
+				by <a href="https://www.colouringcode.com" rel="noopener noreferrer" target="_blank">
+					Colouring Code
+				</a>
+			</span>
 		</DsFooter>
 
 		<PrototypeNotice />
