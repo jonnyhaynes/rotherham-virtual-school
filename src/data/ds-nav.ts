@@ -30,6 +30,7 @@ export const DS_FOOTER_NAV: { heading: string; links: { label: string; href: str
 			{ label: "News", href: "/news/" },
 			{ label: "Training and events", href: "/training-events/" },
 			{ label: "Documents and policies", href: "/documents/" },
+			{ label: "Outcomes", href: "/outcomes/" },
 		],
 	},
 	{

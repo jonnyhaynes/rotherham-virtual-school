@@ -22,7 +22,7 @@ Navigation is the five audiences, as in the prototype's `primary` menu: **Young 
 | News | `/news/` | Template: News | prototype |
 | News article | `/news/[slug]` | Template: News article | prototype |
 | Documents | `/documents/` | Template: Documents | prototype |
-| Outcomes | `/reports/` | Template: Outcomes | prototype (placeholder figures) |
+| Outcomes | `/outcomes/` | Template: Outcomes | prototype (placeholder figures) |
 | Words we use | `/words-we-use/` | Template: Words we use | client request |
 | Useful links | `/useful-links/` | Template: Useful links | client request |
 | Contact us | `/contact/` | Template: Contact | prototype |

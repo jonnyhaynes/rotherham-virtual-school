@@ -100,22 +100,6 @@ export interface TeamMember {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface Faq {
-  id: string;
-  slug: string | null;
-  status: string;
-  question: string;
-  answer?: PortableTextBlock[];
-  audience?: "all" | "young-people" | "parents-carers" | "schools" | "social-workers" | "professionals";
-  order?: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
 export interface Outcome {
   id: string;
   slug: string | null;
@@ -141,7 +125,6 @@ declare module "emdash" {
     events: Event;
     documents: Document;
     team_members: TeamMember;
-    faqs: Faq;
     outcomes: Outcome;
   }
 }

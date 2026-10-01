@@ -174,7 +174,7 @@ src/utils/              site.ts (site defaults and identity)
 /training-events/              Training and events, with detail pages
 /news/                         News, with detail pages
 /documents/                    Policies, guidance, forms and reports
-/reports/                      Outcomes dashboard (placeholder figures)
+/outcomes/                     Outcomes dashboard (placeholder figures)
 /about/  /contact/             About and contact
 /accessibility-statement/      Statutory accessibility statement (draft)
 /privacy-cookies/              Privacy and cookies notice (draft)
