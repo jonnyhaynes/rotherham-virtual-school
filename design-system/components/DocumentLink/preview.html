@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>DocumentLink</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.DocumentLink,{title:'ePEP guidance for designated teachers',href:'#',fileType:'PDF',fileSize:'420KB',pages:12,description:'Step-by-step guidance on completing the termly ePEP.',updated:'2026-09-22',accessibleHref:'#'}),h(R.DocumentLink,{variant:'compact',title:'PEP meeting checklist',href:'#',fileType:'DOCX',fileSize:'38KB'}))
+);
+</script>
+</body>
+</html>

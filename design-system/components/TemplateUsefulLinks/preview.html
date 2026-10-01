@@ -1,0 +1,24 @@
+<!-- @dsCard group="Page templates" height=1450 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateUsefulLinks</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'Useful links',lead:'Other services and websites that can help children in care, their carers and the people who support them.',breadcrumbs:[{label:'Home',href:'#'},{label:'Useful links'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h('section',null,h('h2',{className:'rvs-section-title'},'Health and wellbeing'),h(R.Grid,{min:'260px'},
+   h(R.Card,{href:'https://www.kooth.com/',external:true,icon:'message',iconTone:'teal',title:'Kooth',text:'Free, safe and anonymous online support for young people.'}),
+   h(R.Card,{href:'#',icon:'heart',iconTone:'coral',title:'Shine',text:'Link to be confirmed by the Virtual School.'}))),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Families and SEND'),h(R.Grid,{min:'260px'},
+   h(R.Card,{href:'https://www.rotherham.gov.uk/homepage/392/rotherham-family-hubs-and-best-start-in-life',external:true,icon:'home',iconTone:'yellow',title:'Rotherham Family Hubs',text:'Support for families with children from birth to 19.'}),
+   h(R.Card,{href:'https://www.rotherhamsendlocaloffer.org.uk/',external:true,icon:'users',iconTone:'purple',title:'Rotherham SEND Local Offer',text:'Services and support for children with special educational needs and disabilities.'}))),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Learning at home'),h(R.Grid,{min:'260px'},
+   h(R.Card,{href:'https://www.bbc.co.uk/bitesize',external:true,icon:'book',iconTone:'navy',title:'BBC Bitesize',text:'Free learning resources for every key stage, including SATs and GCSE revision.'}))),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Guidance'),h(R.QuickLinks,{links:[{label:'Department for Education: promoting the education of looked-after children',href:'https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children',external:true},{label:'National Association of Virtual School Heads',href:'https://navsh.org.uk/',external:true}]}))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

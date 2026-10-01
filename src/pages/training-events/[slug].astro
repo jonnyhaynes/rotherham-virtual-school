@@ -1,6 +1,12 @@
 ---
 import { decodeSlug, getEmDashEntry, getSeoMeta, getSiteSettings } from "emdash";
 import { PortableText } from "emdash/ui";
+import Button from "../../components/ds/Button.astro";
+import Hero from "../../components/ds/Hero.astro";
+import KeyFacts from "../../components/ds/KeyFacts.astro";
+import PageActions from "../../components/ds/PageActions.astro";
+import Panel from "../../components/ds/Panel.astro";
+import Prose from "../../components/ds/Prose.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { resolveSiteIdentity } from "../../utils/site";
 
@@ -19,6 +25,15 @@ const seo = getSeoMeta(event, {
 	path: Astro.url.pathname.replace(/\/$/, ""),
 });
 
+const AUDIENCE_LABELS: Record<string, string> = {
+	"young-people": "Young people",
+	"parents-carers": "Parents and carers",
+	schools: "Schools",
+	"social-workers": "Social workers",
+	professionals: "Professionals",
+	all: "Everyone",
+};
+
 const dateFmt = (value: unknown, options: Intl.DateTimeFormatOptions) =>
 	value ? new Date(value as string).toLocaleString("en-GB", options) : null;
 
@@ -28,10 +43,24 @@ const dateLabel = dateFmt(event.data.starts_at, {
 	month: "long",
 	year: "numeric",
 });
-const timeLabel =
-	event.data.ends_at
-		? `${dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" })} to ${dateFmt(event.data.ends_at, { hour: "2-digit", minute: "2-digit" })}`
-		: dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" });
+const timeLabel = event.data.ends_at
+	? `${dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" })} to ${dateFmt(event.data.ends_at, { hour: "2-digit", minute: "2-digit" })}`
+	: dateFmt(event.data.starts_at, { hour: "2-digit", minute: "2-digit" });
+
+const where = event.data.is_online
+	? `Online${event.data.location ? ` — ${event.data.location}` : ""}`
+	: event.data.location
+		? String(event.data.location)
+		: null;
+
+const facts = [
+	dateLabel && { term: "Date", value: `${dateLabel}${timeLabel ? `, ${timeLabel}` : ""}` },
+	where && { term: "Where", value: where },
+	event.data.audience && {
+		term: "Who it's for",
+		value: AUDIENCE_LABELS[String(event.data.audience)] ?? String(event.data.audience),
+	},
+].filter(Boolean) as { term: string; value: string }[];
 ---
 
 <BaseLayout
@@ -41,63 +70,41 @@ const timeLabel =
 	canonical={seo.canonical}
 	image={seo.ogImage}
 	content={{ collection: "events", id: event.data.id, slug }}
-	breadcrumbs={[
-		{ label: "Home", href: "/" },
-		{ label: "Training and events", href: "/training-events/" },
-		{ label: event.data.title },
-	]}
 >
-	<h1 class="govuk-heading-xl" {...event.edit.title}>{event.data.title}</h1>
+	<Hero
+		slot="hero"
+		variant="compact"
+		eyebrow="Training and events"
+		title={String(event.data.title)}
+		breadcrumbs={[
+			{ label: "Home", href: "/" },
+			{ label: "Training and events", href: "/training-events/" },
+			{ label: String(event.data.title) },
+		]}
+	/>
 
-	<dl class="govuk-summary-list rvs-event-summary">
-		{
-			dateLabel && (
-				<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Date</dt>
-					<dd class="govuk-summary-list__value">
-						{dateLabel}
-						{timeLabel && <>, {timeLabel}</>}
-					</dd>
-				</div>
-			)
-		}
-		{
-			(event.data.location || event.data.is_online) && (
-				<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Where</dt>
-					<dd class="govuk-summary-list__value">
-						{event.data.is_online
-							? `Online${event.data.location ? ` — ${event.data.location}` : ""}`
-							: event.data.location}
-					</dd>
-				</div>
-			)
-		}
-		{
-			event.data.audience && (
-				<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Who it's for</dt>
-					<dd class="govuk-summary-list__value">{event.data.audience}</dd>
-				</div>
-			)
-		}
-	</dl>
+	<div class="rvs-two-col">
+		<div class="rvs-stack">
+			<Prose>
+				<PortableText value={event.data.content} />
+			</Prose>
 
-	{
-		event.data.booking_url && (
-			<a class="govuk-button" href={event.data.booking_url} rel="noopener">
-				Book a place
-			</a>
-		)
-	}
+			<PageActions actions={["copy", "print"]} />
+		</div>
 
-	<div class="rvs-prose">
-		<PortableText value={event.data.content} />
+		<aside class="rvs-stack">
+			<KeyFacts items={facts} title="When and where" icon="calendar" />
+
+			{
+				event.data.booking_url && (
+					<Panel tone="advice" title="Book a place">
+						<p>Places are booked through our booking page.</p>
+						<Button slot="actions" href={String(event.data.booking_url)} icon="arrow-right">
+							Book a place
+						</Button>
+					</Panel>
+				)
+			}
+		</aside>
 	</div>
 </BaseLayout>
-
-<style>
-	.rvs-event-summary {
-		margin-bottom: 2rem;
-	}
-</style>

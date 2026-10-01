@@ -1,0 +1,14 @@
+<!-- @dsCard group="Core" height=380 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Prose</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Prose,{html:'<p class="lead">A Personal Education Plan (PEP) is a record of what needs to happen for a looked-after child to reach their full potential.</p><h2>Who writes the PEP</h2><p>The designated teacher leads the PEP meeting with the child, their carer and social worker. <a href="#">Read the designated teacher guidance</a>.</p><ul><li>it is reviewed every term</li><li>the child’s views are recorded in their own words</li></ul><h3>When it happens</h3><p>Within 20 school days of a child coming into care.</p>'}))
+);
+</script>
+</body>
+</html>

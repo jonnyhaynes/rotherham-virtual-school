@@ -1,0 +1,107 @@
+---
+import Logo from "./Logo.astro";
+
+/**
+ * Footer — the single site footer on navy. Ported from `bundle.js`, laid out so
+ * it reads as one band rather than two:
+ *
+ *   - the brand and the navigation columns share the top row;
+ *   - the support links and the council partner sit in a thin bottom bar;
+ *   - the copyright closes it.
+ *
+ * The design system's reference footer carries only the support links; this
+ * service's footer has always carried its navigation in columns, so that is kept
+ * as a site extension. The Rotherham Metropolitan Borough Council logo is not
+ * part of the design system and is supplied to the `partner` slot.
+ */
+interface Group {
+	heading: string;
+	links: { label: string; href: string }[];
+}
+
+interface Props {
+	/** The footer's navigation columns. */
+	navigationGroups?: Group[];
+	/** Keep to support pages: accessibility, privacy, cookies, contact. */
+	links?: { label: string; href: string }[];
+	copyright?: string;
+	logoHref?: string;
+	class?: string;
+}
+
+const {
+	navigationGroups = [],
+	links = [],
+	copyright,
+	logoHref = "/",
+	class: className,
+} = Astro.props;
+
+const year = new Date().getFullYear();
+const resolvedCopyright =
+	copyright ?? `© ${year} Rotherham Virtual School. All rights reserved.`;
+---
+
+<footer class:list={["rvs-footer", className]}>
+	<div class="rvs-footer__inner">
+		<div class="rvs-footer__top">
+			<Logo variant="stacked" reversed={true} height={40} href={logoHref} />
+
+			{
+				navigationGroups.length > 0 && (
+					<nav class="rvs-footer__nav" aria-label="Footer">
+						{navigationGroups.map((group) => (
+							<div class="rvs-footer__section">
+								<h2 class="rvs-footer__heading">{group.heading}</h2>
+								<ul class="rvs-footer__list">
+									{group.links.map((link) => (
+										<li>
+											<a class="rvs-footer__link" href={link.href}>
+												{link.label}
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						))}
+					</nav>
+				)
+			}
+		</div>
+
+		<div class="rvs-footer__bottom">
+			{
+				links.length > 0 && (
+					<nav aria-label="Support links">
+						<ul class="rvs-footer__links">
+							{links.map((link) => (
+								<li>
+									<a class="rvs-footer__link" href={link.href}>
+										{link.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				)
+			}
+			{
+				Astro.slots.has("partner") && (
+					<div class="rvs-footer__partner">
+						<slot name="partner" />
+					</div>
+				)
+			}
+		</div>
+
+		{
+			Astro.slots.has("default") && (
+				<div class="rvs-footer__extra">
+					<slot />
+				</div>
+			)
+		}
+
+		<p class="rvs-footer__meta">{resolvedCopyright}</p>
+	</div>
+</footer>

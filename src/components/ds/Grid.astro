@@ -1,0 +1,31 @@
+---
+/**
+ * Grid — an auto-fitting card grid. Ported from `bundle.js`; `min` and `gap`
+ * become the two custom properties the stylesheet reads, so callers tune the
+ * track size without new CSS.
+ *
+ * Renders a `<ul>` when the children are list items (`as="ul"`), so card grids
+ * keep list semantics.
+ */
+interface Props {
+	min?: string;
+	gap?: string;
+	as?: "div" | "ul";
+	class?: string;
+}
+
+const { min = "240px", gap = "var(--space-5)", as = "div", class: className } = Astro.props;
+const style = `--rvs-grid-min: ${min}; --rvs-grid-gap: ${gap}`;
+---
+
+{
+	as === "ul" ? (
+		<ul class:list={["rvs-grid", className]} style={style}>
+			<slot />
+		</ul>
+	) : (
+		<div class:list={["rvs-grid", className]} style={style}>
+			<slot />
+		</div>
+	)
+}

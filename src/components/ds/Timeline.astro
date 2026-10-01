@@ -1,0 +1,50 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Timeline — dated milestones with a done / current / upcoming state. Ported
+ * from `bundle.js`. The state is carried by a word for a screen reader, not by
+ * the dot colour alone.
+ */
+interface Item {
+	date?: string;
+	title: string;
+	text?: string;
+	status?: "done" | "current" | "upcoming";
+}
+
+interface Props {
+	items: Item[];
+	label?: string;
+	class?: string;
+}
+
+const { items = [], label, class: className } = Astro.props;
+---
+
+<ol class:list={["rvs-timeline", className]} aria-label={label}>
+	{
+		items.map((item) => {
+			const status = item.status ?? "upcoming";
+			return (
+				<li
+					class:list={["rvs-timeline__item", `is-${status}`]}
+					aria-current={status === "current" ? "step" : undefined}
+				>
+					<span class="rvs-timeline__dot" aria-hidden="true">
+						{status === "done" && <Icon name="check" size={14} strokeWidth={3} />}
+					</span>
+					<div class="rvs-timeline__body">
+						{item.date && <p class="rvs-timeline__date">{item.date}</p>}
+						<h3 class="rvs-timeline__title">
+							{item.title}
+							{status === "done" && <span class="rvs-visually-hidden"> (completed)</span>}
+							{status === "current" && <span class="rvs-visually-hidden"> (current)</span>}
+						</h3>
+						{item.text && <p class="rvs-timeline__text">{item.text}</p>}
+					</div>
+				</li>
+			);
+		})
+	}
+</ol>

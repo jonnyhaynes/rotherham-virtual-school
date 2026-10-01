@@ -1,0 +1,16 @@
+<!-- @dsCard group="Interactive patterns" height=460 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ChoiceGroup</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'560px'}},
+ h(R.ChoiceGroup,{legend:'Who are you?',hint:'Select one option.',name:'who',defaultValue:'carer',options:[{value:'young-people',label:'A child or young person'},{value:'carer',label:'A carer',hint:'Foster carer, kinship carer or residential worker'},{value:'school',label:'School staff'},{divider:'or'},{value:'other',label:'Something else'}]}),
+ h(R.ChoiceGroup,{type:'checkbox',legend:'What do you need help with?',error:'Select at least one option',size:'small',options:[{value:'pep',label:'The PEP'},{value:'pp',label:'Pupil Premium Plus'},{value:'adm',label:'School admissions'}]}))
+);
+</script>
+</body>
+</html>

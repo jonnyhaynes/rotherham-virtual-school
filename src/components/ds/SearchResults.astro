@@ -1,0 +1,85 @@
+---
+import StateMessage from "./StateMessage.astro";
+import { formatDate } from "./assets";
+
+/**
+ * SearchResults — the results list with a live count and the empty state.
+ * Ported from `bundle.js`.
+ */
+interface Result {
+	title: string;
+	href: string;
+	summary?: string;
+	type?: string;
+	updated?: string;
+}
+
+interface Props {
+	query?: string | null;
+	results?: Result[];
+	total?: number;
+	loading?: boolean;
+	error?: boolean;
+	emptyText?: string | null;
+	class?: string;
+}
+
+const {
+	query = null,
+	results = [],
+	total,
+	loading = false,
+	error = false,
+	emptyText = null,
+	class: className,
+} = Astro.props;
+
+const count = total ?? results.length;
+---
+
+{
+	loading ? (
+		<StateMessage state="loading" skeleton={3} title="Loading results" />
+	) : error ? (
+		<StateMessage state="error" title="Search is not working right now">
+			<p>Try again in a few minutes. If you need help now, call 01709 334610.</p>
+		</StateMessage>
+	) : (
+		<section class:list={["rvs-results", className]} aria-labelledby="rvs-results-h">
+			<h2 id="rvs-results-h" class="rvs-results__count" aria-live="polite">
+				{count} result{count === 1 ? "" : "s"}
+				{query && <> for ‘<mark>{query}</mark>’</>}
+			</h2>
+			{results.length === 0 ? (
+				<StateMessage state="empty" title="No results found" compact={true}>
+					{emptyText ? (
+						<p>{emptyText}</p>
+					) : (
+						<ul class="rvs-list">
+							<li>check your spelling</li>
+							<li>use fewer or more general words</li>
+							<li>remove some filters</li>
+						</ul>
+					)}
+				</StateMessage>
+			) : (
+				<ol class="rvs-results__list">
+					{results.map((result) => (
+						<li class="rvs-results__item">
+							{result.type && <span class="rvs-results__type">{result.type}</span>}
+							<h3 class="rvs-results__title">
+								<a class="rvs-link" href={result.href}>{result.title}</a>
+							</h3>
+							{result.summary && <p class="rvs-results__summary" set:html={result.summary} />}
+							{result.updated && (
+								<p class="rvs-results__meta">
+									Updated <time datetime={result.updated}>{formatDate(result.updated)}</time>
+								</p>
+							)}
+						</li>
+					))}
+				</ol>
+			)}
+		</section>
+	)
+}

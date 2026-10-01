@@ -1,0 +1,26 @@
+---
+import QuickLinks from "./ds/QuickLinks.astro";
+
+/**
+ * The audience pages' sidebar, from the design system's audience template: who's
+ * who (the three people around a child's education) and related links. Meant for
+ * `slot="aside"` on `AudienceLanding`, which puts it beside the page body and
+ * pairs it with the contact panel.
+ *
+ * Every link goes to a page that exists on this site, so nothing dead-ends.
+ */
+const WHO_IS_WHO = [
+	{ label: "Designated teacher", href: "/schools/", meta: "At the child's school" },
+	{ label: "Social worker", href: "/social-workers/", meta: "Leads on the care plan" },
+	{ label: "Virtual School", href: "/our-team/", meta: "Oversees the child's education" },
+];
+
+const RELATED = [
+	{ label: "Training and events", href: "/training-events/" },
+	{ label: "Documents and policies", href: "/documents/" },
+	{ label: "Contact the Virtual School", href: "/contact/" },
+];
+---
+
+<QuickLinks heading="Who's who" links={WHO_IS_WHO} />
+<QuickLinks heading="Related" links={RELATED} />

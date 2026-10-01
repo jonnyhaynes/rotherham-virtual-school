@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation & discovery" height=430 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>FilterPanel</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'300px'}},h(R.FilterPanel,{sortOptions:[{value:'relevance',label:'Most relevant'},{value:'updated',label:'Recently updated'},{value:'az',label:'A to Z'}],defaultSelected:{aud:['schools']},groups:[{id:'aud',legend:'Audience',options:[{value:'young-people',label:'Children and young people',count:14},{value:'parents-carers',label:'Carers',count:9},{value:'schools',label:'Schools',count:22}]},{id:'type',legend:'Content type',open:false,options:[{value:'guidance',label:'Guidance'},{value:'form',label:'Forms'},{value:'event',label:'Training events'}]}]}))
+);
+</script>
+</body>
+</html>

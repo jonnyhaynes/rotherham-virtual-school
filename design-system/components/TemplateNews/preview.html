@@ -1,0 +1,21 @@
+<!-- @dsCard group="Page templates" height=1150 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateNews</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'News',lead:'Updates from the Virtual School, including newsletters and annual reports.',breadcrumbs:[{label:'Home',href:'#'},{label:'News'}]}),
+ h('div',{className:'rvs-main rvs-stack--s'},
+  h(R.AudienceSelector,{variant:'pills',label:'Show news for',current:'all',audiences:[{id:'all',label:'Everyone',href:'#'},{id:'young-people',label:'Young people',href:'#'},{id:'schools',label:'Schools',href:'#'}]}),
+  h(R.Grid,{min:'280px'},
+   h(R.Card,{href:'#',tag:h(R.Tag,{tone:'navy'},'Report'),title:'Virtual School annual report published',text:'Our annual report sets out how children in care in Rotherham performed last year, and what we are doing next.',meta:'15 September 2026'}),
+   h(R.Card,{href:'#',audience:'young-people',tag:h(R.Tag,{tone:'teal'},'Young people'),title:'Celebrating our care leavers’ results',text:'Congratulations to the young people who collected results this summer and are moving on to college, training or work.',meta:'20 August 2026'}),
+   h(R.Card,{href:'#',tag:h(R.Tag,{tone:'yellow'},'Schools'),title:'More Rotherham schools achieve Attachment Aware status',text:'Schools across the borough have completed training to make their classrooms more inclusive for children who have experienced trauma.',meta:'2 July 2026'})),
+  h(R.Pagination,{page:1,total:2})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

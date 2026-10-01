@@ -1,42 +1,52 @@
 ---
-import FaqList from "../../components/FaqList.astro";
-import AudienceLayout from "../../layouts/AudienceLayout.astro";
+import AudienceAside from "../../components/AudienceAside.astro";
+import Prose from "../../components/ds/Prose.astro";
+import AudienceLanding from "../../layouts/AudienceLanding.astro";
+
+// The service's own content for other professionals, word for word as the live
+// site has it.
 ---
 
-<AudienceLayout
+<AudienceLanding
+	audience="professionals"
+	eyebrow="For other professionals"
 	title="Other professionals"
+	headline="Joining up support around the child"
 	lead="Information for health, early help, youth justice and voluntary sector partners supporting children in care in Rotherham."
+	illustration={{ name: "home", alt: "" }}
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Other professionals" }]}
 	description="Information for health, early help, virtual partners and anyone supporting a child in care."
-	accent="var(--rvs-audience-other)"
 >
-	<h2 class="govuk-heading-l">How we work with partners</h2>
-	<p class="govuk-body">
-		Children in care are supported by many services. The Virtual School focuses only on education,
-		but we cannot do that well in isolation. We work with health, early help, youth justice,
-		housing and the voluntary sector to make sure the support around a child joins up.
-	</p>
+	<Prose>
+		<h2>How we work with partners</h2>
+		<p>
+			Children in care are supported by many services. The Virtual School focuses only on education,
+			but we cannot do that well in isolation. We work with health, early help, youth justice,
+			housing and the voluntary sector to make sure the support around a child joins up.
+		</p>
 
-	<h2 class="govuk-heading-l">Health and emotional wellbeing</h2>
-	<p class="govuk-body">
-		Children in care have a statutory health assessment, and emotional wellbeing is often the
-		biggest barrier to learning. If you are working with a child on mental health, and it is
-		affecting their school life, tell us — we can make sure the school puts the right adjustments
-		in place.
-	</p>
+		<h2>Health and emotional wellbeing</h2>
+		<p>
+			Children in care have a statutory health assessment, and emotional wellbeing is often the
+			biggest barrier to learning. If you are working with a child on mental health, and it is
+			affecting their school life, tell us — we can make sure the school puts the right adjustments
+			in place.
+		</p>
 
-	<h2 class="govuk-heading-l">Early help and family support</h2>
-	<p class="govuk-body">
-		Where a child is on a child in need or child protection plan, or in kinship care, the Virtual
-		School's role is different but the education focus still matters. We can advise on
-		attendance, admissions and support in school.
-	</p>
+		<h2>Early help and family support</h2>
+		<p>
+			Where a child is on a child in need or child protection plan, or in kinship care, the Virtual
+			School's role is different but the education focus still matters. We can advise on attendance,
+			admissions and support in school.
+		</p>
 
-	<h2 class="govuk-heading-l">Sharing information</h2>
-	<p class="govuk-body">
-		We will share information with you where it is necessary to support a child's education, in
-		line with our <a class="govuk-link" href="/privacy-cookies/">privacy notice</a>. Please
-		contact the team rather than individual staff where a request relates to more than one child.
-	</p>
+		<h2>Sharing information</h2>
+		<p>
+			We will share information with you where it is necessary to support a child's education, in
+			line with our <a href="/privacy-cookies/">privacy notice</a>. Please contact the team rather
+			than individual staff where a request relates to more than one child.
+		</p>
+	</Prose>
 
-	<FaqList audience="professionals" />
-</AudienceLayout>
+	<AudienceAside slot="aside" />
+</AudienceLanding>

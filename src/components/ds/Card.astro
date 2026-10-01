@@ -1,0 +1,131 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import IconBadge from "./IconBadge.astro";
+import type { IconName } from "./icons";
+
+/**
+ * Card — a self-contained block that links to one destination: icon, title,
+ * one-line description, optional metadata and "Find out more". Ported from
+ * `bundle.js`.
+ *
+ * The whole card is clickable (the title link stretches over it with `::after`),
+ * so there is one link in the accessibility tree and nothing else focusable
+ * inside. Keep a row's cards on one variant: `tinted` takes the audience tint and
+ * is for statements that do not link, `outlined` is for navigation.
+ *
+ * `as` picks the element — `li` when the card sits in a `<ul>` grid.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+type BrandTone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Props {
+	title: string;
+	href?: string | null;
+	/** Opens in a new tab: adds the external glyph and the "Visit website" label. */
+	external?: boolean;
+	text?: string | null;
+	icon?: IconName | null;
+	iconTone?: BrandTone;
+	iconStyle?: "badge" | "plain";
+	variant?: "outlined" | "tinted" | "plain";
+	audience?: Audience;
+	meta?: string | null;
+	image?: { src: string; alt?: string } | null;
+	/** Visual only — the accessible name is the title link. `false` hides it. */
+	linkLabel?: string | false | null;
+	headingLevel?: number;
+	as?: "div" | "li" | "article";
+	class?: string;
+}
+
+const {
+	title,
+	href = null,
+	external = false,
+	text = null,
+	icon = null,
+	iconTone = "teal",
+	iconStyle,
+	variant = "outlined",
+	audience,
+	meta = null,
+	image = null,
+	linkLabel = null,
+	headingLevel = 3,
+	as = "div",
+	class: className,
+} = Astro.props;
+
+const Tag = as;
+const plainIcon = variant === "tinted" || iconStyle === "plain";
+
+const classes = [
+	"rvs-card",
+	`rvs-card--${variant}`,
+	href ? "rvs-card--clickable" : null,
+	className,
+]
+	.filter(Boolean)
+	.join(" ");
+---
+
+<Tag class={classes} data-audience={audience}>
+	{
+		image && (
+			<div class="rvs-card__media">
+				<img src={image.src} alt={image.alt ?? ""} loading="lazy" />
+			</div>
+		)
+	}
+	<div class="rvs-card__body">
+		{
+			icon && (
+				<span class="rvs-card__icon">
+					{plainIcon ? (
+						<Icon name={icon} size={32} class={`rvs-tone-text-${iconTone}`} />
+					) : (
+						<IconBadge icon={icon} tone={iconTone} size="md" />
+					)}
+				</span>
+			)
+		}
+		{Astro.slots.has("tag") && <div class="rvs-card__tag"><slot name="tag" /></div>}
+		<Heading level={headingLevel} class="rvs-card__title">
+			{href ? (
+				<a
+					class="rvs-card__link"
+					href={href}
+					target={external ? "_blank" : undefined}
+					rel={external ? "noopener noreferrer" : undefined}
+				>
+					{title}
+					{external && (
+						<>
+							<Icon name="external" size={16} class="rvs-link__ext" />
+							<span class="rvs-visually-hidden"> (opens in new tab)</span>
+						</>
+					)}
+				</a>
+			) : (
+				title
+			)}
+		</Heading>
+		{text && <p class="rvs-card__text">{text}</p>}
+		<slot />
+		{meta && <p class="rvs-card__meta">{meta}</p>}
+		{
+			href && linkLabel !== false && (
+				<span class="rvs-card__more" aria-hidden="true">
+					{linkLabel ?? (external ? "Visit website" : "Find out more")}
+					<Icon name={external ? "external" : "arrow-right"} size={18} />
+				</span>
+			)
+		}
+	</div>
+</Tag>

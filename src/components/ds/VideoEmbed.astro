@@ -1,0 +1,70 @@
+---
+import BrandPattern from "./BrandPattern.astro";
+import Icon from "./Icon.astro";
+
+/**
+ * VideoEmbed — consent-first video. Ported from `bundle.js`. Nothing loads from
+ * the video host until the reader chooses to play it, so no third-party cookie
+ * is set on page load.
+ */
+interface Props {
+	title: string;
+	videoId?: string | null;
+	src?: string | null;
+	thumbnail?: string | null;
+	duration?: string | null;
+	transcriptHref?: string | null;
+	consentText?: string;
+	class?: string;
+}
+
+const {
+	title,
+	videoId = null,
+	src = null,
+	thumbnail = null,
+	duration = null,
+	transcriptHref = null,
+	consentText = "Playing this video loads content from YouTube, which may set cookies.",
+	class: className,
+} = Astro.props;
+
+const embedSrc = src ?? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+---
+
+<figure class:list={["rvs-video", className]} data-rvs-video data-src={embedSrc} data-title={title}>
+	<div class="rvs-video__frame">
+		<div class="rvs-video__consent" data-rvs-video-consent>
+			{thumbnail ? <img class="rvs-video__thumb" src={thumbnail} alt="" /> : <BrandPattern rows={3} cols={6} unit={60} seed={9} />}
+			<div class="rvs-video__overlay">
+				<button type="button" class="rvs-video__play" data-rvs-video-play>
+					<Icon name="play" size={28} />
+					<span>Play video<span class="rvs-visually-hidden">: {title}</span></span>
+				</button>
+				<p class="rvs-video__note">{consentText}</p>
+			</div>
+		</div>
+	</div>
+	<figcaption class="rvs-video__caption">
+		<span class="rvs-video__title">{title}</span>
+		{duration && <span class="rvs-muted"> ({duration})</span>}
+		{transcriptHref && <> · <a class="rvs-link" href={transcriptHref}>Read the transcript</a></>}
+	</figcaption>
+</figure>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-video]").forEach((figure) => {
+		figure.querySelector("[data-rvs-video-play]")?.addEventListener("click", () => {
+			const frame = figure.querySelector<HTMLElement>(".rvs-video__frame");
+			const src = figure.dataset.src;
+			if (!frame || !src) return;
+			const iframe = document.createElement("iframe");
+			iframe.src = src;
+			iframe.title = figure.dataset.title ?? "Video";
+			iframe.allow = "autoplay; encrypted-media; picture-in-picture";
+			iframe.setAttribute("allowfullscreen", "");
+			iframe.loading = "lazy";
+			frame.replaceChildren(iframe);
+		});
+	});
+</script>

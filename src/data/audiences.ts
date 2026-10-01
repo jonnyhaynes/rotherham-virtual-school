@@ -1,14 +1,18 @@
+import { AUDIENCE_MARKS, type AudienceId, type AudienceMarkName } from "./brand";
+
 // The five audiences the Virtual School serves. This is the backbone of the
 // site's information architecture: the home page routes by audience, and every
 // audience zone is themed with its own accent colour.
 //
-// Colours come from the Rotherham palette. Accents are used for card
-// top-borders, rules and icons, never as a background for body text, so each
-// pairing keeps WCAG 2.2 AA contrast against white.
+// Accents come from the Virtual School palette (see src/styles/_tokens.scss).
+// They are used for card accent rules, marks and icons, never as a background
+// for body text, so every pairing keeps WCAG 2.2 AA contrast against white.
+// Each audience also has a distinct icon, so meaning is never carried by colour
+// alone.
 
 export interface Audience {
 	/** Stable identifier, also used as the theme class suffix. */
-	id: "young-people" | "parents-carers" | "schools" | "social-workers" | "professionals";
+	id: AudienceId;
 	/** Card heading, phrased as the reader. */
 	title: string;
 	href: string;
@@ -16,6 +20,8 @@ export interface Audience {
 	description: string;
 	/** CSS custom property holding the accent colour. */
 	accent: string;
+	/** Icon from `brand/AudienceMark.astro`. */
+	mark: AudienceMarkName;
 }
 
 export const AUDIENCES: Audience[] = [
@@ -25,7 +31,8 @@ export const AUDIENCES: Audience[] = [
 		href: "/children-young-people/",
 		description:
 			"What a virtual school is, what your PEP means, and who you can talk to if you need help.",
-		accent: "var(--rvs-audience-young)",
+		accent: "var(--accent-young-people)",
+		mark: AUDIENCE_MARKS["young-people"],
 	},
 	{
 		id: "parents-carers",
@@ -33,7 +40,8 @@ export const AUDIENCES: Audience[] = [
 		href: "/parents-carers/",
 		description:
 			"How we support your child's education, what the PEP is, and how to ask for help.",
-		accent: "var(--rvs-audience-parent)",
+		accent: "var(--accent-parents-carers)",
+		mark: AUDIENCE_MARKS["parents-carers"],
 	},
 	{
 		id: "schools",
@@ -41,7 +49,8 @@ export const AUDIENCES: Audience[] = [
 		href: "/schools/",
 		description:
 			"Designated teacher guidance, PEP deadlines, Pupil Premium Plus, training and admissions.",
-		accent: "var(--rvs-audience-school)",
+		accent: "var(--accent-schools)",
+		mark: AUDIENCE_MARKS.schools,
 	},
 	{
 		id: "social-workers",
@@ -49,7 +58,8 @@ export const AUDIENCES: Audience[] = [
 		href: "/social-workers/",
 		description:
 			"Your part in the PEP, how to refer a child, and how we work together to improve outcomes.",
-		accent: "var(--rvs-audience-social)",
+		accent: "var(--accent-social-workers)",
+		mark: AUDIENCE_MARKS["social-workers"],
 	},
 	{
 		id: "professionals",
@@ -57,6 +67,7 @@ export const AUDIENCES: Audience[] = [
 		href: "/professionals/",
 		description:
 			"Information for health, early help, virtual partners and anyone supporting a child in care.",
-		accent: "var(--rvs-audience-other)",
+		accent: "var(--accent-professionals)",
+		mark: AUDIENCE_MARKS.professionals,
 	},
 ];

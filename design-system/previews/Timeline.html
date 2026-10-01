@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Timeline</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'560px'}},h(R.Timeline,{label:'A school year of PEPs',items:[{date:'September',title:'Autumn PEP',text:'Set targets for the year and agree PP+ spending.',status:'done'},{date:'January',title:'Spring PEP',text:'Review progress and update support.',status:'current'},{date:'May',title:'Summer PEP',text:'Plan transitions for next year.'}]}))
+);
+</script>
+</body>
+</html>

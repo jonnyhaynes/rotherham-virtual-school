@@ -1,0 +1,70 @@
+---
+import Button from "./Button.astro";
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import { uid } from "./assets";
+import type { IconName } from "./icons";
+
+/**
+ * CtaBanner — a branded call to action at the foot of a page. Ported from
+ * `bundle.js`. The corner arcs are decorative; the button carries the meaning.
+ */
+interface Props {
+	title: string;
+	text?: string | null;
+	action?: { label: string; href: string } | null;
+	icon?: IconName | null;
+	variant?: "brand" | "navy" | "ending";
+	decoration?: boolean;
+	headingLevel?: number;
+	id?: string;
+	class?: string;
+}
+
+const {
+	title,
+	text = null,
+	action = null,
+	icon = null,
+	variant = "brand",
+	decoration = true,
+	headingLevel = 2,
+	id,
+	class: className,
+} = Astro.props;
+
+const headingId = id ?? uid("rvs-cta");
+---
+
+<section class:list={["rvs-cta", `rvs-cta--${variant}`, className]} aria-labelledby={headingId}>
+	{icon && <Icon name={icon} size={56} class="rvs-cta__icon" />}
+	<div class="rvs-cta__body">
+		<Heading level={headingLevel} id={headingId} class="rvs-cta__title">{title}</Heading>
+		{text && <p class="rvs-cta__text">{text}</p>}
+		{
+			action && (
+				<div class="rvs-cta__action">
+					<Button
+						href={action.href}
+						variant={variant === "navy" ? "inverse" : "primary"}
+						icon="arrow-right"
+					>
+						{action.label}
+					</Button>
+				</div>
+			)
+		}
+	</div>
+	{
+		decoration && (
+			<svg class="rvs-cta__deco" viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+				<path class="rvs-fill-yellow" d="M160 160H40A120 120 0 0 1 160 40z" />
+				<path class="rvs-fill-teal" d="M160 160H90A70 70 0 0 1 160 90z" />
+				<path
+					class="rvs-fill-coral"
+					d="M160 20v14A126 126 0 0 0 34 160H20A140 140 0 0 1 160 20z"
+				/>
+			</svg>
+		)
+	}
+</section>

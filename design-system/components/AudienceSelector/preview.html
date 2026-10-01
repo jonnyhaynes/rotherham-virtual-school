@@ -1,0 +1,16 @@
+<!-- @dsCard group="Navigation & discovery" height=360 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>AudienceSelector</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.AudienceSelector,{heading:'Who are you?',audiences:[{id:'young-people',label:'Children and young people',description:'Your education, your PEP and the support you can get.',href:'#'},{id:'parents-carers',label:'Parents and carers',description:'Helping the child in your care with school and learning.',href:'#'},{id:'schools',label:'Schools',description:'Designated teachers, PEPs and Pupil Premium Plus.',href:'#'},{id:'social-workers',label:'Social workers',description:'PEPs, school moves and working with the Virtual School.',href:'#'},{id:'professionals',label:'Professionals',description:'Governors, health and partner agencies.',href:'#'}]}),
+ h(R.AudienceSelector,{variant:'pills',label:'Choose who you are',current:'social-workers',audiences:[{id:'young-people',label:'Children and young people',href:'#'},{id:'parents-carers',label:'Parents and carers',href:'#'},{id:'schools',label:'Schools',href:'#'},{id:'social-workers',label:'Social workers',href:'#'},{id:'professionals',label:'Professionals',href:'#'}]}))
+);
+</script>
+</body>
+</html>

@@ -1,12 +1,16 @@
 // =============================================================================
 // Global stylesheet
 // =============================================================================
-// GOV.UK Frontend provides the structural layer; the Virtual School's own
-// components live alongside their Astro components and consume the tokens
-// exposed as CSS custom properties by ./_tokens.scss.
+// Two layers, in this order:
 //
-// The palette lives in one place. Anything here that hard-codes a colour is a
-// bug waiting to happen — see `success` below for why.
+//   1. GOV.UK Frontend, configured with the design system's tokens so the
+//      GOV.UK-pattern pages and the `rvs-*` components agree on one palette,
+//      one type family and one page width.
+//   2. The design system's own stylesheet (`./design-system.scss`), vendored
+//      from `design-system/components/bundle.css`.
+//
+// The palette lives in ./_tokens.scss, generated from `design-system/tokens.json`.
+// Anything here that hard-codes a colour is a bug waiting to happen.
 // =============================================================================
 
 @use "./fonts";
@@ -14,30 +18,42 @@
 
 @use "govuk-frontend/dist/govuk" with (
 	$govuk-functional-colours: (
-		// Rotherham navy drives the header, footer and buttons.
-		brand: tokens.$rvs-navy,
-		text: tokens.$rvs-ink,
-		secondary-text: tokens.$rvs-grey,
-		link: tokens.$rvs-navy,
-		link-hover: tokens.$rvs-navy-dark,
-		link-visited: tokens.$rvs-maroon,
-		link-active: tokens.$rvs-ink,
-		// Rotherham's accent yellow, used for keyboard focus.
-		focus: tokens.$rvs-yellow,
-		error: tokens.$rvs-error,
-		// Must be the *functional* green, not Rotherham's light surface green.
-		// GOV.UK uses this as the confirmation panel background behind white
-		// text, and as the success link colour, so it needs 4.5:1 both ways.
-		success: tokens.$rvs-success-functional,
-		// Pale Rotherham blue for the page template and surface backgrounds.
-		template-background: tokens.$rvs-blue-tint,
-		surface-background: tokens.$rvs-blue-tint
+		// Ink navy drives the header, footer and primary buttons.
+		brand: tokens.$ds-navy,
+		text: tokens.$ds-navy,
+		secondary-text: tokens.$ds-text-secondary,
+		// Links are the accessible teal shade, not plain teal: #00a6a6 measures
+		// 3.0:1 on white, which clears the UI bar but fails the 4.5:1 text bar.
+		// #006b6e is the same hue, darkened until it passes (6.3:1).
+		link: tokens.$ds-teal-700,
+		link-hover: tokens.$ds-teal-800,
+		// GOV.UK's purple, as the design system specifies for visited links.
+		link-visited: tokens.$ds-link-visited,
+		link-active: tokens.$ds-navy-900,
+		// Brand yellow for keyboard focus, paired with the navy bar GOV.UK draws,
+		// so the indicator never relies on the yellow alone.
+		focus: tokens.$ds-yellow,
+		error: tokens.$ds-error,
+		// Success is teal, off the red–green axis, so success and error never
+		// depend on telling red from green. GOV.UK uses this both as the
+		// confirmation panel fill behind white text and as the success link
+		// colour, so it needs 4.5:1 both ways — teal-700 is 6.3:1.
+		success: tokens.$ds-teal-700,
+		// Pale blue for the page template and surface backgrounds.
+		template-background: tokens.$ds-pale-blue,
+		surface-background: tokens.$ds-pale-blue
 	),
-	// Mulish matches the council site. It is self-hosted in ./_fonts.scss, and
-	// the stack degrades to Arial, which is also the GOV.UK fallback.
-	$govuk-font-family: tokens.$rvs-font-family
+	// One family: the self-hosted Noto Sans, then its metric-matched fallback and
+	// the Helvetica/Arial fallback the design system specifies. GDS Transport is
+	// deliberately not in the stack, so GOV.UK emits no @font-face for it and no
+	// page requests a font we do not ship.
+	$govuk-font-family: tokens.$ds-font-sans,
+	// Match the design system's content width so GOV.UK's `.govuk-width-container`
+	// and the `rvs-*` components share one grid.
+	$govuk-page-width: tokens.$ds-page-width
 );
 
+@use "./design-system";
 @use "./overrides";
 
 // =============================================================================
@@ -50,7 +66,7 @@
 // typography finding. Setting the family here, once, means no element can
 // fall through again.
 html {
-	font-family: tokens.$rvs-font-family;
+	font-family: tokens.$ds-font-sans;
 
 	// The design is light-only. Declaring that stops a browser set to dark mode
 	// rendering native parts of the interface — scrollbars, the search field's

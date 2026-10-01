@@ -1,7 +1,11 @@
 ---
 import { getEmDashCollection } from "emdash";
-import PageHeader from "../../components/PageHeader.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
+import Hero from "../../components/ds/Hero.astro";
+import NotificationBanner from "../../components/ds/NotificationBanner.astro";
+import Prose from "../../components/ds/Prose.astro";
+import QuickLinks from "../../components/ds/QuickLinks.astro";
+import StatsPanel from "../../components/ds/StatsPanel.astro";
+import Table from "../../components/ds/Table.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const [outcomesResult, newsResult] = await Promise.all([
@@ -41,114 +45,113 @@ const formatDate = (value: unknown) =>
 				year: "numeric",
 			})
 		: null;
+
+const latestYear = years[years.length - 1];
+const latestStats = rows
+	.filter((row) => String(row.data.academic_year) === latestYear)
+	.map((row) => ({
+		value: String(row.data.value),
+		label: METRIC_LABELS[String(row.data.metric)] ?? String(row.data.metric),
+		description: row.data.comparison ? String(row.data.comparison) : undefined,
+	}));
 ---
 
 <BaseLayout
 	title="Outcomes"
 	description="How children in care in Rotherham are doing at school, in plain English."
-	breadcrumbs={[
-		{ label: "Home", href: "/" },
-		{ label: "Outcomes" },
-	]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="How our children are doing"
 		lead="The Virtual School monitors the progress, attainment, attendance and exclusions of children in care. These are the headline figures, explained in plain English."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Outcomes" }]}
 	/>
 
-	<InsetText title="These figures are illustrative, not real">
-		<p class="govuk-body">
+	<NotificationBanner tone="important" title="These figures are illustrative, not real">
+		<p>
 			This is a prototype. The example figures below are placeholder data invented to
-			demonstrate the layout — they are <strong>not</strong> Rotherham's published outcomes and
-			should not be quoted or relied on.
+			demonstrate the layout — they are <strong>not</strong> Rotherham's published outcomes
+			and should not be quoted or relied on.
 		</p>
-		<p class="govuk-body">
-			When real data is used: children in care are a small group and their circumstances change
-			often, so a single figure can hide a lot. We publish these numbers so that schools,
-			carers and young people can see where we are doing well and where we still have work to
-			do.
+		<p>
+			When real data is used: children in care are a small group and their circumstances
+			change often, so a single figure can hide a lot. We publish these numbers so that
+			schools, carers and young people can see where we are doing well and where we still
+			have work to do.
 		</p>
-	</InsetText>
+	</NotificationBanner>
 
 	{
 		rows.length === 0 ? (
-			<p class="govuk-body">Outcome figures for this year have not been published yet.</p>
+			<p class="rvs-muted">Outcome figures for this year have not been published yet.</p>
 		) : (
-			years.map((year) => (
-				<section aria-labelledby={`year-${year.replace(/\W/g, "-")}`}>
-					<h2 class="govuk-heading-l" id={`year-${year.replace(/\W/g, "-")}`}>
-						Academic year {year}
-					</h2>
-					{/* Three columns of outcome data cannot compress below ~362px, so
-					    below that the table scrolls rather than pushing the whole page
-					    wide. The wrapper is focusable so it can be scrolled by keyboard.
-					    It is named from the table's own caption rather than the section
-					    heading: two regions sharing one name is not a unique landmark. */}
-					<div
-						class="rvs-table-scroll"
-						role="region"
-						aria-labelledby={`caption-${year.replace(/\W/g, "-")}`}
-						tabindex="0"
-					>
-						<table class="govuk-table rvs-data-table">
-							<caption
-								class="govuk-table__caption govuk-table__caption--s"
-								id={`caption-${year.replace(/\W/g, "-")}`}
-							>
-								Children in care in Rotherham, {year}
-							</caption>
-							<thead class="govuk-table__head">
-								<tr class="govuk-table__row">
-									<th scope="col" class="govuk-table__header">Measure</th>
-									<th scope="col" class="govuk-table__header">Rotherham children in care</th>
-									<th scope="col" class="govuk-table__header">Comparison</th>
-								</tr>
-							</thead>
-							<tbody class="govuk-table__body">
-								{rows
-									.filter((row) => String(row.data.academic_year) === year)
-									.map((row) => (
-										<tr class="govuk-table__row">
-											<th scope="row" class="govuk-table__header">
-												{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}
-											</th>
-											<td class="govuk-table__cell">{row.data.value}</td>
-											<td class="govuk-table__cell">{row.data.comparison}</td>
-										</tr>
-									))}
-							</tbody>
-						</table>
-					</div>
-					{rows
-						.filter((row) => String(row.data.academic_year) === year && row.data.note)
-						.map((row) => (
-							<p class="govuk-body">
-								<strong>{METRIC_LABELS[String(row.data.metric)] ?? row.data.metric}:</strong>{" "}
-								{row.data.note}
-							</p>
-						))}
-				</section>
-			))
+			<>
+				<StatsPanel
+					heading={`Academic year ${latestYear}`}
+					stats={latestStats}
+					source="Rotherham Virtual School — placeholder data"
+				/>
+
+				{years.map((year) => (
+					<section aria-labelledby={`year-${year.replace(/\W/g, "-")}`}>
+						<h2 class="rvs-section-title" id={`year-${year.replace(/\W/g, "-")}`}>
+							Academic year {year}
+						</h2>
+						<Table
+							caption={`Children in care in Rotherham, ${year}`}
+							columns={[
+								{ key: "measure", label: "Measure" },
+								{ key: "value", label: "Rotherham children in care" },
+								{ key: "comparison", label: "Comparison" },
+							]}
+							rows={rows
+								.filter((row) => String(row.data.academic_year) === year)
+								.map((row) => ({
+									measure: METRIC_LABELS[String(row.data.metric)] ?? String(row.data.metric),
+									value: String(row.data.value),
+									comparison: row.data.comparison ? String(row.data.comparison) : "",
+								}))}
+						/>
+						{rows
+							.filter((row) => String(row.data.academic_year) === year && row.data.note)
+							.map((row) => (
+								<p>
+									<strong>
+										{METRIC_LABELS[String(row.data.metric)] ?? String(row.data.metric)}:
+									</strong>{" "}
+									{String(row.data.note)}
+								</p>
+							))}
+					</section>
+				))}
+			</>
 		)
 	}
 
-	<h2 class="govuk-heading-l">Annual report</h2>
-	<p class="govuk-body">
-		Our annual report sets out the full picture for the year, including attainment and progress
-		data, and our priorities for the year ahead.
-	</p>
+	<Prose>
+		<h2>Annual report</h2>
+		<p>
+			Our annual report sets out the full picture for the year, including attainment and
+			progress data, and our priorities for the year ahead.
+		</p>
+	</Prose>
+
 	{
 		reportNews ? (
-			<p class="govuk-body">
-				<a class="govuk-link" href={`/news/${reportNews.id}`}>
-					Read: {reportNews.data.title}
-				</a>
-				{formatDate(reportNews.data.published_on) && (
-					<> — published {formatDate(reportNews.data.published_on)}</>
-				)}
-			</p>
+			<QuickLinks
+				heading={null}
+				label="Read the annual report"
+				links={[
+					{
+						label: String(reportNews.data.title),
+						href: `/news/${reportNews.id}`,
+						meta: formatDate(reportNews.data.published_on) ?? undefined,
+					},
+				]}
+			/>
 		) : (
-			<p class="govuk-body">
+			<p class="rvs-muted">
 				The annual report will be published here. Contact the team if you need a copy in the
 				meantime.
 			</p>

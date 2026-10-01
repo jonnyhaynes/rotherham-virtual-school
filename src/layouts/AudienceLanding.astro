@@ -1,0 +1,108 @@
+---
+import Hero from "../components/ds/Hero.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+/**
+ * Audience landing template — the pattern for every audience section, from
+ * `design-system/components/TemplateAudiencePage`.
+ *
+ * It supplies the audience chrome and the hero. Pass an `aside` slot and the
+ * body becomes two columns — the page's content in the main column, related
+ * links in the sidebar. Without one the body stays a single column.
+ *
+ * The "get in touch" strip at the foot is the layout's, so it appears once on
+ * every page and never repeats here.
+ *
+ * Setting `data-audience` (via the `audience` prop) is what switches the accent
+ * the hero, panels and cards read. The `eyebrow` is the audience label above the
+ * title, in the audience's text colour.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+interface Props {
+	audience: Audience;
+	/** The section name: document title, breadcrumb, sidebar label. */
+	title: string;
+	/**
+	 * The hero `h1`. The design system writes each audience section in that
+	 * audience's own voice, so the headline is a promise rather than the section
+	 * name — which otherwise repeated the eyebrow and the breadcrumb three times.
+	 * Falls back to `title`.
+	 */
+	headline?: string | null;
+	lead: string;
+	eyebrow?: string | null;
+	illustration?: { name?: "home" | "children" | "parents-carers" | "schools"; src?: string; alt?: string };
+	breadcrumbs?: { label: string; href?: string }[];
+	description?: string | null;
+}
+
+const {
+	audience,
+	title,
+	headline = null,
+	lead,
+	eyebrow = null,
+	illustration = { name: "home", alt: "" },
+	breadcrumbs = [],
+	description = null,
+} = Astro.props;
+
+const hasAside = Astro.slots.has("aside");
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	audience={audience}
+>
+	<Hero
+		slot="hero"
+		audience={audience}
+		variant="default"
+		breadcrumbs={breadcrumbs}
+		eyebrow={eyebrow}
+		title={headline ?? title}
+		lead={lead}
+		illustration={illustration}
+	/>
+
+	{/* The same grid, ratio and gap the design system's other two-column pages
+	    use, so the audience pages line up with the detail, legal and contact
+	    pages rather than introducing a second sidebar layout. */}
+	<div class:list={[hasAside && "rvs-two-col"]}>
+		<div class="rvs-stack">
+			<slot />
+		</div>
+
+		{
+			hasAside && (
+				<aside class="rvs-audience-aside" aria-label={`More for ${title.toLowerCase()}`}>
+					<slot name="aside" />
+				</aside>
+			)
+		}
+	</div>
+</BaseLayout>
+
+<style>
+	/* The sidebar's blocks (who's who, related links) need the same gap the main
+	   column gets, so they do not stack flush. */
+	.rvs-audience-aside {
+		display: grid;
+		gap: var(--space-7);
+	}
+
+	@media (min-width: 769px) {
+		.rvs-audience-aside {
+			align-self: start;
+			position: sticky;
+			top: var(--space-5);
+		}
+	}
+</style>

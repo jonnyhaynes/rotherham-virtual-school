@@ -1,0 +1,86 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import Tag from "./Tag.astro";
+
+/**
+ * EventCard — a training session or event. Ported from `bundle.js`.
+ *
+ * The booking state is carried by a tag and a word, never by colour alone. A
+ * past session with a recording available uses `status="recording"`.
+ */
+type Status = "open" | "few" | "full" | "closed" | "recording";
+
+interface Props {
+	title: string;
+	date: string;
+	href?: string | null;
+	time?: string | null;
+	location?: string | null;
+	format?: "online" | "in-person" | null;
+	audience?: string | null;
+	text?: string | null;
+	status?: Status;
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	title,
+	date,
+	href = null,
+	time = null,
+	location = null,
+	format = null,
+	audience = null,
+	text = null,
+	status = "open",
+	headingLevel = 3,
+	class: className,
+} = Astro.props;
+
+const MONTHS = [
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+const d = new Date(date.length === 10 ? `${date}T12:00:00` : date);
+const day = Number.isNaN(d.getTime()) ? "" : d.getDate();
+const month = Number.isNaN(d.getTime()) ? "" : MONTHS[d.getMonth()];
+const year = Number.isNaN(d.getTime()) ? "" : d.getFullYear();
+---
+
+<article class:list={["rvs-event", "rvs-card", "rvs-card--outlined", href && "rvs-card--clickable", className]}>
+	<time class="rvs-dates__tile rvs-event__tile" datetime={date}>
+		<span class="rvs-dates__day">{day}</span>
+		<span class="rvs-dates__month">{month}</span>
+		<span class="rvs-visually-hidden"> {year}</span>
+	</time>
+	<div class="rvs-event__body">
+		<div class="rvs-event__tags">
+			{
+				status === "open" ? (
+					<Tag tone="teal">Booking open</Tag>
+				) : status === "few" ? (
+					<Tag tone="yellow">Few places left</Tag>
+				) : status === "full" ? (
+					<Tag tone="coral">Fully booked</Tag>
+				) : status === "recording" ? (
+					<Tag tone="purple">Recording available</Tag>
+				) : (
+					<Tag tone="neutral">Booking closed</Tag>
+				)
+			}
+			{format && <Tag tone="neutral">{format === "online" ? "Online" : "In person"}</Tag>}
+		</div>
+		<Heading level={headingLevel} class="rvs-card__title">
+			{href ? <a class="rvs-card__link" href={href}>{title}</a> : title}
+		</Heading>
+		{text && <p class="rvs-card__text">{text}</p>}
+		<ul class="rvs-event__meta">
+			{time && <li><Icon name="clock" size={18} />{time}</li>}
+			{location && <li><Icon name="map-pin" size={18} />{location}</li>}
+			{audience && <li><Icon name="users" size={18} />{audience}</li>}
+		</ul>
+	</div>
+</article>

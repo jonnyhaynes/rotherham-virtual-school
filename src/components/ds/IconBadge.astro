@@ -1,0 +1,48 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * IconBadge — a glyph on a coloured disc. Ported from `bundle.js`.
+ *
+ * The glyph is navy on teal, yellow or coral (never white: none of those
+ * reaches 4.5:1 with white), and white on navy.
+ */
+type BrandTone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Props {
+	icon: IconName;
+	tone?: BrandTone | "error" | "success";
+	size?: "sm" | "md" | "lg";
+	shape?: "circle" | "square";
+	/** Accessible name. Omit when the badge sits beside a text label. */
+	label?: string;
+	class?: string;
+}
+
+const {
+	icon,
+	tone = "teal",
+	size = "md",
+	shape = "circle",
+	label,
+	class: className,
+} = Astro.props;
+
+const px = { sm: 32, md: 48, lg: 64 }[size] ?? 48;
+---
+
+<span
+	class:list={[
+		"rvs-icon-badge",
+		`rvs-tone-${tone}`,
+		`rvs-icon-badge--${size}`,
+		`rvs-icon-badge--${shape}`,
+		className,
+	]}
+	aria-hidden={label ? undefined : "true"}
+	role={label ? "img" : undefined}
+	aria-label={label}
+>
+	<Icon name={icon} size={Math.round(px * 0.5)} />
+</span>

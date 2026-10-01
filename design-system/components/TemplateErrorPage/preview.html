@@ -1,0 +1,16 @@
+<!-- @dsCard group="Page templates" height=800 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateErrorPage</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h('div',{className:'rvs-main'},h('div',{className:'rvs-two-col'},
+  h('div',{className:'rvs-stack--s'},h('h1',{className:'rvs-legend__heading'},'Page not found'),h('p',null,'If you typed the web address, check it is correct.'),h('p',null,'If you pasted the web address, check you copied the entire address.'),h(R.SearchInput,{label:'Search the site'}),h(R.QuickLinks,{heading:'You might be looking for',links:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'},{label:'Contact us',href:'#'}]})),
+  h('div',{'aria-hidden':'true'},h(R.BrandPattern,{rows:4,cols:4,unit:64,seed:17}))))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

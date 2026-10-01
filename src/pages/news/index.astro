@@ -1,55 +1,102 @@
 ---
 import { getEmDashCollection } from "emdash";
-import NewsCard from "../../components/NewsCard.astro";
-import PageHeader from "../../components/PageHeader.astro";
+import Card from "../../components/ds/Card.astro";
+import Grid from "../../components/ds/Grid.astro";
+import Hero from "../../components/ds/Hero.astro";
+import StateMessage from "../../components/ds/StateMessage.astro";
+import Tag from "../../components/ds/Tag.astro";
+import AudienceSelector from "../../components/ds/AudienceSelector.astro";
+import { formatDate } from "../../components/ds/assets";
+import { AUDIENCES } from "../../data/audiences";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const { entries, cacheHint } = await getEmDashCollection("news", { limit: 100 });
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
-const news = [...entries].sort(
-	(a, b) =>
-		new Date(b.data.published_on ?? 0).getTime() -
-		new Date(a.data.published_on ?? 0).getTime(),
-);
+const AUDIENCE_LABELS: Record<string, string> = {
+	"young-people": "Young people",
+	"parents-carers": "Parents and carers",
+	schools: "Schools",
+	"social-workers": "Social workers",
+	professionals: "Professionals",
+	all: "Everyone",
+};
+
+type AudienceId =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+const selected = (Astro.url.searchParams.get("audience") as AudienceId | null) ?? undefined;
+
+const news = [...entries]
+	.filter((item) => !selected || String(item.data.audience) === selected)
+	.sort(
+		(a, b) =>
+			new Date(b.data.published_on ?? 0).getTime() -
+			new Date(a.data.published_on ?? 0).getTime(),
+	);
+
+// Pills take the short audience name, not the card's full-sentence title, so the
+// filter row stays one line instead of wrapping to three.
+const PILL_LABELS: Record<string, string> = {
+	"young-people": "Young people",
+	"parents-carers": "Parents and carers",
+	schools: "Schools",
+	"social-workers": "Social workers",
+	professionals: "Professionals",
+};
+
+const pills = AUDIENCES.map((audience) => ({
+	id: audience.id,
+	label: PILL_LABELS[audience.id] ?? audience.title,
+	href: `/news/?audience=${audience.id}`,
+}));
 ---
 
 <BaseLayout
 	title="News"
 	description="News, updates and newsletters from Rotherham Virtual School."
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: "News" }]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="News"
 		lead="Updates from Rotherham Virtual School for children, carers, schools and social workers."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "News" }]}
+	/>
+
+	<AudienceSelector
+		variant="pills"
+		current={selected}
+		heading={null}
+		label="Filter news by audience"
+		audiences={pills}
 	/>
 
 	{
 		news.length === 0 ? (
-			<p class="govuk-body">There is no news to show yet.</p>
+			<StateMessage state="empty" title="There is no news to show yet">
+				<p>News and updates will appear here as they are published.</p>
+			</StateMessage>
 		) : (
-			<ul class="rvs-news-list" role="list">
+			<Grid as="ul" min="280px">
 				{news.map((item) => (
-					<NewsCard
-						title={item.data.title}
+					<Card
+						as="li"
 						href={`/news/${item.id}`}
-						summary={item.data.summary}
-						publishedOn={item.data.published_on}
-						level={2}
-					/>
+						title={String(item.data.title)}
+						text={item.data.summary ? String(item.data.summary) : null}
+						meta={item.data.published_on ? formatDate(String(item.data.published_on)) : null}
+					>
+						<Tag slot="tag" tone="teal">
+							{AUDIENCE_LABELS[String(item.data.audience)] ?? "News"}
+						</Tag>
+					</Card>
 				))}
-			</ul>
+			</Grid>
 		)
 	}
 </BaseLayout>
-
-<style>
-	.rvs-news-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.5rem 2rem;
-		list-style: none;
-		padding: 0;
-		margin: 1.5rem 0 0;
-	}
-</style>

@@ -1,0 +1,22 @@
+<!-- @dsCard group="Core" height=420 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Card</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.Grid,{min:'220px'},
+  h(R.Card,{href:'#',icon:'star',iconTone:'yellow',title:'Pupil Premium Plus',text:'Information on Pupil Premium Plus for eligible children and young people.'}),
+  h(R.Card,{href:'#',icon:'user',iconTone:'teal',title:'Designated teacher guidance',text:'Roles, responsibilities and practical support for designated teachers.'}),
+  h(R.Card,{href:'#',icon:'graduation',iconTone:'navy',title:'Training and resources',text:'CPD, useful links and resources to support your work.',meta:'Updated 12 September 2026'})),
+ h(R.Grid,{min:'200px'},
+  h(R.Card,{variant:'tinted',audience:'young-people',icon:'message',iconTone:'teal',title:'Your voice matters',text:'We listen to your views and help make sure you’re heard.'}),
+  h(R.Card,{variant:'tinted',audience:'parents-carers',icon:'heart',iconTone:'coral',title:'You belong',text:'We’re here to support you, whatever your background.'}),
+  h(R.Card,{variant:'plain',href:'#',title:'Early years',text:'Support for children aged 0 to 5 and transition to school.',linkLabel:false})))
+);
+</script>
+</body>
+</html>

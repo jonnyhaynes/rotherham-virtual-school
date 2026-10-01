@@ -1,0 +1,25 @@
+<!-- @dsCard group="Page templates" height=2300 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateAudiencePage</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#',active:true},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content','data-audience':'parents-carers'},h(R.Hero,{variant:'default',title:'Parents and carers',lead:'If you are caring for a child in care, or a child who was previously looked after, the Virtual School is here to help with their education.',audience:'parents-carers',illustration:{name:'carers',alt:''},breadcrumbs:[{label:'Home',href:'#'},{label:'Parents and carers'}]}),
+ h('div',{className:'rvs-main'},h('div',{className:'rvs-two-col'},
+  h('div',{className:'rvs-stack'},
+   h(R.Prose,{html:'<h2>What we do for your child</h2><p>We are not a school. We are a small team inside Rotherham Council whose job is to make sure children in care get the education they are entitled to — wherever they go to school.</p><ul><li>We check that your child is in the right school and making progress</li><li>We make sure their school understands what support they need</li><li>We help when things go wrong, such as poor attendance or a risk of exclusion</li><li>We help plan for the move to a new school, to secondary school, or to college</li></ul>'}),
+   h(R.Steps,{heading:'The PEP: what to expect',intro:'Every child in care of school age has a Personal Education Plan (PEP). It is reviewed at least three times a year. At the meeting:',steps:[{title:'The school reports',text:'Progress, attendance and any concerns.'},{title:'The social worker updates',text:'The care plan, so everything joins up.'},{title:'Your child is heard',text:'Their views are recorded and taken seriously.'},{title:'Everyone agrees targets',text:'SMART targets for the next term.'}]}),
+   h(R.Panel,{tone:'pep',icon:'users',title:'You have a say'},h('p',null,'As the carer, you should be invited to the PEP meeting and you can ask for a copy. If you cannot attend, ask for your views to be sent in before the meeting.')),
+   h(R.Prose,{html:"<h2>Extra funding for your child's school</h2><p>Schools receive extra money called <strong>Pupil Premium Plus</strong> for every child in care. It is meant to pay for the specific things written in your child's PEP, such as tutoring, therapy, books, or equipment.</p><p>It is not paid to you, and it is not extra pocket money — but you can ask the school how they are spending it, and what difference it is making.</p><h2>Attendance and moving school</h2><p>Children in care are more likely to miss school than other children. We track attendance closely and will contact the school early if it starts to slip, so we can sort out the reason rather than blame your child.</p><p>If your child has to move school, they should not lose any school days. Contact us as soon as you know a move is likely and we will start arranging the next place.</p>"}),
+   h('section',null,h('h2',{className:'rvs-section-title'},'Questions people ask'),h(R.Accordion,{headingLevel:3,items:[{heading:'How do I ask for help with a child’s education?',content:h('p',null,'Email the Virtual School team. Tell us the child’s name, school and what is worrying you, and we will pass it to the right person.')},{heading:'What is a PEP?',content:h('p',null,'A Personal Education Plan records what a child needs to do well at school, what help they will get, and who is responsible.')}]}))),
+  h('aside',{className:'rvs-stack--s'},
+   h(R.QuickLinks,{variant:'panel',heading:'Who’s who',links:[{label:'Designated teacher',href:'#',meta:'A teacher at your child’s school responsible for children in care.'},{label:'Social worker',href:'#',meta:'Leads on your child’s care plan and attends the PEP.'},{label:'Virtual School',href:'#',meta:'The team that oversees your child’s education.'}]}),
+   h(R.QuickLinks,{heading:'Useful links',links:[{label:'Rotherham SEND Local Offer',href:'https://www.rotherhamsendlocaloffer.org.uk/',external:true},{label:'Rotherham Family Hubs',href:'https://www.rotherham.gov.uk/homepage/392/rotherham-family-hubs-and-best-start-in-life',external:true},{label:'BBC Bitesize',href:'https://www.bbc.co.uk/bitesize',external:true}]}),
+   h(R.ContactPanel,{title:'Need to get in touch?',email:'virtualschool@rotherham.gov.uk',contactHref:'#'})))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

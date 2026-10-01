@@ -1,0 +1,87 @@
+---
+/**
+ * BrandPattern — the brand's quarter-circles, leaves and half-rounds in teal,
+ * yellow, coral and pale blue. Ported from `bundle.js`, including its seeded
+ * generator so the same `seed` always draws the same pattern.
+ *
+ * Decorative: `aria-hidden`, and the design system allows one pattern area per
+ * screen, never under text.
+ */
+type Tone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Props {
+	rows?: number;
+	cols?: number;
+	unit?: number;
+	gap?: number;
+	seed?: number;
+	tones?: Tone[];
+	width?: string | number;
+	height?: string | number;
+	class?: string;
+}
+
+const {
+	rows = 3,
+	cols = 8,
+	unit = 48,
+	gap = 4,
+	seed = 11,
+	tones = ["teal", "yellow", "coral", "pale", "teal", "yellow"],
+	width = "100%",
+	height,
+	class: className,
+} = Astro.props;
+
+// The reference implementation's linear congruential generator.
+function makeRng(start: number) {
+	let s = start || 7;
+	return () => {
+		s = (s * 16807) % 2147483647;
+		return (s - 1) / 2147483646;
+	};
+}
+
+const r = makeRng(seed);
+const cells: { d: string; transform: string; tone: string }[] = [];
+
+for (let y = 0; y < rows; y++) {
+	for (let x = 0; x < cols; x++) {
+		const tone = tones[Math.floor(r() * tones.length)];
+		const kind = Math.floor(r() * 4);
+		const rot = Math.floor(r() * 4) * 90;
+		const ox = x * (unit + gap);
+		const oy = y * (unit + gap);
+		let d: string;
+		if (kind === 0) d = `M0 ${unit}V0A${unit} ${unit} 0 0 1 ${unit} ${unit}Z`;
+		else if (kind === 1)
+			d = `M0 ${unit}A${unit} ${unit} 0 0 1 ${unit} 0A${unit} ${unit} 0 0 1 0 ${unit}Z`;
+		else if (kind === 2) d = `M0 ${unit}A${unit / 2} ${unit / 2} 0 0 1 ${unit} ${unit}Z`;
+		else d = `M0 0H${unit}A${unit} ${unit} 0 0 1 0 ${unit}Z`;
+		cells.push({
+			d,
+			transform: `translate(${ox} ${oy}) rotate(${rot} ${unit / 2} ${unit / 2})`,
+			tone,
+		});
+	}
+}
+
+const w = cols * unit + (cols - 1) * gap;
+const h = rows * unit + (rows - 1) * gap;
+---
+
+<svg
+	class:list={["rvs-pattern", className]}
+	viewBox={`0 0 ${w} ${h}`}
+	width={width}
+	preserveAspectRatio="xMidYMid slice"
+	aria-hidden="true"
+	focusable="false"
+	style={height ? `height: ${height}px` : undefined}
+>
+	{
+		cells.map((cell) => (
+			<path class={`rvs-fill-${cell.tone}`} d={cell.d} transform={cell.transform} />
+		))
+	}
+</svg>

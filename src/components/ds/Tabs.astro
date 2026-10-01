@@ -1,0 +1,104 @@
+---
+import Heading from "./Heading.astro";
+import { uid } from "./assets";
+
+/**
+ * Tabs — grouped panels switched by a tab list. Ported from `bundle.js`.
+ *
+ * The tablist follows the ARIA tabs pattern: roving `tabindex`, arrow/Home/End
+ * keys, and `aria-controls`/`aria-labelledby` linking each tab to its panel.
+ * Without JavaScript the first panel shows; the others are `hidden`.
+ */
+interface Tab {
+	id: string;
+	label: string;
+	/** Rendered as HTML. */
+	content: string;
+}
+
+interface Props {
+	tabs: Tab[];
+	defaultTab?: string;
+	label?: string;
+	title?: string;
+	class?: string;
+}
+
+const { tabs = [], defaultTab, label, title, class: className } = Astro.props;
+const base = uid("rvs-tabs");
+const selected = defaultTab ?? tabs[0]?.id;
+---
+
+<div class:list={["rvs-tabs", className]} data-rvs-tabs>
+	{title && <Heading level={2} class="rvs-tabs__title">{title}</Heading>}
+	<div class="rvs-tabs__list" role="tablist" aria-label={label ?? title}>
+		{
+			tabs.map((tab, i) => {
+				const on = tab.id === selected;
+				return (
+					<button
+						type="button"
+						role="tab"
+						id={`${base}-t-${tab.id}`}
+						aria-selected={on ? "true" : "false"}
+						aria-controls={`${base}-p-${tab.id}`}
+						tabindex={on ? 0 : -1}
+						class:list={["rvs-tabs__tab", on && "is-selected"]}
+						data-rvs-tab
+						data-index={String(i)}
+					>
+						{tab.label}
+					</button>
+				);
+			})
+		}
+	</div>
+	{
+		tabs.map((tab) => (
+			<div
+				role="tabpanel"
+				id={`${base}-p-${tab.id}`}
+				aria-labelledby={`${base}-t-${tab.id}`}
+				hidden={tab.id !== selected}
+				tabindex="0"
+				class="rvs-tabs__panel"
+				data-rvs-tabpanel
+				set:html={tab.content}
+			/>
+		))
+	}
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-tabs]").forEach((root) => {
+		const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-rvs-tab]"));
+		const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-rvs-tabpanel]"));
+		if (tabs.length === 0) return;
+
+		const select = (index: number, focus = true) => {
+			tabs.forEach((tab, i) => {
+				const on = i === index;
+				tab.setAttribute("aria-selected", on ? "true" : "false");
+				tab.tabIndex = on ? 0 : -1;
+				tab.classList.toggle("is-selected", on);
+				panels[i] && (panels[i].hidden = !on);
+			});
+			if (focus) tabs[index]?.focus();
+		};
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener("click", () => select(i, false));
+			tab.addEventListener("keydown", (event) => {
+				let next: number | null = null;
+				if (event.key === "ArrowRight") next = (i + 1) % tabs.length;
+				else if (event.key === "ArrowLeft") next = (i - 1 + tabs.length) % tabs.length;
+				else if (event.key === "Home") next = 0;
+				else if (event.key === "End") next = tabs.length - 1;
+				if (next !== null) {
+					event.preventDefault();
+					select(next);
+				}
+			});
+		});
+	});
+</script>

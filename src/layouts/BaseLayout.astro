@@ -1,20 +1,23 @@
 ---
-import {
-	getMenuWithCacheHint,
-	getSiteSettingsWithCacheHint,
-} from "emdash";
+import { getSiteSettingsWithCacheHint } from "emdash";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
-import PageFeedback from "../components/PageFeedback.astro";
 import PrototypeNotice from "../components/PrototypeNotice.astro";
-import SearchForm from "../components/SearchForm.astro";
+import ContactPanel from "../components/ds/ContactPanel.astro";
+import DsFooter from "../components/ds/Footer.astro";
+import DsHeader from "../components/ds/Header.astro";
+import SkipLink from "../components/ds/SkipLink.astro";
+import { DS_FOOTER_LINKS, DS_FOOTER_NAV, DS_NAV } from "../data/ds-nav";
 import "../styles/main.scss";
 import { SITE_DEFAULTS, resolveSiteIdentity } from "../utils/site";
 
-export interface Crumb {
-	label: string;
-	href?: string;
-}
+/** The design system's five audience ids, as used by `data-audience`. */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
 
 interface Props {
 	title: string;
@@ -22,14 +25,18 @@ interface Props {
 	description?: string | null;
 	image?: string | null;
 	canonical?: string | null;
-	/** Breadcrumb trail. The final item should omit `href`. */
-	breadcrumbs?: Crumb[];
 	/** EmDash content reference, enables plugin page contributions. */
 	content?: { collection: string; id: string; slug?: string | null };
 	/** Extra classes for <main>. */
 	mainClass?: string;
-	/** Show the "Is this page useful?" block. Off for pages with nothing to rate. */
-	showFeedback?: boolean;
+	/**
+	 * Show the standard "get in touch" strip at the foot of the page. On for
+	 * every page; off only where the page carries its own contact panel, so the
+	 * strip never appears twice.
+	 */
+	showContact?: boolean;
+	/** Sets `data-audience` on `<main>`, which drives the accent tokens. */
+	audience?: Audience;
 }
 
 const {
@@ -38,33 +45,30 @@ const {
 	description,
 	image,
 	canonical,
-	breadcrumbs = [],
 	content,
 	mainClass,
-	showFeedback = true,
+	showContact = true,
+	audience,
 } = Astro.props;
 
-const [settingsResult, menuResult] = await Promise.all([
-	getSiteSettingsWithCacheHint(),
-	getMenuWithCacheHint("primary"),
-]);
-if (Astro.cache?.enabled) {
-	Astro.cache.set(settingsResult.cacheHint);
-	Astro.cache.set(menuResult.cacheHint);
-}
+const { data: settings, cacheHint } = await getSiteSettingsWithCacheHint();
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
-const { siteTitle, siteTagline } = resolveSiteIdentity(settingsResult.data);
+const { siteTitle, siteTagline } = resolveSiteIdentity(settings);
 const titleIncludesSiteName =
 	title === siteTitle ||
 	title.endsWith(` | ${siteTitle}`) ||
 	title.endsWith(` — ${siteTitle}`);
 const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
 const pageDescription = description ?? siteTagline;
-const menu = menuResult.data;
 const currentPath = Astro.url.pathname;
 
-const isCurrent = (url: string) =>
-	url === "/" ? currentPath === "/" : currentPath.startsWith(url);
+// Absolute URLs, so every page carries a canonical link and a social card even
+// where a page or a CMS entry supplies neither. `Astro.site` is set in
+// astro.config.mjs; the brand app icon is the default card image.
+const siteOrigin = (Astro.site ?? new URL(Astro.url.origin)).origin;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteOrigin).href;
+const socialImage = image ?? new URL("/assets/rvs/rvs-app-icon.png", siteOrigin).href;
 
 const pageCtx = createPublicPageContext({
 	Astro,
@@ -73,19 +77,20 @@ const pageCtx = createPublicPageContext({
 	title: fullTitle,
 	pageTitle: pageTitle ?? title,
 	description: pageDescription,
-	canonical,
-	image,
+	canonical: canonicalUrl,
+	image: socialImage,
 	content,
 	siteName: siteTitle,
 });
 ---
 
 <!doctype html>
-<html lang="en" class="govuk-template">
+<html lang="en-GB">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta name="theme-color" content="#002554" />
+		<meta name="theme-color" content="#172b4d" />
+		<meta property="og:locale" content="en_GB" />
 		<!--
 			Prototype safeguards: this is an unaffiliated demonstration build, so it
 			must stay out of search engines. Remove these two tags, the PrototypeNotice
@@ -96,438 +101,63 @@ const pageCtx = createPublicPageContext({
 		<meta name="googlebot" content="noindex, nofollow, noimageindex" />
 		<title>{fullTitle}</title>
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/assets/rvs/rvs-app-icon.png" type="image/png" sizes="360x360" />
+		<link rel="apple-touch-icon" href="/assets/rvs/rvs-app-icon.png" />
+		<link rel="manifest" href="/site.webmanifest" />
 		<EmDashHead page={pageCtx} />
 	</head>
-	<body class="govuk-template__body">
-		<script is:inline>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+	<body>
 		<EmDashBodyStart page={pageCtx} />
 
-		<a
-			href="#main-content"
-			class="govuk-skip-link"
-			data-module="govuk-skip-link">Skip to main content</a
-		>
+		<SkipLink />
+		<DsHeader
+			navigation={DS_NAV.map((item) => ({
+				...item,
+				active: currentPath.startsWith(item.href),
+			}))}
+		/>
 
-		<header class="govuk-template__header">
-			<div class="govuk-header" data-module="govuk-header">
-				<div class="govuk-header__container govuk-width-container">
-					<div class="govuk-header__logo">
-						<a href="/" class="govuk-header__homepage-link">
-							<img
-								class="govuk-header__logotype rvs-header-logo"
-								src="/brand/rmbc-logo-white.svg"
-								alt={SITE_DEFAULTS.organisation}
-								width="132"
-								height="46"
-							/>
-							<span class="govuk-header__product-name">{SITE_DEFAULTS.shortName}</span>
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<section aria-label="Service information" class="govuk-service-navigation" data-rvs-nav>
-				<div class="govuk-width-container">
-					<div class="govuk-service-navigation__container">
-						<nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-							<button
-								type="button"
-								class="govuk-service-navigation__toggle"
-								aria-controls="navigation"
-								aria-expanded="false"
-								hidden>Menu</button
-							>
-							<ul class="govuk-service-navigation__list" id="navigation" role="list">
-								{
-									menu?.items.map((item) => (
-										<li
-											class:list={[
-												"govuk-service-navigation__item",
-												item.url && isCurrent(item.url)
-													? "govuk-service-navigation__item--active"
-													: null,
-											]}
-										>
-											<a class="govuk-service-navigation__link" href={item.url}>
-												{item.url && isCurrent(item.url) ? (
-													<strong class="govuk-service-navigation__active-fallback">
-														{item.label}
-													</strong>
-												) : (
-													item.label
-												)}
-											</a>
-										</li>
-									))
-								}
-							</ul>
-						</nav>
-
-						<button
-							type="button"
-							class="rvs-search-toggle"
-							aria-controls="rvs-search-panel"
-							aria-expanded="false"
-							data-search-toggle
-						>
-							<svg
-								class="rvs-search-toggle__icon"
-								width="20"
-								height="20"
-								viewBox="0 0 27 27"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								aria-hidden="true"
-								focusable="false"
-							>
-								<circle
-									cx="12.0161"
-									cy="11.0161"
-									r="8.51613"
-									stroke="currentColor"
-									stroke-width="3"></circle>
-								<line
-									x1="17.8668"
-									y1="17.3587"
-									x2="26.4475"
-									y2="25.9393"
-									stroke="currentColor"
-									stroke-width="3"></line>
-							</svg>
-							Search
-						</button>
-					</div>
-				</div>
-			</section>
-		</header>
-
-		<div class="govuk-width-container">
-			{
-				breadcrumbs.length > 0 && (
-					<nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
-						<ol class="govuk-breadcrumbs__list" role="list">
-							{breadcrumbs.map((crumb) => (
-								<li class="govuk-breadcrumbs__list-item">
-									{crumb.href ? (
-										<a class="govuk-breadcrumbs__link" href={crumb.href}>
-											{crumb.label}
-										</a>
-									) : (
-										crumb.label
-									)}
-								</li>
-							))}
-						</ol>
-					</nav>
-				)
-			}
-			<div class="rvs-search-panel" id="rvs-search-panel" hidden>
-				<SearchForm />
-			</div>
-		</div>
-
-		<main
-			class:list={[
-				"govuk-main-wrapper",
-				showFeedback ? "rvs-main-wrapper--feedback" : null,
-				mainClass,
-			]}
-			id="main-content"
-		>
-			{/*
-				The hero band renders outside the width container. It carries its own
-				`govuk-width-container` for the heading and lead, which only does its
-				job once the band itself is free of the outer one.
-			*/}
+		{/*
+			`data-audience` on <main> is what switches the accent tokens the hero,
+			panels and cards read from.
+		*/}
+		<main id="main-content" data-audience={audience}>
 			<slot name="hero" />
-
-			<div class="govuk-width-container">
+			<div class:list={["rvs-main", "rvs-stack", mainClass]}>
 				<slot />
-				{showFeedback && <PageFeedback />}
+				{
+					showContact && (
+						<ContactPanel
+							variant="inline"
+							title="Get in touch"
+							phone="01709 822307"
+							phoneHours="(Mon – Fri, 9am – 5pm)"
+							email={SITE_DEFAULTS.email}
+							contactHref="/contact/"
+						/>
+					)
+				}
 			</div>
 		</main>
 
-		<footer class="govuk-template__footer">
-			<div class="govuk-footer">
-				<div class="govuk-width-container">
-					<div class="govuk-footer__navigation">
-						<div class="govuk-footer__section govuk-grid-column-one-third">
-							<h2 class="govuk-footer__heading govuk-heading-m">Virtual School</h2>
-							<ul class="govuk-footer__list" role="list">
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/about/">About us</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/our-team/">Our team</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/news/">News</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/training-events/">Training and events</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/documents/">Documents and policies</a>
-								</li>
-							</ul>
-						</div>
-						<div class="govuk-footer__section govuk-grid-column-one-third">
-							<h2 class="govuk-footer__heading govuk-heading-m">For</h2>
-							<ul class="govuk-footer__list" role="list">
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/children-young-people/"
-										>Children and young people</a
-									>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/parents-carers/">Parents and carers</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/schools/">Schools and teachers</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/social-workers/">Social workers</a>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/professionals/">Other professionals</a>
-								</li>
-							</ul>
-						</div>
-						<div class="govuk-footer__section govuk-grid-column-one-third">
-							<h2 class="govuk-footer__heading govuk-heading-m">Rotherham Council</h2>
-							<ul class="govuk-footer__list" role="list">
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="https://www.rotherham.gov.uk/"
-										>rotherham.gov.uk</a
-									>
-								</li>
-								<li class="govuk-footer__list-item">
-									<a class="govuk-footer__link" href="/contact/">Contact the Virtual School</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<hr class="govuk-footer__section-break" />
-					<div class="govuk-footer__meta">
-						<div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-							<h2 class="govuk-visually-hidden">Support links</h2>
-							<ul class="govuk-footer__inline-list">
-								<li class="govuk-footer__inline-list-item">
-									<a class="govuk-footer__link" href="/accessibility-statement/"
-										>Accessibility statement</a
-									>
-								</li>
-								<li class="govuk-footer__inline-list-item">
-									<a class="govuk-footer__link" href="/privacy-cookies/">Privacy and cookies</a>
-								</li>
-								<li class="govuk-footer__inline-list-item">
-									<a class="govuk-footer__link" href="https://www.rotherham.gov.uk/site-map"
-										>Rotherham Council services</a
-									>
-								</li>
-							</ul>
-							<p class="govuk-body-s rvs-footer__copyright">
-								© {SITE_DEFAULTS.organisation}
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
+		<DsFooter links={DS_FOOTER_LINKS} navigationGroups={DS_FOOTER_NAV}>
+			{/*
+				The council logo goes in the footer's `partner` slot: the design
+				system says it is not part of the system and must be supplied by
+				the council, so it is not bundled with the components.
+			*/}
+			<img
+				slot="partner"
+				src="/brand/rmbc-logo-white.svg"
+				alt="Rotherham Metropolitan Borough Council"
+				width="132"
+				height="46"
+				loading="lazy"
+			/>
+		</DsFooter>
 
 		<PrototypeNotice />
-
-		<script>
-			import { initAll } from "govuk-frontend";
-
-			initAll();
-		</script>
 
 		<EmDashBodyEnd page={pageCtx} />
 	</body>
 </html>
-
-<style>
-	/* Search toggle, following the pattern GOV.UK uses in its own header: a
-	   button that reveals a search panel below rather than a permanently
-	   visible field. */
-	.rvs-search-toggle {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin: 0 0 0 auto;
-		padding: 15px 0;
-		border: 0;
-		background: none;
-		color: var(--govuk-link-colour, #002554);
-		font: inherit;
-		cursor: pointer;
-	}
-
-	/* The hover rule set a thickness without an underline, so hovering this
-	   button changed nothing on screen. */
-	.rvs-search-toggle:hover {
-		text-decoration: underline;
-		text-decoration-thickness: 3px;
-	}
-
-	/* Every other control on the page takes GOV.UK's focus treatment — the
-	   Rotherham yellow block with the ink underline. Without this the browser's
-	   own 1px ring was the only indicator, which reads as a different
-	   interface. Measured before: `outline: 1px auto rgb(0, 95, 204)`. */
-	.rvs-search-toggle:focus-visible {
-		outline: 3px solid transparent;
-		color: var(--rvs-ink);
-		background-color: var(--rvs-yellow);
-		box-shadow:
-			0 -2px var(--rvs-yellow),
-			0 4px var(--rvs-ink);
-		text-decoration: none;
-	}
-
-	.rvs-search-toggle__icon {
-		flex: 0 0 auto;
-	}
-
-	.rvs-search-panel {
-		padding: 0 0 1.5rem;
-	}
-
-	/* The feedback band runs the full width and must meet the footer flush, so
-	   drop the main wrapper's bottom padding on pages that show it. */
-	.rvs-main-wrapper--feedback {
-		padding-bottom: 0;
-	}
-
-	/* Council logo in the header. Uses the reversed (white) variant, which is
-	   the one drawn for a dark background. It reuses GOV.UK's
-	   govuk-header__logotype class for positioning, so only the height is set
-	   here. The GOV.UK crest is deliberately not used: this is a council
-	   service, not a GOV.UK service. */
-	.rvs-header-logo {
-		height: 34px;
-		width: auto;
-	}
-
-	@media (min-width: 40.0625em) {
-		.rvs-header-logo {
-			height: 40px;
-		}
-	}
-
-	.rvs-footer__copyright {
-		color: var(--govuk-secondary-text-colour, #616365);
-		margin: 1rem 0 0;
-	}
-</style>
-
-<script is:inline>
-	// Service navigation disclosure.
-	//
-	// GOV.UK expands its service navigation from the tablet breakpoint (641px),
-	// but this nav carries five items that need 717px before the search toggle
-	// has any room. Between 641px and ~880px the list therefore wrapped to two
-	// lines, orphaning the last item and pushing the search toggle onto a third
-	// row — the header grew from 131px to 245px.
-	//
-	// The component's breakpoint is a single `--govuk-breakpoint-tablet` custom
-	// property on :root, shared with every GOV.UK grid rule, so it cannot be
-	// changed for one component. The disclosure is driven here instead, with the
-	// same markup, classes and accessibility model, at a width the content fits.
-	(function () {
-		var nav = document.querySelector("[data-rvs-nav]");
-		if (!nav) return;
-		var button = nav.querySelector(".govuk-service-navigation__toggle");
-		var list = nav.querySelector(".govuk-service-navigation__list");
-		if (!button || !list) return;
-
-		// Must match the 55em breakpoint in the stylesheet.
-		var desktop = window.matchMedia("(min-width: 55em)");
-		var open = false;
-
-		function render() {
-			if (desktop.matches) {
-				button.hidden = true;
-				button.setAttribute("aria-hidden", "true");
-				button.setAttribute("aria-expanded", "false");
-				list.hidden = false;
-				return;
-			}
-			button.hidden = false;
-			button.removeAttribute("aria-hidden");
-			button.setAttribute("aria-expanded", String(open));
-			list.hidden = !open;
-		}
-
-		button.addEventListener("click", function () {
-			open = !open;
-			render();
-		});
-
-		// Escape closes the opened menu and returns focus to the toggle.
-		document.addEventListener("keydown", function (event) {
-			if (event.key !== "Escape" || !open || desktop.matches) return;
-			open = false;
-			render();
-			button.focus();
-		});
-
-		// A click outside the menu closes it. Clicks inside `nav` include the
-		// toggle, which the handler above already deals with.
-		document.addEventListener("click", function (event) {
-			if (!open || desktop.matches) return;
-			if (nav.contains(event.target)) return;
-			open = false;
-			render();
-		});
-
-		// Crossing the breakpoint always returns to the collapsed state, so the
-		// menu is never left open at a width where the toggle is hidden.
-		var onChange = function () {
-			open = false;
-			render();
-		};
-		if (desktop.addEventListener) desktop.addEventListener("change", onChange);
-		else desktop.addListener(onChange);
-
-		render();
-	})();
-</script>
-
-<script is:inline>
-	(function () {
-		var toggle = document.querySelector("[data-search-toggle]");
-		var panel = document.getElementById("rvs-search-panel");
-		if (!toggle || !panel) return;
-
-		function setOpen(open) {
-			panel.hidden = !open;
-			toggle.setAttribute("aria-expanded", String(open));
-			if (open) {
-				var input = panel.querySelector("input");
-				if (input) input.focus();
-			}
-		}
-
-		toggle.addEventListener("click", function () {
-			setOpen(toggle.getAttribute("aria-expanded") !== "true");
-		});
-
-		// Escape closes the panel and returns focus to the toggle.
-		document.addEventListener("keydown", function (event) {
-			if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
-				setOpen(false);
-				toggle.focus();
-			}
-		});
-
-		// A click anywhere outside the panel and its toggle closes it. Clicks on
-		// the toggle are left to the handler above, so pressing the button does
-		// not close and immediately reopen.
-		document.addEventListener("click", function (event) {
-			if (toggle.getAttribute("aria-expanded") !== "true") return;
-			if (toggle.contains(event.target) || panel.contains(event.target)) return;
-			setOpen(false);
-		});
-	})();
-</script>

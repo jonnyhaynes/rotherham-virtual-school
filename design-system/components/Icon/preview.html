@@ -1,0 +1,14 @@
+<!-- @dsCard group="Brand & visual language" height=360 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Icon</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h('ul',{style:{listStyle:'none',margin:0,padding:0,display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))',gap:'10px'}},R.ICON_NAMES.map(function(n){return h('li',{key:n,style:{display:'flex',flexDirection:'column',alignItems:'center',gap:'6px',padding:'10px 4px',borderRadius:'8px',background:'var(--surface-alt)',fontSize:'13px',color:'var(--text-secondary)'}},h(R.Icon,{name:n,size:28,className:'rvs-tone-text-navy'}),n);})))
+);
+</script>
+</body>
+</html>

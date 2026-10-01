@@ -1,0 +1,18 @@
+<!-- @dsCard group="Education patterns" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>PupilCard</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo','data-zone':'pupil'},h('ul',{className:'rvs-pupil-cards'},
+ h('li',null,h(R.PupilCard,{href:'#',icon:'document',tone:'teal',title:'Your PEP',text:'What a Personal Education Plan is, and what should happen at your PEP meeting.'})),
+ h('li',null,h(R.PupilCard,{href:'#',icon:'school',tone:'yellow',title:'Moving to a new school',text:'What to expect when you change school or move to a new home.'})),
+ h('li',null,h(R.PupilCard,{href:'#',icon:'graduation',tone:'coral',title:'Going to college or work',text:'Help with what comes next after year 11, including money and support.'})),
+ h('li',null,h(R.PupilCard,{href:'#',icon:'users',tone:'purple',title:'Who can help you',text:'The people you can talk to if something is worrying you at school.'}))))
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import IconBadge from "./IconBadge.astro";
+import type { IconName } from "./icons";
+
+/**
+ * AudienceSelector — the "who are you?" router. Ported from `bundle.js`.
+ *
+ * Each item carries its audience id, which sets `data-audience` on the list item
+ * so the card tints with that audience's accent. The design system defines five
+ * audience ids, one colour each.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+type BrandTone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Item {
+	id: Audience;
+	label: string;
+	description?: string;
+	href: string;
+	icon?: IconName;
+}
+
+interface Props {
+	audiences: Item[];
+	variant?: "cards" | "pills";
+	current?: Audience;
+	heading?: string | null;
+	headingLevel?: number;
+	label?: string;
+	class?: string;
+}
+
+const {
+	audiences = [],
+	variant = "cards",
+	current,
+	heading = null,
+	headingLevel = 2,
+	label,
+	class: className,
+} = Astro.props;
+
+const AUD_ICON: Record<Audience, IconName> = {
+	"young-people": "user",
+	"parents-carers": "users",
+	schools: "school",
+	"social-workers": "clipboard",
+	professionals: "briefcase",
+};
+
+const AUD_TONE: Record<Audience, BrandTone> = {
+	"young-people": "teal",
+	"parents-carers": "coral",
+	schools: "yellow",
+	"social-workers": "purple",
+	professionals: "navy",
+};
+---
+
+<nav class:list={["rvs-audiences", `rvs-audiences--${variant}`, className]} aria-label={label ?? "Who is this for?"}>
+	{heading && <Heading level={headingLevel} class="rvs-section-title">{heading}</Heading>}
+	<ul class="rvs-audiences__list">
+		{
+			audiences.map((item) => {
+				const isCurrent = current === item.id;
+				return (
+					<li class="rvs-audiences__item" data-audience={item.id}>
+						<a
+							class:list={["rvs-audiences__link", isCurrent && "is-current"]}
+							href={item.href}
+							aria-current={isCurrent ? "page" : undefined}
+						>
+							{variant === "cards" && (
+								<IconBadge
+									icon={item.icon ?? AUD_ICON[item.id] ?? "user"}
+									tone={AUD_TONE[item.id] ?? "teal"}
+									size="md"
+								/>
+							)}
+							<span class="rvs-audiences__text">
+								<span class="rvs-audiences__label">{item.label}</span>
+								{variant === "cards" && item.description && (
+									<span class="rvs-audiences__desc">{item.description}</span>
+								)}
+							</span>
+							<Icon name="arrow-right" size={20} class="rvs-audiences__arrow" />
+						</a>
+					</li>
+				);
+			})
+		}
+	</ul>
+</nav>

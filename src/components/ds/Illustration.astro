@@ -1,0 +1,49 @@
+---
+import { ASSETS } from "./assets";
+
+/**
+ * Illustration — the flat, warm brand scenes. Ported from `bundle.js`.
+ *
+ * Always decorative: the design system is explicit that these carry no meaning
+ * and must not be given a text alternative, and that no photo of a child in care
+ * is ever used.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+interface Props {
+	name?: "home" | "children" | "parents-carers" | "schools";
+	src?: string;
+	alt?: string;
+	variant?: "frame" | "circle" | "bleed";
+	audience?: Audience;
+	caption?: string | null;
+	class?: string;
+}
+
+const {
+	name = "home",
+	src,
+	alt = "",
+	variant = "frame",
+	audience,
+	caption = null,
+	class: className,
+} = Astro.props;
+
+const resolvedSrc = src ?? ASSETS[`illustration-${name}`];
+---
+
+<figure
+	class:list={["rvs-illustration", `rvs-illustration--${variant}`, className]}
+	data-audience={audience}
+>
+	<div class="rvs-illustration__frame">
+		<img src={resolvedSrc} alt={alt} loading="lazy" />
+	</div>
+	{caption && <figcaption class="rvs-illustration__caption">{caption}</figcaption>}
+</figure>

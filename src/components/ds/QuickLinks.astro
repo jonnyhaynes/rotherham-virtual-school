@@ -1,0 +1,75 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * QuickLinks — a list of related routes. Ported from `bundle.js`. Used for
+ * "Related…" blocks, recently updated lists and on-page jump links.
+ */
+interface LinkItem {
+	label: string;
+	href: string;
+	icon?: IconName;
+	meta?: string;
+	external?: boolean;
+}
+
+interface Props {
+	links: LinkItem[];
+	heading?: string | null;
+	headingLevel?: number;
+	variant?: "default" | "panel";
+	columns?: number;
+	emptyText?: string;
+	label?: string;
+	class?: string;
+}
+
+const {
+	links = [],
+	heading = null,
+	headingLevel = 2,
+	variant = "default",
+	columns,
+	emptyText = "Nothing to show yet.",
+	label,
+	class: className,
+} = Astro.props;
+---
+
+<nav
+	class:list={["rvs-quicklinks", variant !== "default" && `rvs-quicklinks--${variant}`, className]}
+	aria-label={label ?? heading ?? "Quick links"}
+>
+	{heading && <Heading level={headingLevel} class="rvs-quicklinks__title">{heading}</Heading>}
+	{
+		links.length > 0 ? (
+			<ul class="rvs-quicklinks__list" style={columns ? `column-count: ${columns}` : undefined}>
+				{links.map((link) => (
+					<li class="rvs-quicklinks__item">
+						<a
+							class="rvs-quicklinks__link"
+							href={link.href}
+							target={link.external ? "_blank" : undefined}
+							rel={link.external ? "noopener noreferrer" : undefined}
+						>
+							<Icon
+								name={link.icon ?? (link.external ? "external" : "chevron-right")}
+								size={link.icon ? 20 : 18}
+								class="rvs-quicklinks__icon"
+							/>
+							<span>
+								{link.label}
+								{link.external && <span class="rvs-visually-hidden"> (opens in new tab)</span>}
+							</span>
+						</a>
+						{link.meta && <span class="rvs-quicklinks__meta">{link.meta}</span>}
+					</li>
+				))}
+			</ul>
+		) : (
+			<p class="rvs-muted">{emptyText}</p>
+		)
+	}
+</nav>

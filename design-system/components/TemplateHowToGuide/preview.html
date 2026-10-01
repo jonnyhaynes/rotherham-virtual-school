@@ -1,0 +1,22 @@
+<!-- @dsCard group="Page templates" height=1700 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateHowToGuide</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#',active:true},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content','data-audience':'schools'},h(R.Hero,{variant:'compact',title:'How to complete a PEP',lead:'A step-by-step guide for designated teachers. It takes about 30 minutes once you have the information ready.',eyebrow:'How-to guide',audience:'schools',breadcrumbs:[{label:'Home',href:'#'},{label:'Schools',href:'#'},{label:'How to complete a PEP'}]}),
+ h('div',{className:'rvs-main'},h('div',{className:'rvs-sidebar-layout'},
+  h('div',{className:'rvs-stack--s'},h(R.OnThisPage,{activeId:'s1',items:[{id:'s0',label:'Before you start'},{id:'s1',label:'Steps'},{id:'s2',label:'Pupil Premium Plus'},{id:'s3',label:'Watch the video'}]})),
+  h('div',{className:'rvs-stack'},
+   h(R.Checklist,{interactive:false,heading:'Before you start, you’ll need',items:[{id:'a',label:'Attendance and attainment data for this term'},{id:'b',label:'The child’s views, in their own words'},{id:'c',label:'Last term’s targets and what happened'}]}),
+   h(R.Steps,{heading:'Steps',steps:[{title:'Sign in to ePEP',text:'Open the child’s record for this term.'},{title:'Update progress and attendance',text:'Use evidence, not adjectives.'},{title:'Record the child’s voice',text:'Their words, not a summary.'},{title:'Set three SMART targets',text:'A small number, each with a named adult and a date.'},{title:'Link Pupil Premium Plus to targets',text:'Say what the money buys and what will change.'},{title:'Submit for quality assurance',text:'The PEP coordinator checks it within 10 working days.'}]}),
+   h(R.Panel,{tone:'advice',title:'Hint: show the impact'},h('p',null,'“Weekly 1:1 reading, moved up two book bands” beats “extra support”.')),
+   h('section',{id:'s3'},h('h2',{className:'rvs-section-title'},'Watch the video'),h('div',{style:{maxWidth:'560px'}},h(R.VideoEmbed,{title:'Completing a PEP in ePEP (example)',videoId:'VIDEO_ID',duration:'2 minutes',transcriptHref:'#'}))),
+   h(R.DocumentLink,{title:'How to complete a PEP: printable guide (example)',href:'#',fileType:'PDF',fileSize:'420KB',pages:4,updated:'2026-09-01'})))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

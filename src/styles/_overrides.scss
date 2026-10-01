@@ -1,302 +1,336 @@
 // =============================================================================
-// Global refinements layered over GOV.UK Frontend
+// Global refinements
 // =============================================================================
 // Keep this file small and genuine: component-specific styling belongs in the
 // component's own <style> block. Only rules that apply site-wide live here.
+//
+// With every page composing from `src/components/ds`, this file no longer
+// patches GOV.UK: it holds type mechanics, the design system's progressive
+// enhancement, and this service's own extensions to a few components.
 
 // --- Type mechanics ---------------------------------------------------------
-// Headings break with intention rather than leaving one orphaned word; prose
-// descriptions avoid ugly last lines. Neither is applied to long-form, where
-// the browser ignores `balance` past a few lines anyway.
+// Headings break with intention rather than leaving one orphaned word.
 h1,
 h2,
 h3,
 h4,
 h5,
 h6,
-.govuk-heading-xl,
-.govuk-heading-l,
-.govuk-heading-m,
-.govuk-heading-s {
+.rvs-section-title,
+.rvs-hero__title {
 	text-wrap: balance;
 }
 
 // Long words, URLs and email addresses must never force a horizontal scrollbar.
 // `break-word` only breaks a token that would otherwise overflow, so ordinary
-// prose wrapping is untouched. This is the safety net behind the 320px reflow
-// finding; `.rvs-break-words` is the explicit opt-in.
+// prose wrapping is untouched. `.rvs-break-words` is the explicit opt-in.
 body,
-.govuk-body,
-.govuk-body-l,
-.govuk-body-s,
-.govuk-list,
-.govuk-link,
 .rvs-prose,
 .rvs-break-words {
 	overflow-wrap: break-word;
 }
 
-// --- Measure ----------------------------------------------------------------
-// Without a cap, body copy runs the full 960px container — measured at ~84
-// characters per line, well past the readable band.
-//
-// The cap is in rem, not ch, on purpose. A `ch` cap resolves against whichever
-// font is active, so the same 65ch is a different width in the fallback than in
-// Mulish — which rewraps every paragraph at the moment the webfont loads and
-// shifts the page. A fixed width cannot move.
-//
-// 46rem is 736px, which renders at roughly 65ch in Mulish at 19px, inside the
-// readable 60–75ch band.
-main .govuk-body,
-main .govuk-list {
-	max-width: 46rem;
+// --- Brand utilities --------------------------------------------------------
+// Sunshine highlight behind ink text — an editorial device, never text on white.
+.rvs-highlight {
+	color: var(--navy);
+	background-image: linear-gradient(
+		to top,
+		transparent 0.18em,
+		var(--yellow) 0.18em,
+		var(--yellow) 0.72em,
+		transparent 0.72em
+	);
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	padding-inline: 0.06em;
 }
 
-// Body copy rendered from EmDash Portable Text or hand-authored pages.
-.rvs-prose {
-	> *:last-child {
-		margin-bottom: 0;
-	}
-
-	// On the GOV.UK 5px ladder, expressed through its own spacing scale.
-	h2 {
-		margin-top: 40px;
-	}
-
-	h3,
-	h4 {
-		margin-top: 30px;
-	}
-
-	img {
-		max-width: 100%;
-		height: auto;
-	}
-
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		margin-bottom: 30px;
-	}
+// Constrain a block to the readable measure.
+.rvs-measure {
+	max-width: var(--measure);
 }
 
-// =============================================================================
-// Service navigation disclosure
-// =============================================================================
-// GOV.UK expands its service navigation inline from the tablet breakpoint
-// (641px), but this nav carries five items needing 717px before the search
-// toggle has room. Between 641px and ~880px the list wrapped to two lines,
-// orphaning the last item and pushing the toggle onto a third row; the header
-// grew from 131px to 245px. The breakpoint is one global
-// `--govuk-breakpoint-tablet` property shared with every GOV.UK grid rule, so
-// the disclosure is re-driven in BaseLayout at 55em instead.
-//
-// These rules support that: the collapsed state must beat GOV.UK's
-// `display: flex`, and the opened menu must use GOV.UK's mobile stack (one item
-// per line) rather than a horizontally wrapping row.
-
-[data-rvs-nav] .govuk-service-navigation__list[hidden] {
-	display: none;
+// A short introduction under a section heading, outside Prose. One class so the
+// same paragraph reads identically wherever it appears — previously each page
+// rolled its own (home `__intro`, about `__lead-intro`, 404 `__body`) with
+// slightly different rules.
+.rvs-intro {
+	margin: 0 0 var(--space-4);
+	max-width: var(--measure);
+	font-size: 19px;
+	line-height: 25px;
+	color: var(--text-secondary);
 }
 
-@media (max-width: 54.99em) {
-	[data-rvs-nav] .govuk-service-navigation__list {
-		display: block;
+// -----------------------------------------------------------------------------
+// Hero: steady height, uniform illustration, blending ground
+// -----------------------------------------------------------------------------
+// Heroes sized to their content, so a longer lead or a differently proportioned
+// illustration made each page's hero a different height and the page jumped as
+// you moved between sections. Give the hero a floor height and the illustration
+// one fixed box, take the frame off, and let its light backdrop multiply into the
+// ground so it sits in the colour rather than on top of it.
+
+// The floor applies to every illustrated hero (home and the audience landings),
+// not the compact ones, and is a multiple of the spacing scale rather than a
+// magic number.
+.rvs-hero:not(.rvs-hero--compact) .rvs-hero__inner {
+	min-height: calc(var(--space-9) * 7);
+}
+
+.rvs-hero__art {
+	background: var(--rvs-hero-ground);
+}
+
+.rvs-hero__art img {
+	height: 320px;
+	object-fit: contain;
+	border-radius: 0;
+	mix-blend-mode: multiply;
+}
+
+@media (max-width: 640px) {
+	.rvs-hero:not(.rvs-hero--compact) .rvs-hero__inner {
+		min-height: 0;
 	}
 
-	[data-rvs-nav] .govuk-service-navigation__item {
-		display: block;
-		margin: 10px 0;
-		padding: 0;
+	.rvs-hero__art img {
+		height: 220px;
 	}
 }
 
-// The toggle is the only control on the collapsed menu, so give it a touch
-// target. GOV.UK sizes it to its 25px line box.
-[data-rvs-nav] .govuk-service-navigation__toggle {
-	min-height: 44px;
+// The hero ground and the hills divider's back hill share one colour, so the
+// divider blends into the hero instead of showing a pale-blue band on a tinted
+// section: teal for young people, coral for carers, yellow for schools, purple
+// for social workers. Home (no `data-audience`) keeps the brand pale blue, whose
+// hills already match. The `-50` tints all clear 4.5:1 with navy text.
+.rvs-hero--home {
+	--rvs-hero-ground: var(--pale-blue);
 }
 
-// GOV.UK ships no hover state for this control — zero hover rules in its
-// stylesheet — so the menu toggle looked inert under a pointer while the search
-// toggle beside it underlines. Same treatment as that control.
-[data-rvs-nav] .govuk-service-navigation__toggle:hover {
-	text-decoration: underline;
-	text-decoration-thickness: 3px;
+// Any audience hero — the home variant on the home page, the default variant on
+// the audience landings — takes the section's soft accent as its ground.
+[data-audience] .rvs-hero {
+	--rvs-hero-ground: var(--rvs-accent-soft);
+	background-color: var(--rvs-hero-ground);
 }
 
-// =============================================================================
-// Prototype safeguards
-// =============================================================================
+.rvs-hero .rvs-divider .rvs-fill-pale {
+	fill: var(--rvs-hero-ground, var(--pale-blue));
+}
+
+// --- Prototype safeguards ---------------------------------------------------
 // The prototype notice bar is fixed to the bottom of the viewport, so reserve
 // space for it while it is on screen. The class is set on <html> by the bar.
-// The safe-area inset is added to both the reserved space and the bar's own
-// padding, so the two stay in step on devices that report one.
 html.rvs-has-prototype-bar body {
 	padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
 }
 
-// =============================================================================
-// Full-bleed bands
-// =============================================================================
-// A band keeps its content on the same lane as the rest of the page but paints
-// its background out to the viewport edges. Lifting the element out of the
-// width container would drag its content with it, and `width: 100vw` overhangs
-// by the scrollbar width and pulls the band's centre off the page's. Painting a
-// shadow behind the box and clipping it horizontally avoids both. The vertical
-// inset of 0 keeps the clip to the element's own height, so a band that grows
-// (the feedback form opening, an error message appearing) still clips correctly.
-.rvs-band {
-	background-color: var(--rvs-band-bg);
-	box-shadow: 0 0 0 100vmax var(--rvs-band-bg);
-	clip-path: inset(0 -100vmax);
-}
-
-// =============================================================================
-// Audience router grid
-// =============================================================================
-// Five audiences. Auto-fit sized the cards to whatever fitted, which left the
-// second row two cards short of the row above it, so the site's primary router
-// ended on a hole. Six tracks with spans instead: three across the first row and
-// two across the second, both rows flush to the same edges.
-//
-// This lives here rather than in the page because Astro scopes a page's styles
-// to elements that page renders, and these children are `<li>`s rendered by
-// AudienceCard. Written in the page, the `:nth-child` selectors matched nothing
-// and all five cards collapsed into single tracks, overflowing at tablet.
-.rvs-audience-grid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: var(--rvs-space-4);
-	margin: var(--rvs-space-4) 0 0;
-	padding: 0;
-	list-style: none;
-}
-
-@media (min-width: 40.0625em) {
-	.rvs-audience-grid {
-		grid-template-columns: repeat(6, 1fr);
-		margin-block-start: var(--rvs-space-5);
-	}
-
-	.rvs-audience-grid > :nth-child(-n + 3) {
-		grid-column: span 2;
-	}
-
-	.rvs-audience-grid > :nth-child(n + 4) {
-		grid-column: span 3;
-	}
-}
-
-// =============================================================================
-// Safe areas
-// =============================================================================
-// BaseLayout sets `viewport-fit=cover`, so the page extends under the notch and
-// the home indicator. In landscape the notch would otherwise sit over the left
-// edge of every full-bleed band, and the fixed notice bar would sit under the
-// home indicator. Both insets resolve to 0 where there is no cutout.
-.govuk-header,
-.govuk-service-navigation,
-.govuk-footer,
+// --- Safe areas -------------------------------------------------------------
+// BaseLayout sets `viewport-fit=cover`, so the fixed notice bar would otherwise
+// sit under the home indicator. The inset resolves to 0 where there is no cutout.
 .rvs-prototype {
 	padding-left: env(safe-area-inset-left, 0px);
 	padding-right: env(safe-area-inset-right, 0px);
-}
-
-.rvs-prototype {
 	padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 // =============================================================================
-// Pupil Zone theme
+// Design system: progressive enhancement
 // =============================================================================
-// A deliberately warmer sub-brand for content written for children and young
-// people. Same components, bigger and softer: larger body text, generous line
-// height, rounded surfaces and a purple accent. Everything still inherits the
-// GOV.UK type scale and focus styles, so accessibility is unchanged.
-.rvs-pupil {
-	--rvs-pupil-accent: var(--rvs-audience-young);
-
-	// Larger reading size for this audience, but still an explicit step.
-	.govuk-body,
-	p,
-	li {
-		font-size: 1.25rem;
-		line-height: 1.6;
+// The masthead collapses its navigation behind a Menu button that only
+// JavaScript can drive, so the collapsed state is scoped to `.is-enhanced` —
+// the class the Header component's script sets. Until it runs, and for anyone
+// with JavaScript off, the navigation stays visible and the inert toggle hidden.
+@container (max-width: 860px) {
+	.rvs-header:not(.is-enhanced) .rvs-header__toggle {
+		display: none;
 	}
 
-	// The lead must stay clearly above body copy. It previously shared the
-	// 1.25rem rule, which flattened the pair to a 1.00 ratio and made the lead
-	// smaller than the same lead on every other page.
-	.govuk-body-l {
-		font-size: 1.5rem;
-		line-height: 1.4;
-	}
-
-	.govuk-heading-xl {
-		line-height: 1.05;
-	}
-
-	.govuk-list--bullet li {
-		margin-bottom: 10px;
-	}
-
-	.govuk-inset-text {
-		border-left-width: 10px;
-		border-left-color: var(--rvs-pupil-accent);
-		background: #fff;
-		border-radius: var(--rvs-pupil-radius);
-		padding: 20px;
-	}
-
-	.govuk-link {
-		text-underline-offset: 0.15em;
-	}
-
-	.rvs-pupil-card {
+	.rvs-header:not(.is-enhanced) .rvs-header__nav {
 		display: block;
-		background: #fff;
-		border: 2px solid var(--rvs-border);
-		border-radius: var(--rvs-pupil-radius);
-		padding: 20px;
-		text-decoration: none;
-		color: inherit;
+		flex-basis: 100%;
+		order: 3;
 	}
+}
 
-	.rvs-pupil-card:hover {
-		border-color: var(--rvs-pupil-accent);
-		text-decoration: underline;
-	}
+// The open/closed glyph is swapped on `aria-expanded`, so the state never
+// depends on the icon: the accessible name and the expanded state are announced
+// either way.
+.rvs-toggle-icon {
+	display: inline-flex;
+}
 
-	.rvs-pupil-card__title {
-		margin: 0 0 10px;
-		color: var(--rvs-navy);
-	}
+.rvs-toggle-icon--close {
+	display: none;
+}
 
-	.rvs-pupil-card__text {
-		margin: 0;
-	}
+[aria-expanded="true"] > .rvs-toggle-icon--close {
+	display: inline-flex;
+}
+
+[aria-expanded="true"] > .rvs-toggle-icon--open {
+	display: none;
+}
+
+// The no-JavaScript route to search, under the masthead's search panel.
+.rvs-header__search-noscript {
+	margin: var(--space-3) 0 0;
+	font-size: 16px;
+	line-height: 20px;
 }
 
 // =============================================================================
-// Data tables
+// Design system: site extensions
 // =============================================================================
-// Figures must line up in a column so they can be compared by scanning.
-// Outcomes table, documents metadata, anywhere numbers are read as data.
-.rvs-data-table {
-	font-variant-numeric: tabular-nums;
+// Places where this service's real content needs a little more than the
+// reference components provide. Each one keeps the design system's tokens, so
+// they stay in its language rather than introducing a second one.
+
+// The footer is one band: brand and navigation share the top row, then a thin
+// legal bar carries the support links and the council partner. The reference
+// footer has only the support links; this service's navigation columns are kept
+// as the site extension, sitting beside the brand rather than as a second band.
+.rvs-footer__top {
+	align-items: flex-start;
 }
 
-// Three columns of outcomes cannot compress below ~362px, so on the narrowest
-// screens the table scrolls rather than widening the page. Scroll (rather than
-// stacking the cells) keeps the columns aligned, which is the whole point of
-// the table. Focusable so it can be scrolled without a pointer.
-.rvs-table-scroll {
-	overflow-x: auto;
+.rvs-footer__nav {
+	flex: 1 1 26rem;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--space-5) var(--space-6);
 }
 
-.rvs-table-scroll:focus-visible {
-	outline: 3px solid var(--rvs-yellow);
-	outline-offset: 2px;
+@media (min-width: 641px) {
+	.rvs-footer__nav {
+		grid-template-columns: repeat(3, 1fr);
+	}
 }
 
+.rvs-footer__bottom {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4) var(--space-5);
+	padding-top: var(--space-5);
+}
+
+.rvs-footer__heading {
+	margin: 0 0 var(--space-3);
+	font-size: 19px;
+	line-height: 25px;
+	font-weight: 700;
+	color: var(--text-inverse);
+}
+
+.rvs-footer__list {
+	display: grid;
+	gap: var(--space-2);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+// The council logo, supplied to the footer's `partner` slot.
+.rvs-footer__partner img {
+	display: block;
+	height: 46px;
+	width: auto;
+}
+
+// The contact panel's line of reassurance, which the reference component does
+// not carry. Full width in the inline strip so it sits under the title.
+.rvs-contact__text {
+	margin: 0 0 var(--space-3);
+	font-size: 16px;
+	line-height: 22px;
+	color: var(--text-secondary);
+}
+
+.rvs-contact--inline .rvs-contact__text {
+	flex-basis: 100%;
+	margin-bottom: var(--space-2);
+}
+
+// Five audience cards. Auto-fit sized them to whatever fitted, so the second row
+// ended two cells short of the row above and the primary router finished on a
+// hole. Six tracks with spans instead: three across the first row and two across
+// the second, both rows flush to the same edges. (The pills variant sets its own
+// flex list, so this only affects the cards.)
+.rvs-audiences__list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--space-4);
+}
+
+@media (min-width: 641px) {
+	.rvs-audiences__list {
+		grid-template-columns: repeat(6, 1fr);
+		gap: var(--space-5);
+	}
+
+	.rvs-audiences__list > :nth-child(-n + 3) {
+		grid-column: span 2;
+	}
+
+	.rvs-audiences__list > :nth-child(n + 4) {
+		grid-column: span 3;
+	}
+}
+
+// Most components that head a page section (StatsPanel, Signpost, Steps, Tabs,
+// StateMessage, the section title itself) sit on the 24/30 scale; Checklist,
+// QuickLinks and KeyFacts default to 19/25, so the same kind of heading came out
+// at two sizes on one page. Where they head a section they now match; where they
+// sit in a sidebar they keep the smaller title.
+.rvs-checklist__title,
+.rvs-quicklinks__title,
+.rvs-facts__title {
+	font-size: 24px;
+	line-height: 30px;
+}
+
+aside .rvs-quicklinks__title,
+aside .rvs-facts__title {
+	font-size: 19px;
+	line-height: 25px;
+}
+
+@media (max-width: 640px) {
+	.rvs-checklist__title,
+	.rvs-quicklinks__title,
+	.rvs-facts__title {
+		font-size: 21px;
+		line-height: 25px;
+	}
+}
+
+// The non-interactive checklist has no progress bar, so its list sat flush
+// against the heading with no gap. Give it breathing room when it directly
+// follows the head.
+.rvs-checklist__head + .rvs-checklist__list {
+	margin-top: var(--space-4);
+}
+
+// The Apply-filters control has no style of its own, so the button sat flush
+// against the last filter group. Separate it on the component's own rhythm.
+.rvs-filters__apply {
+	margin-top: var(--space-5);
+	display: flex;
+	gap: var(--space-3);
+}
+
+// -----------------------------------------------------------------------------
+// Mobile navigation
+// -----------------------------------------------------------------------------
+// The open menu sets `left`/`right` but no `top`, so it fell back to its static
+// position — vertically centred on the tools row — and opened about 100px above
+// the viewport, with its first items off-screen. Anchor it to the bottom of the
+// header instead, so it drops down full width and fully visible.
+.rvs-header__nav.is-open {
+	top: 100%;
+	bottom: auto;
+}

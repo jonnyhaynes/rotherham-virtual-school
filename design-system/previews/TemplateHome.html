@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateHome</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'home',title:'Rotherham Virtual School',lead:'We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham — wherever they live and whatever school they go to.',illustration:{name:'home',alt:''}}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h('section',null,h('h2',{className:'rvs-section-title'},'Who are you?'),h('p',{className:'rvs-muted',style:{marginTop:'-10px',marginBottom:'20px'}},'Choose the option that fits you best. Each section is written for you.'),
+   h(R.AudienceSelector,{label:'Who are you?',audiences:[{id:'young-people',label:'You are a child or young person',description:'What a virtual school is, what your PEP means, and who you can talk to if you need help.',href:'#'},{id:'parents-carers',label:'You are a parent, carer or kinship carer',description:'How we support your child’s education, what the PEP is, and how to ask for help.',href:'#'},{id:'schools',label:'You work in a school',description:'Designated teacher guidance, PEP deadlines, Pupil Premium Plus, training and admissions.',href:'#'},{id:'social-workers',label:'You are a social worker',description:'Your part in the PEP, how to refer a child, and how we work together to improve outcomes.',href:'#'},{id:'professionals',label:'You are another professional',description:'Information for health, early help, virtual partners and anyone supporting a child in care.',href:'#'}]})),
+  h(R.Explainer,{icon:'school',tone:'teal',question:'What is a virtual school?',answer:'A virtual school is not a building and children do not attend it. We are a team of professionals who work with schools, carers and social workers to make sure the children we support get the education they deserve.',points:[{icon:'school',text:'The right school, making progress'},{icon:'graduation',text:'Training and good practice'},{icon:'check-circle',text:'Progress, attendance and exclusions'},{icon:'transition',text:'Moving school, year group or on to college'}],href:'#',linkLabel:'About us'}),
+  h(R.Panel,{tone:'help',title:'Are you worried about a child?',actions:h(R.Link,{href:'https://www.rotherham.gov.uk/child-protection/report-concern-child-young-person',variant:'arrow'},'Report a concern about a child or young person')},h('p',null,'If you are worried about a child or young person’s safety, contact Rotherham’s Children’s Social Care team.')),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Latest news'),h(R.Grid,{min:'280px'},
+   h(R.Card,{href:'#',title:'Virtual School annual report published',text:'Our annual report sets out how children in care in Rotherham performed last year, and what we are doing next.',meta:'15 September 2026'}),
+   h(R.Card,{href:'#',title:'Celebrating our care leavers’ results',text:'Congratulations to the young people who collected results this summer and are moving on to college, training or work.',meta:'20 August 2026'})),
+   h('p',{style:{marginTop:'20px'}},h(R.Link,{href:'#',variant:'arrow'},'See all news'))),
+  h(R.Grid,{min:'300px'},h(R.Quote,{variant:'student-voice',label:'Pupil voice',cite:'Young person, Year 10'},'Add a real quote here, with consent — what difference the Virtual School made.'),h(R.ContactPanel,{title:'Need to get in touch?',email:'virtualschool@rotherham.gov.uk',contactHref:'#'}))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Hero</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',null,
+ h(R.Hero,{audience:'young-people',breadcrumbs:[{label:'Home',href:'#'},{label:'For children & young people'}],eyebrow:'For children & young people',title:'Your education. Your voice. Your future.',lead:'We’re here to support you to achieve your goals, feel safe and make the most of your opportunities, no matter what your circumstances.',actions:h(R.Button,{href:'#',icon:'arrow-right'},'Find out about your PEP'),illustration:{name:'children',alt:''}}),
+ h(R.Hero,{variant:'compact',audience:'schools',eyebrow:'For schools',title:'Pupil Premium Plus',lead:'How the grant works, who is eligible and how to request funding.'}))
+);
+</script>
+</body>
+</html>

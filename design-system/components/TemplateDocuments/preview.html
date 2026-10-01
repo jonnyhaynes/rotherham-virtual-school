@@ -1,0 +1,22 @@
+<!-- @dsCard group="Page templates" height=1500 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateDocuments</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'Documents',lead:'Policies, statutory guidance, forms and reports. Where a document is published nationally, we link to the original source so you always have the current version.',breadcrumbs:[{label:'Home',href:'#'},{label:'Documents'}]}),
+ h('div',{className:'rvs-main'},h('div',{className:'rvs-sidebar-layout'},
+  h(R.FilterPanel,{groups:[{id:'aud',legend:'Audience',options:[{value:'young-people',label:'Young people'},{value:'parents-carers',label:'Parents and carers'},{value:'schools',label:'Schools'},{value:'social-workers',label:'Social workers'},{value:'professionals',label:'Professionals'}]},{id:'cat',legend:'Type',options:[{value:'guidance',label:'Guidance'},{value:'policy',label:'Policies'},{value:'form',label:'Forms'},{value:'report',label:'Reports'}]}]}),
+  h('div',{className:'rvs-stack'},
+   h('section',null,h('h2',{className:'rvs-section-title'},'Guidance'),h('div',{className:'rvs-stack--s'},
+    h(R.Card,{href:'https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children',external:true,title:'Promoting the education of looked-after and previously looked-after children',text:'The Department for Education’s statutory guidance for local authorities. This is the framework the Virtual School works to.',meta:'Updated 1 April 2024'}),
+    h(R.DocumentLink,{variant:'compact',title:'How to complete a PEP: guide for designated teachers (example)',href:'#',fileType:'PDF',fileSize:'420KB',updated:'2026-09-01'}))),
+   h('section',null,h('h2',{className:'rvs-section-title'},'Reports'),h(R.Card,{href:'https://www.gov.uk/government/publications/the-impact-of-virtual-schools-on-the-education-of-looked-after-children',external:true,title:'The impact of virtual schools on the education of looked-after children',text:'Ofsted’s survey report on how virtual schools improve outcomes for children in care.',meta:'Updated 1 April 2024'})),
+   h('section',null,h('h2',{className:'rvs-section-title'},'Other'),h(R.Card,{href:'https://navsh.org.uk/',external:true,title:'National Association of Virtual School Heads (NAVSH)',text:'The national body for virtual school heads, with research, events and good practice.'}))))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+---
+import Accordion from "../../components/ds/Accordion.astro";
+import AudienceSelector from "../../components/ds/AudienceSelector.astro";
+import BrandPattern from "../../components/ds/BrandPattern.astro";
+import Button from "../../components/ds/Button.astro";
+import Card from "../../components/ds/Card.astro";
+import ContactPanel from "../../components/ds/ContactPanel.astro";
+import Grid from "../../components/ds/Grid.astro";
+import Hero from "../../components/ds/Hero.astro";
+import IconBadge from "../../components/ds/IconBadge.astro";
+import KeyFacts from "../../components/ds/KeyFacts.astro";
+import Link from "../../components/ds/Link.astro";
+import Logo from "../../components/ds/Logo.astro";
+import NotificationBanner from "../../components/ds/NotificationBanner.astro";
+import Pagination from "../../components/ds/Pagination.astro";
+import Panel from "../../components/ds/Panel.astro";
+import Prose from "../../components/ds/Prose.astro";
+import QuickLinks from "../../components/ds/QuickLinks.astro";
+import Quote from "../../components/ds/Quote.astro";
+import SectionDivider from "../../components/ds/SectionDivider.astro";
+import StatsPanel from "../../components/ds/StatsPanel.astro";
+import Steps from "../../components/ds/Steps.astro";
+import Table from "../../components/ds/Table.astro";
+import Tabs from "../../components/ds/Tabs.astro";
+import Tag from "../../components/ds/Tag.astro";
+import { AUDIENCES } from "../../data/audiences";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_DEFAULTS } from "../../utils/site";
+
+// The palette, straight from design-system/tokens.json. Ratios are measured live
+// against white, so the figures on the page are the figures that render.
+function channelToLinear(value: number) {
+	const s = value / 255;
+	return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+}
+function luminance(hex: string) {
+	const h = hex.replace("#", "");
+	return (
+		0.2126 * channelToLinear(parseInt(h.slice(0, 2), 16)) +
+		0.7152 * channelToLinear(parseInt(h.slice(2, 4), 16)) +
+		0.0722 * channelToLinear(parseInt(h.slice(4, 6), 16))
+	);
+}
+function contrast(a: string, b: string) {
+	const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+	return (hi + 0.05) / (lo + 0.05);
+}
+const ratio = (hex: string) => contrast(hex, "#ffffff").toFixed(2);
+
+const PALETTE = [
+	{ name: "Navy", token: "--navy", hex: "#172b4d", use: "The backbone: header, footer, headings, body text. 14:1 on white." },
+	{ name: "Navy 900", token: "--navy-900", hex: "#0f2140", use: "Hover and pressed state for navy fills." },
+	{ name: "Teal", token: "--teal", hex: "#00a6a6", use: "Graphic only: illustration, icon badges, pattern — and the young people accent." },
+	{ name: "Teal 700", token: "--teal-700", hex: "#006b6e", use: "Accessible teal: buttons, links, success text." },
+	{ name: "Teal 800", token: "--teal-800", hex: "#00575a", use: "Hover and pressed state of teal-700." },
+	{ name: "Teal 50", token: "--teal-50", hex: "#e0f4f4", use: "Tint behind teal-700 or navy text: success, young people cards." },
+	{ name: "Yellow", token: "--yellow", hex: "#ffc857", use: "Graphic only: the sun, pattern, the schools accent and the focus state." },
+	{ name: "Yellow 800", token: "--yellow-800", hex: "#7a5a00", use: "Accessible ochre for text tied to the schools accent." },
+	{ name: "Yellow 50", token: "--yellow-50", hex: "#fff4dc", use: "Tint for advice panels and schools cards." },
+	{ name: "Coral", token: "--coral", hex: "#f26b5b", use: "Graphic only: illustration, the carers accent, the help disc." },
+	{ name: "Coral 700", token: "--coral-700", hex: "#b83a2c", use: "Accessible coral for carer-accent text and links." },
+	{ name: "Coral 50", token: "--coral-50", hex: "#fdece9", use: "Tint for carers cards and help panels." },
+	{ name: "Purple", token: "--purple", hex: "#a58bda", use: "Graphic only: the social workers accent." },
+	{ name: "Purple 700", token: "--purple-700", hex: "#5e3fa3", use: "Accessible purple for social-worker accent text and links." },
+	{ name: "Purple 50", token: "--purple-50", hex: "#f1ecfa", use: "Tint for social workers cards and panels." },
+	{ name: "Pale blue", token: "--pale-blue", hex: "#eaf4f7", use: "Section and panel backgrounds, feature cards, hero ground." },
+	{ name: "Surface", token: "--surface", hex: "#ffffff", use: "Page background and card fill." },
+	{ name: "Surface alt", token: "--surface-alt", hex: "#f4f8fa", use: "Table stripes, input add-ons and filter panels." },
+	{ name: "Text secondary", token: "--text-secondary", hex: "#4a5a73", use: "Hints, metadata and card descriptions." },
+	{ name: "Border", token: "--border", hex: "#c9d6df", use: "Decorative hairlines only — not for control boundaries." },
+	{ name: "Border strong", token: "--border-strong", hex: "#5f6f86", use: "Input, checkbox and radio boundaries." },
+	{ name: "Error", token: "--error", hex: "#b42318", use: "Error text, borders and the error summary outline." },
+];
+
+const ACCENTS = AUDIENCES.map((audience) => ({
+	id: audience.id,
+	label: audience.id,
+	href: audience.href,
+}));
+
+const STEPS = [
+	{ title: "Before the meeting", text: "Views are gathered and any existing plan is reviewed." },
+	{ title: "During the meeting", text: "Progress is discussed and targets are agreed." },
+	{ title: "After the meeting", text: "The plan is finalised and shared with everyone involved." },
+];
+
+const ACCORDION_ITEMS = [
+	{
+		heading: "What an accordion is for",
+		content:
+			"<p>Grouped sections of content that a reader can open one at a time. Each heading is a button with <code>aria-expanded</code>, and its panel is only in the reading order while it is open.</p>",
+	},
+	{
+		heading: "Keyboard support",
+		content: "<p>Enter and Space toggle a section. The “Show all sections” control sets them together.</p>",
+	},
+	{
+		heading: "Without JavaScript",
+		content: "<p>The markup is complete; a collapsed panel stays hidden until the script runs.</p>",
+		open: true,
+	},
+];
+
+const TABS = [
+	{
+		id: "first",
+		label: "First tab",
+		content: "<p>The first panel. Tabs use the ARIA tabs pattern with arrow, Home and End keys.</p>",
+	},
+	{ id: "second", label: "Second tab", content: "<p>The second panel.</p>" },
+	{ id: "third", label: "Third tab", content: "<p>The third panel.</p>" },
+];
+---
+
+<BaseLayout
+	title="Style guide"
+	description="The Rotherham Virtual School design system: tokens, components and states."
+	showContact={false}
+>
+	<Hero
+		slot="hero"
+		variant="compact"
+		eyebrow="Internal reference"
+		title="Rotherham Virtual School design system"
+		lead="The tokens and components the site is built from, rendered live. Every example below is the real component, not a picture of one."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Style guide" }]}
+	/>
+
+	<NotificationBanner tone="info" label="How to use this page">
+		<p>
+			Components are imported from <code>src/components/ds</code>, so what you see is what the
+			site ships. The page is kept out of navigation and search engines.
+		</p>
+	</NotificationBanner>
+
+	<!-- ================= Brand ================= -->
+	<section class="sg-section" aria-labelledby="sg-brand">
+		<h2 class="rvs-section-title" id="sg-brand">Brand</h2>
+		<Prose>
+			<p>
+				The mark is the rising sun over the path forward; the lockup pairs it with the name.
+				Logos come as SVG, serve from <code>/assets/rvs/</code> and are never recoloured or
+				stretched.
+			</p>
+		</Prose>
+		<div class="sg-grid sg-grid--3">
+			<div class="sg-demo sg-demo--dark"><Logo variant="stacked" reversed={true} height={44} /></div>
+			<div class="sg-demo"><Logo variant="primary" height={44} /></div>
+			<div class="sg-demo sg-demo--row">
+				<Logo variant="mark" height={48} />
+				<IconBadge icon="sun" tone="yellow" size="md" />
+				<IconBadge icon="briefcase" tone="purple" size="md" />
+			</div>
+		</div>
+		<div class="sg-demo sg-demo--pattern"><BrandPattern rows={2} cols={6} /></div>
+		<SectionDivider variant="hills" />
+	</section>
+
+	<!-- ================= Colour ================= -->
+	<section class="sg-section" aria-labelledby="sg-colour">
+		<h2 class="rvs-section-title" id="sg-colour">Colour</h2>
+		<Prose>
+			<p>
+				Ratios are measured live against white. Text needs 4.5:1 and user-interface or
+				graphical objects 3:1. Teal, coral and purple are UI-only: where they must carry
+				text, the <code>-700</code> partner is used.
+			</p>
+		</Prose>
+		<ul class="sg-swatches" role="list">
+			{
+				PALETTE.map((colour) => (
+					<li class="sg-swatch">
+						<span class="sg-swatch__chip" style={`background: ${colour.hex}`} aria-hidden="true" />
+						<span class="sg-swatch__body">
+							<span class="sg-swatch__name">{colour.name}</span>
+							<span class="sg-swatch__hex">{colour.hex} · on white {ratio(colour.hex)}:1</span>
+							<span class="sg-swatch__use">{colour.use}</span>
+							<code class="sg-swatch__token">{colour.token}</code>
+						</span>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<!-- ================= Audience accents ================= -->
+	<section class="sg-section" aria-labelledby="sg-audiences">
+		<h2 class="rvs-section-title" id="sg-audiences">Audience accents</h2>
+		<Prose>
+			<p>
+				Five audiences, one colour each, applied with <code>data-audience</code> on a
+				container. Accents mark a section; words always carry the meaning.
+			</p>
+		</Prose>
+		<AudienceSelector variant="cards" heading={null} audiences={ACCENTS} label="Audience accents" />
+	</section>
+
+	<!-- ================= Typography ================= -->
+	<section class="sg-section" aria-labelledby="sg-type">
+		<h2 class="rvs-section-title" id="sg-type">Typography</h2>
+		<Prose>
+			<p>
+				One family, Noto Sans, on the GOV.UK type scale: headings, body, the eyebrow and the
+				brand tagline.
+			</p>
+		</Prose>
+		<Prose>
+			<h2>Heading L — section</h2>
+			<h3>Heading M — subsection</h3>
+			<p class="lead">Lead paragraph — the introduction under a page title.</p>
+			<p>Body copy — the default reading size.</p>
+			<p class="rvs-body-s">Supporting text — for metadata and secondary detail.</p>
+			<p class="rvs-eyebrow">Eyebrow label</p>
+			<p>
+				Inline <strong>bold</strong>, <em>italic</em>, and a <a href="#sg-type">text link</a>.
+			</p>
+		</Prose>
+	</section>
+
+	<!-- ================= Buttons, links, tags ================= -->
+	<section class="sg-section" aria-labelledby="sg-buttons">
+		<h2 class="rvs-section-title" id="sg-buttons">Buttons, links and tags</h2>
+		<div class="sg-demo">
+			<div class="sg-row">
+				<Button>Primary</Button>
+				<Button variant="secondary">Secondary</Button>
+				<Button variant="warning">Warning</Button>
+				<Button variant="tertiary">Tertiary</Button>
+				<Button disabled={true}>Disabled</Button>
+			</div>
+			<p class="sg-caption">Hover and press any button to see its hover and active states.</p>
+		</div>
+		<div class="sg-demo sg-demo--dark">
+			<div class="sg-row"><Button variant="inverse">Inverse button</Button></div>
+		</div>
+		<div class="sg-demo">
+			<p>
+				A <Link href="#sg-buttons">standard link</Link>, an <Link href="https://www.gov.uk/" external={true}>external link</Link> and an <Link href="#sg-buttons" variant="arrow">arrow link</Link>.
+			</p>
+		</div>
+		<div class="sg-demo sg-row">
+			<Tag>Default</Tag>
+			<Tag tone="teal">Teal</Tag>
+			<Tag tone="yellow">Yellow</Tag>
+			<Tag tone="coral">Coral</Tag>
+			<Tag tone="purple">Purple</Tag>
+			<Tag tone="navy">Navy</Tag>
+		</div>
+	</section>
+
+	<!-- ================= Cards and grid ================= -->
+	<section class="sg-section" aria-labelledby="sg-cards">
+		<h2 class="rvs-section-title" id="sg-cards">Cards and grid</h2>
+		<Grid as="ul" min="280px">
+			<li>
+				<Card
+					href="#sg-cards"
+					icon="book"
+					iconTone="teal"
+					title="Icon card"
+					text="An outlined card with an icon badge and a linked title."
+				/>
+			</li>
+			<li>
+				<Card
+					href="#sg-cards"
+					icon="clipboard"
+					iconTone="purple"
+					audience="social-workers"
+					title="Audience card"
+					text="Takes the accent of the audience it serves."
+				/>
+			</li>
+			<li>
+				<Card variant="tinted" title="Tinted card" text="A quiet ground for a statement that does not link." />
+			</li>
+		</Grid>
+	</section>
+
+	<!-- ================= Panels and banners ================= -->
+	<section class="sg-section" aria-labelledby="sg-panels">
+		<h2 class="rvs-section-title" id="sg-panels">Panels and banners</h2>
+		<Panel tone="info" title="Information"><p>For context that supports the main content.</p></Panel>
+		<Panel tone="advice" title="Advice"><p>For a helpful suggestion or good practice.</p></Panel>
+		<Panel tone="help" title="Help"><p>Always include a route to help.</p></Panel>
+		<Panel tone="warning" title="Warning"><p>For a consequence to avoid.</p></Panel>
+		<NotificationBanner tone="success" title="Saved">
+			<p>Success is teal, off the red–green axis, with an icon and a word.</p>
+		</NotificationBanner>
+	</section>
+
+	<!-- ================= Content ================= -->
+	<section class="sg-section" aria-labelledby="sg-content">
+		<h2 class="rvs-section-title" id="sg-content">Content</h2>
+		<Quote variant="student-voice" cite="A year 9 pupil">
+			<p>It helped to know someone was on my side.</p>
+		</Quote>
+		<StatsPanel
+			heading="Example statistics"
+			stats={[
+				{ value: "94%", label: "Attendance", description: "Children in care, 2025/26" },
+				{ value: "1 in 9", label: "Fixed-term exclusions" },
+			]}
+			source="Placeholder data"
+		/>
+		<Table
+			caption="Example comparison table"
+			columns={[
+				{ key: "measure", label: "Measure" },
+				{ key: "care", label: "Children in care" },
+				{ key: "all", label: "All children" },
+			]}
+			rows={[
+				{ measure: "Attendance", care: "94.1%", all: "95.6%" },
+				{ measure: "Persistent absence", care: "12.4%", all: "9.8%" },
+			]}
+		/>
+		<KeyFacts
+			title="Key facts"
+			icon="info"
+			items={[
+				{ term: "Published", value: "1 October 2026" },
+				{ term: "Owner", value: "Rotherham Virtual School" },
+			]}
+		/>
+		<QuickLinks
+			heading="Quick links"
+			links={[
+				{ label: "Find out more about your PEP", href: "/children-young-people/" },
+				{ label: "Department for Education", href: "https://www.gov.uk/", external: true },
+			]}
+		/>
+	</section>
+
+	<!-- ================= Education patterns ================= -->
+	<section class="sg-section" aria-labelledby="sg-patterns">
+		<h2 class="rvs-section-title" id="sg-patterns">Education patterns</h2>
+		<Steps heading="The PEP process" steps={STEPS} />
+		<Accordion items={ACCORDION_ITEMS} headingLevel={3} />
+		<Tabs tabs={TABS} title="Tabs by audience" />
+		<Pagination page={2} total={5} />
+		<ContactPanel
+			variant="inline"
+			title="Need advice?"
+			phone="01709 334610"
+			phoneHours="(Mon – Fri, 9am – 5pm)"
+			email={SITE_DEFAULTS.email}
+			contactHref="/contact/"
+		/>
+	</section>
+
+	<Prose>
+		<p class="rvs-muted">{SITE_DEFAULTS.title} · Every child. Every possibility.</p>
+	</Prose>
+</BaseLayout>
+
+<style>
+	.sg-section {
+		padding-block: var(--space-6);
+		border-top: 1px solid var(--border);
+	}
+	.sg-section:first-of-type {
+		border-top: 0;
+	}
+	.sg-grid {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+	}
+	@media (min-width: 641px) {
+		.sg-grid--3 {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.sg-demo {
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		padding: var(--space-4);
+		margin-block: var(--space-4);
+		background: var(--surface);
+		overflow: hidden;
+	}
+	.sg-demo--dark {
+		background: var(--navy);
+		color: var(--text-inverse);
+	}
+	.sg-demo--row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-4);
+	}
+	.sg-demo--pattern {
+		height: 140px;
+		padding: 0;
+	}
+	.sg-demo--pattern :global(svg) {
+		width: 100%;
+		height: 100%;
+	}
+	.sg-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3);
+	}
+	.sg-caption {
+		margin: var(--space-4) 0 0;
+		color: var(--text-secondary);
+		font-size: 16px;
+		line-height: 20px;
+	}
+	.sg-swatches {
+		display: grid;
+		gap: var(--space-4);
+		grid-template-columns: 1fr;
+		list-style: none;
+		margin: var(--space-4) 0 0;
+		padding: 0;
+	}
+	@media (min-width: 641px) {
+		.sg-swatches {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (min-width: 880px) {
+		.sg-swatches {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.sg-swatch {
+		display: flex;
+		gap: var(--space-3);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		padding: var(--space-3);
+	}
+	.sg-swatch__chip {
+		flex: 0 0 auto;
+		width: 44px;
+		height: 44px;
+		border-radius: var(--radius-sm);
+		border: 1px solid rgb(0 0 0 / 0.15);
+	}
+	.sg-swatch__body {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+	.sg-swatch__name {
+		font-weight: 700;
+	}
+	.sg-swatch__hex,
+	.sg-swatch__use,
+	.sg-swatch__token {
+		font-size: 14px;
+		line-height: 20px;
+		color: var(--text-secondary);
+	}
+	.sg-swatch__token {
+		color: var(--teal-700);
+	}
+</style>

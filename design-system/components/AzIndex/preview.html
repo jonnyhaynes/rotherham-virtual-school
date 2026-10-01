@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation & discovery" height=360 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>AzIndex</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.AzIndex,{groups:[{letter:'D',items:[{label:'Designated teacher',href:'#',description:'the teacher who leads on looked-after children in a school'}]},{letter:'E',items:[{label:'ePEP',href:'#',description:'the online Personal Education Plan'},{label:'Exclusions',href:'#'}]},{letter:'P',items:[{label:'PEP',href:'#',description:'Personal Education Plan'},{label:'Pupil Premium Plus',href:'#'}]}]}))
+);
+</script>
+</body>
+</html>

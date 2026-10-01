@@ -22,22 +22,76 @@ information architecture and a content-managed build.
 
 - **Framework:** Astro 7 (server output) + TypeScript
 - **CMS:** [EmDash](https://emdashcms.com) — Astro-native, database-backed, with an admin UI
-- **Design system:** GOV.UK Design System (`govuk-frontend`), themed with Rotherham's brand palette
+- **Design system:** GOV.UK Design System (`govuk-frontend`) for structure and accessibility, with a
+  Virtual School brand layer on top (palette, mark, components)
 - **Styling:** SCSS with design tokens exposed as CSS custom properties
 - **Hosting:** Vercel (`@astrojs/vercel`), with libSQL/Turso for content and S3-compatible storage
   for media
 
 ## Design approach
 
-Three layers, described in the plan at `~/.commandcode/plans/rotherham-virtual-school-website.md`:
+Four layers:
 
 1. **GOV.UK structure** — skip link, header, service navigation, breadcrumbs, buttons, inset and
    warning text, details, summary lists, tables. This buys WCAG 2.2 AA compliance for free.
-2. **Rotherham identity** — the council's own palette and type (sampled from the Orbit stylesheet
-   that powers `rotherham.gov.uk`), a full-bleed photographic hero, and a card-grid "who are you?"
-   router.
-3. **The Virtual School twist** — an audience router, a distinct **Pupil Zone** sub-brand written
+2. **The Virtual School brand** — its own palette, mark and type, sitting alongside GOV.UK rather
+   than recolouring it. See [Brand and design system](#brand-and-design-system).
+3. **Reusable components** — a token-driven component library (`src/components/ui`,
+   `src/components/content`, `src/components/nav`) that every page composes from.
+4. **The Virtual School twist** — an audience router, a distinct **Pupil Zone** sub-brand written
    for children, a plain-English outcomes page, and inline glossary definitions of jargon.
+
+### Brand and design system
+
+The brand is defined in **[`design-system/`](design-system/)** — a design-system artifact authored
+separately (brand book, token file, component specs, a React reference implementation and page
+templates). **That folder is the source of truth for the visual language**; this repository
+implements it.
+
+Where it is implemented:
+
+| Layer | Where | Notes |
+|---|---|---|
+| Tokens | `src/styles/_tokens.scss` | Generated from `design-system/tokens.json`. Token names are the design system's (`--navy`, `--teal-700`, `--space-4`, …). |
+| GOV.UK theming | `src/styles/main.scss` | GOV.UK Frontend is configured from the same tokens, so `.govuk-*` and `.rvs-*` share one palette, one type family and one 1140px grid. |
+| Component styles | `src/styles/_design-system.scss` | Vendored verbatim from `design-system/components/bundle.css`, minus the Google Fonts `@import` and the preview-only `.rvs-demo*` rules. Re-sync from the source file rather than editing rules in place. |
+| Components | `src/components/ds/` | Astro ports of the reference implementations, keeping the prop names (`components/index.d.ts`), the class names and the markup/ARIA. |
+| Assets | `public/assets/rvs/` | The logo and illustration PNG extracts, served from the path the design system expects. |
+| Templates | `src/layouts/AudienceLanding.astro` | The audience landing pattern (`design-system/components/TemplateAudienceLanding`). |
+
+- **Colour.** `navy` is the backbone (header, footer, headings, body). `teal`, `yellow` and `coral`
+  are **graphic** colours — illustration, icon badges, pattern, accents — and none reaches 4.5:1
+  with white, so they never carry text; their accessible partners are `teal-700` (6.3:1), `coral-700`
+  and `yellow-800`. `success` is teal, off the red–green axis, so it never depends on telling red
+  from green.
+- **Type.** One family: **Noto Sans** (400/600/700), self-hosted from `public/fonts/`. The design
+  system loads it from Google Fonts; this repository self-hosts it for the same privacy reason it
+  self-hosted the previous face — a public-sector site should not send visitor IP addresses to
+  Google to render its own text. A metric-matched fallback (measured, not guessed) means the swap
+  does not reflow the page.
+- **Audience accents.** `data-audience` on a container switches the accent tokens:
+  children and young people → teal, carers → coral, schools → yellow, professionals → navy. Accents
+  mark a section; words carry the meaning.
+- **GOV.UK.** Components that `design-system/inventory.md` maps to GOV.UK Frontend are themed rather
+  than reimplemented — buttons, forms, error summary, accordion, tabs, pagination, cookie banner,
+  notification banner. Everything else is composed from `src/components/ds/`.
+- **Accessibility floor.** GOV.UK's focus treatment, semantic markup, visible focus, 40–44px
+  targets, reduced-motion support and the prototype safeguards are unchanged. Pages must work
+  without JavaScript; the script only enhances (see the masthead, below).
+
+#### Migration status
+
+The design system arrived after the site was built, so it is being adopted page by page rather than
+in one change.
+
+- **On the design system:** the audience landing template and `/parents-carers/`.
+- **Still on the earlier layer:** the other routes. They keep working because `_tokens.scss` carries
+  a transitional block aliasing the older `--rvs-*` token names onto the design-system tokens, and
+  because `BaseLayout` takes a `chrome` prop (`govuk` | `design-system`) to pick the masthead.
+- **To finish:** move each remaining route onto `src/components/ds`, then delete the alias block in
+  `src/styles/_tokens.scss` and the older components. The `/style-guide/` page documents the earlier
+  layer and will need rebuilding against the design system.
+
 
 ### Navigation
 
@@ -96,12 +150,15 @@ astro.config.mjs        Astro config: Vercel adapter, libSQL, S3/local storage, 
 vercel.json             Prototype safeguard: X-Robots-Tag header on every route
 seed/seed.json          Content model (collections, fields, menus, redirects) + starter content
 scripts/env-types.mjs   Offline emdash-env.d.ts generation
-src/layouts/            BaseLayout, AudienceLayout, PupilLayout
-src/components/         Audience cards, hero, news/event cards, FAQ list, prototype notice
-src/components/govuk/   Thin wrappers over GOV.UK Frontend markup
+design-system/          Design-system source of truth: brand book, tokens, component specs,
+                        React reference bundle and page templates (see Brand and design system)
+src/layouts/            BaseLayout, AudienceLanding
+src/components/ds/      Design-system components ported to Astro (Header, Footer, Hero, Card, Panel, …)
+src/components/         Site components: AudienceAside, OfstedRecognition, PrototypeNotice
 src/pages/              Routes (see below)
-src/styles/             Tokens, GOV.UK overrides, the Pupil Zone theme
-src/data/audiences.ts   The five audiences that drive the information architecture
+src/styles/             Tokens, vendored design-system stylesheet, overrides
+src/data/               audiences.ts (information architecture), brand.ts, ds-nav.ts
+src/utils/              site.ts (site defaults and identity)
 ```
 
 ### Routes
@@ -121,6 +178,7 @@ src/data/audiences.ts   The five audiences that drive the information architectu
 /about/  /contact/             About and contact
 /accessibility-statement/      Statutory accessibility statement (draft)
 /privacy-cookies/              Privacy and cookies notice (draft)
+/style-guide/                  Internal design-system reference (unlinked, noindex)
 /[slug]                        Generic CMS-managed pages
 ```
 
@@ -135,7 +193,6 @@ Defined in `seed/seed.json` and applied to the database:
 | `events` | Training, workshops and network meetings (`kind` distinguishes them) |
 | `documents` | Policies, guidance, forms, reports — either an uploaded file or an external link |
 | `team_members` | Who's who, with remits (no personal names in the seed) |
-| `faqs` | Questions grouped by audience |
 | `outcomes` | Headline figures for the outcomes dashboard |
 
 Field and collection slugs must be `snake_case`; EmDash reserves some slugs (for example `version`,
@@ -207,14 +264,24 @@ half-configured project tells you what it needs.
 
 Targeting **WCAG 2.2 AA**, against the Public Sector Bodies (Websites and Mobile Applications)
 (No. 2) Accessibility Regulations 2018. The build uses semantic landmarks, a skip link, keyboard-
-operable navigation, visible focus (Rotherham's yellow accent), and the GOV.UK type scale.
+operable navigation, visible focus (the brand focus treatment — a sunshine block with an ink bar),
+and the GOV.UK type scale.
 
-**Contrast has been verified programmatically.** Every text and UI pairing in the palette — including
-all five audience accent colours — passes 4.5:1 against white. One deliberate divergence from
-Rotherham's palette: GOV.UK's `success` colour is set to `#2a6b3c`, a darkened version of the
-council's light green. GOV.UK uses that colour both as the confirmation panel background behind
-white text *and* as the success link colour, and Rotherham's `#a4d0b1` measures only 1.72:1 — it is a
-surface colour, not a functional one. See `src/styles/_tokens.scss`.
+**Contrast is documented and measured.** Every brand colour is listed on `/style-guide/` with its
+ratio against white, computed live from the value in the palette. Text needs 4.5:1 and UI or
+graphical objects 3:1; teal (`#00a6a6`, 3.0:1) and coral (`#f26b5b`, 3.0:1) are therefore marked as
+UI-only, and the darker `-text` shades (`#00706b`, 5.9:1 and `#c0392b`, 5.4:1) carry any text. GOV.UK's
+success colour is set to `#2a6b3c` because GOV.UK uses it both as a confirmation panel background
+behind white text *and* as a success link, so it must clear 4.5:1 both ways.
+
+**Reflow has been checked.** No route overflows horizontally at 320, 375 or 768px.
+
+**Keyboard and structure have been checked.** An automated pass over all 18 routes (Chromium)
+focused every reachable control: 640 focusable elements, none without a visible focus indicator. The
+same pass found no unlabelled form controls, no images without an `alt` attribute, no links or
+buttons without an accessible name, no duplicate `id`s, and exactly one `h1` with no skipped heading
+levels on every route. This is a structural check, not a compliance audit — it does not replace
+axe-core or a manual screen-reader pass, both still outstanding.
 
 **Links have been checked.** All internal links resolve, and every external link resolves.
 
@@ -246,8 +313,6 @@ complete.
 - [ ] Run axe-core in CI and do manual keyboard and screen-reader testing
 - [ ] Review the Pupil Zone content for plain-language readability
 - [ ] Have the council's Data Protection Officer review the privacy and cookies notice
-- [ ] Wire the page-feedback endpoint (`src/pages/api/feedback.ts`) to a real destination — it
-      currently only writes to the server log, which is ephemeral on Vercel
 - [ ] Decide whether to reinstate the Open Government Licence statement in the footer. It was
       removed from this prototype, but the council's own site carries one, and OGL attribution is
       normally expected for council content
@@ -282,8 +347,8 @@ you any rights to it.
 **Council-derived content and branding — Rotherham Metropolitan Borough Council.** The description
 of the Virtual School's purpose and duties is reproduced or adapted from the service's published
 website (see `LICENSE` for the files), as are the service name and the Rotherham brand identity.
-This includes the council's logo — `public/brand/rmbc-logo-white.svg` in the header and
-`public/brand/rmbc-logo.svg` in the footer — taken from the council's public
+This includes the council's logo — `public/brand/rmbc-logo-white.svg`, used in the site footer to
+mark the parent organisation — taken from the council's public
 [`rothgov/images`](https://github.com/rothgov/images) repository. This is **not** covered by the
 paragraph above, is included for demonstration purposes only, and is reproduced **without any
 licence from the council**. Replace it with licensed or original wording before any real use.

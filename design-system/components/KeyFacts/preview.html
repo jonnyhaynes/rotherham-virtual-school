@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=280 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>KeyFacts</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.KeyFacts,{title:'Pupil Premium Plus at a glance',icon:'info',items:[{term:'Who it’s for',value:'Children looked after by Rotherham, aged 4 to 16'},{term:'Paid to',value:'The school, via the Virtual School'},{term:'How to request',value:'Through the ePEP, each term'},{term:'Contact',value:'virtualschool@rotherham.gov.uk'}]}))
+);
+</script>
+</body>
+</html>

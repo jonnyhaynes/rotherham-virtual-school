@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplatePhases</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#',active:true},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content','data-audience':'schools'},h(R.Hero,{variant:'compact',title:'Starting school and moving on',lead:'What happens at each stage of education, and how we help children in care move from one stage to the next.',eyebrow:'Phases',audience:'schools',breadcrumbs:[{label:'Home',href:'#'},{label:'Starting school and moving on'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h(R.Steps,{variant:'journey',heading:'The phases of education',steps:[{label:'Age 0–5',title:'Early years',text:'Nursery and Reception'},{label:'Age 5–11',title:'Primary school',text:'Key stages 1 and 2'},{label:'Age 11–16',title:'Secondary school',text:'Key stages 3 and 4'},{label:'Age 16–18',title:'College, training or work',text:'Post-16'},{label:'18–25',title:'Care leavers',text:'Further and higher education'}]}),
+  h(R.Tabs,{label:'Phase guides',tabs:[
+   {id:'ey',label:'Starting school',content:h('div',{className:'rvs-stack--s'},h(R.Prose,{html:'<p>Getting ready for school starts well before Reception. Early Years Pupil Premium can pay for extra support in nursery, and the PEP starts from age 2.</p>'}),h(R.Checklist,{heading:'School readiness checklist (example)',items:[{id:'1',label:'Apply for a school place by the deadline',hint:'Children in care get priority for places.'},{id:'2',label:'Share the early years PEP with the new school'},{id:'3',label:'Arrange a visit before the first day'},{id:'4',label:'Agree who the designated teacher will be'}]}))},
+   {id:'pt',label:'Primary to secondary',content:h(R.Prose,{html:'<p>The move to secondary school is planned from Year 5. The Virtual School works with both schools so support and the PEP move with the child.</p>'})},
+   {id:'p16',label:'Moving on at 16',content:h(R.Signpost,{headingLevel:3,icon:'graduation',iconTone:'coral',title:'Going to college or work',text:'Courses, apprenticeships, jobs, money and support after year 11.',href:'#'})}]}),
+  h(R.Explainer,{audience:'parents-carers',icon:'heart',tone:'coral',id:'send',question:'What is SEND?',answer:'Special educational needs and disabilities: when a child needs extra help to learn. Some children have an education, health and care plan (EHCP).',points:[{icon:'message',text:'Talk to the school’s SENCo'},{icon:'clipboard',text:'Ask for an assessment if needed'},{icon:'document',text:'The EHCP and the PEP work together'}],href:'https://www.rotherhamsendlocaloffer.org.uk/',linkLabel:'Rotherham SEND Local Offer'})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

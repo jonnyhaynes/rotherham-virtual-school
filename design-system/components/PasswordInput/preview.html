@@ -1,0 +1,14 @@
+<!-- @dsCard group="Interactive patterns" height=250 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>PasswordInput</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'560px'}},h(R.PasswordInput,{label:'Password',autoComplete:'current-password'}),h(R.PasswordInput,{label:'Create a password',hint:'Use 8 or more characters. You can use a phrase.',autoComplete:'new-password',error:'Your password must be 8 characters or more'}))
+);
+</script>
+</body>
+</html>

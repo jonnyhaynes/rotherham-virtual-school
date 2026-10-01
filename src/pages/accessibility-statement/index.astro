@@ -1,181 +1,195 @@
 ---
-import PageHeader from "../../components/PageHeader.astro";
-import WarningText from "../../components/govuk/WarningText.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
+import Hero from "../../components/ds/Hero.astro";
+import NotificationBanner from "../../components/ds/NotificationBanner.astro";
+import OnThisPage from "../../components/ds/OnThisPage.astro";
+import Panel from "../../components/ds/Panel.astro";
+import Prose from "../../components/ds/Prose.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SITE_DEFAULTS } from "../../utils/site";
 
 // This page follows the GOV.UK model accessibility statement:
 // https://www.gov.uk/guidance/model-accessibility-statement
 //
-// Several sentences are LEGALLY REQUIRED and must not be reworded. Those are
-// marked below. Lines beginning [TODO are facts only the council can supply,
-// and must be completed before this statement is published.
+// Several sentences are LEGALLY REQUIRED and must not be reworded. Lines
+// beginning [TODO are facts only the council can supply, and must be completed
+// before this statement is published.
+
+const sections = [
+	{ id: "how-accessible", label: "How accessible this website is" },
+	{ id: "feedback", label: "Feedback and contact information" },
+	{ id: "enforcement", label: "Enforcement procedure" },
+	{ id: "technical", label: "Technical information" },
+	{ id: "non-accessible", label: "Non-accessible content" },
+	{ id: "improving", label: "What we're doing to improve accessibility" },
+	{ id: "preparation", label: "Preparation of this statement" },
+];
 ---
 
 <BaseLayout
 	title="Accessibility statement"
 	description="Accessibility statement for the Rotherham Virtual School website."
-	breadcrumbs={[
-		{ label: "Home", href: "/" },
-		{ label: "Accessibility statement" },
-	]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="Accessibility statement for the Rotherham Virtual School website"
 		lead="Publishing an accessibility statement is a legal requirement for public sector websites. This draft follows the GOV.UK model statement."
+		breadcrumbs={[
+			{ label: "Home", href: "/" },
+			{ label: "Accessibility statement" },
+		]}
 	/>
 
-	<WarningText title="Draft">
-		This statement is a draft prepared as part of a prototype and has not been verified, reviewed
-		or published. The compliance status, testing details and dates must be completed and checked
-		by the council before this page is used.
-	</WarningText>
-
-	<p class="govuk-body">
-		This accessibility statement applies to the Rotherham Virtual School website.
-	</p>
-
-	<p class="govuk-body">
-		This website is run by Rotherham Metropolitan Borough Council. We want as many people as
-		possible to be able to use this website. For example, that means you should be able to:
-	</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>change colours, contrast levels and fonts using browser or device settings</li>
-		<li>zoom in up to 400% without the text spilling off the screen</li>
-		<li>navigate most of the website using a keyboard or speech recognition software</li>
-		<li>listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
-	</ul>
-	<p class="govuk-body">
-		We've also made the website text as simple as possible to understand.
-		<a class="govuk-link" href="https://mcmw.abilitynet.org.uk/" rel="noopener">AbilityNet</a>
-		has advice on making your device easier to use if you have a disability.
-	</p>
-
-	<h2 class="govuk-heading-l">How accessible this website is</h2>
-	<p class="govuk-body">
-		[ TODO before publication: summarise the accessibility issues a disabled user can act on,
-		in order of most to least impact — for example, sections to avoid, or how to request an
-		accessible alternative. If there are none, say so. Do not claim more than has been tested. ]
-	</p>
-
-	<h2 class="govuk-heading-l">Feedback and contact information</h2>
-	<p class="govuk-body">
-		If you find any problems not listed on this page or think we're not meeting accessibility
-		requirements, contact:
-		<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>.
-	</p>
-	<p class="govuk-body">
-		If you need information on this website in a different format like accessible PDF, large
-		print, easy read, audio recording or braille:
-	</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>
-			email
-			<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
-		</li>
-		<li>[ TODO: add a phone number and any other contact route ]</li>
-	</ul>
-	<p class="govuk-body">
-		We'll consider your request and get back to you in [ TODO: number ] days.
-	</p>
-
-	<h2 class="govuk-heading-l">Enforcement procedure</h2>
-	<p class="govuk-body">
-		The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public
-		Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the
-		'accessibility regulations'). If you're not happy with how we respond to your complaint,
-		<a class="govuk-link" href="https://www.equalityadvisoryservice.com/" rel="noopener"
-			>contact the Equality Advisory and Support Service (EASS)</a
-		>.
-	</p>
-
-	<h2 class="govuk-heading-l">Technical information about this website's accessibility</h2>
-	<p class="govuk-body">
-		Rotherham Metropolitan Borough Council is committed to making its website accessible, in
-		accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2)
-		Accessibility Regulations 2018.
-	</p>
-
-	<h3 class="govuk-heading-m">Compliance status</h3>
-	<p class="govuk-body">
-		[ TODO before publication: choose one of the legally required options below, delete the
-		others, and satisfy yourself that it is accurate. This website has not yet been audited, so
-		none of these can currently be stated truthfully. ]
-	</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>
-			(a) This website is fully compliant with the
-			<a class="govuk-link" href="https://www.w3.org/TR/WCAG22/" rel="noopener"
-				>Web Content Accessibility Guidelines version 2.2</a
-			> AA standard.
-		</li>
-		<li>
-			(b) This website is partially compliant with the
-			<a class="govuk-link" href="https://www.w3.org/TR/WCAG22/" rel="noopener"
-				>Web Content Accessibility Guidelines version 2.2</a
-			> AA standard, due to the non-compliances and exemptions listed below.
-		</li>
-		<li>
-			(c) This website is not compliant with the
-			<a class="govuk-link" href="https://www.w3.org/TR/WCAG22/" rel="noopener"
-				>Web Content Accessibility Guidelines version 2.2</a
-			> AA standard. The non-compliances and exemptions are listed below.
-		</li>
-	</ul>
-
-	<h2 class="govuk-heading-l">Non-accessible content</h2>
-	<p class="govuk-body">
-		The content listed below is non-accessible for the following reasons.
-	</p>
-
-	<h3 class="govuk-heading-m">Non-compliance with the accessibility regulations</h3>
-	<p class="govuk-body">
-		[ TODO before publication: list each problem, the WCAG 2.2 success criterion it fails, and
-		when you plan to fix it. Example: "Some images do not have a text alternative, so people
-		using a screen reader cannot access the information. This fails WCAG 2.2 success criterion
-		1.1.1 (non-text content). We plan to add text alternatives by [date]." ]
-	</p>
-
-	<h3 class="govuk-heading-m">Disproportionate burden</h3>
-	<p class="govuk-body">
-		[ TODO before publication: list anything you are claiming would be a disproportionate burden
-		to fix, with the assessment behind that claim. If nothing, say so. ]
-	</p>
-
-	<h3 class="govuk-heading-m">Content that's not within the scope of the accessibility regulations</h3>
-	<p class="govuk-body">
-		[ TODO before publication: list out-of-scope content, for example PDFs or other documents
-		published before 23 September 2018 that are not essential to the service, and live video. ]
-	</p>
-
-	<h2 class="govuk-heading-l">What we're doing to improve accessibility</h2>
-	<p class="govuk-body">
-		[ TODO before publication: outline the accessibility roadmap, or delete this section. It is
-		optional. ]
-	</p>
-
-	<h2 class="govuk-heading-l">Preparation of this accessibility statement</h2>
-	<p class="govuk-body">
-		This statement was prepared on [ TODO: date ]. It was last reviewed on [ TODO: date ].
-	</p>
-	<p class="govuk-body">
-		This website was last tested on [ TODO: date ] against the WCAG 2.2 AA standard.
-	</p>
-	<p class="govuk-body">
-		[ TODO before publication: describe how the site was tested and who carried it out — for
-		example, automated testing by the website team plus a manual audit by a third party. ]
-	</p>
-
-	<InsetText title="Notes for the council">
-		<p class="govuk-body">
-			The wording in the "Enforcement procedure" and "Technical information" sections, and the
-			three compliance status options, are legally required and must not be reworded. The
-			statement must be reviewed at least once a year.
+	<NotificationBanner tone="important" label="Draft">
+		<p>
+			This statement is a draft prepared as part of a prototype and has not been verified,
+			reviewed or published. The compliance status, testing details and dates must be
+			completed and checked by the council before this page is used.
 		</p>
-		<p class="govuk-body">
-			This draft has not been audited. Automated checks and manual screen-reader testing are
-			listed as outstanding items in the project README.
+	</NotificationBanner>
+
+	<div class="rvs-two-col">
+		<div class="rvs-stack">
+			<Prose>
+				<p>This accessibility statement applies to the Rotherham Virtual School website.</p>
+		<p>
+			This website is run by Rotherham Metropolitan Borough Council. We want as many people as
+			possible to be able to use this website. For example, that means you should be able to:
 		</p>
-	</InsetText>
+		<ul>
+			<li>change colours, contrast levels and fonts using browser or device settings</li>
+			<li>zoom in up to 400% without the text spilling off the screen</li>
+			<li>navigate most of the website using a keyboard or speech recognition software</li>
+			<li>
+				listen to most of the website using a screen reader (including the most recent
+				versions of JAWS, NVDA and VoiceOver)
+			</li>
+		</ul>
+		<p>
+			We've also made the website text as simple as possible to understand. <a href="https://mcmw.abilitynet.org.uk/" rel="noopener">AbilityNet</a> has advice on
+			making your device easier to use if you have a disability.
+		</p>
+
+		<h2 id="how-accessible">How accessible this website is</h2>
+		<p>
+			[ TODO before publication: summarise the accessibility issues a disabled user can act
+			on, in order of most to least impact — for example, sections to avoid, or how to request
+			an accessible alternative. If there are none, say so. Do not claim more than has been
+			tested. ]
+		</p>
+
+		<h2 id="feedback">Feedback and contact information</h2>
+		<p>
+			If you find any problems not listed on this page or think we're not meeting
+			accessibility requirements, contact: <a href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>.
+		</p>
+		<p>
+			If you need information on this website in a different format like accessible PDF,
+			large print, easy read, audio recording or braille:
+		</p>
+		<ul>
+			<li>
+				email <a href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>
+			</li>
+			<li>[ TODO: add a phone number and any other contact route ]</li>
+		</ul>
+		<p>We'll consider your request and get back to you in [ TODO: number ] days.</p>
+
+		<h2 id="enforcement">Enforcement procedure</h2>
+		<p>
+			The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public
+			Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018
+			(the 'accessibility regulations'). If you're not happy with how we respond to your
+			complaint, <a href="https://www.equalityadvisoryservice.com/" rel="noopener"
+				>contact the Equality Advisory and Support Service (EASS)</a
+			>.
+		</p>
+
+		<h2 id="technical">Technical information about this website's accessibility</h2>
+		<p>
+			Rotherham Metropolitan Borough Council is committed to making its website accessible, in
+			accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2)
+			Accessibility Regulations 2018.
+		</p>
+
+		<h3>Compliance status</h3>
+		<p>
+			[ TODO before publication: choose one of the legally required options below, delete the
+			others, and satisfy yourself that it is accurate. This website has not yet been audited,
+			so none of these can currently be stated truthfully. ]
+		</p>
+		<ul>
+			<li>
+				(a) This website is fully compliant with the <a href="https://www.w3.org/TR/WCAG22/" rel="noopener"
+					>Web Content Accessibility Guidelines version 2.2</a
+				> AA standard.
+			</li>
+			<li>
+				(b) This website is partially compliant with the <a href="https://www.w3.org/TR/WCAG22/" rel="noopener"
+					>Web Content Accessibility Guidelines version 2.2</a
+				> AA standard, due to the non-compliances and exemptions listed below.
+			</li>
+			<li>
+				(c) This website is not compliant with the <a href="https://www.w3.org/TR/WCAG22/" rel="noopener"
+					>Web Content Accessibility Guidelines version 2.2</a
+				> AA standard. The non-compliances and exemptions are listed below.
+			</li>
+		</ul>
+
+		<h2 id="non-accessible">Non-accessible content</h2>
+		<p>The content listed below is non-accessible for the following reasons.</p>
+
+		<h3>Non-compliance with the accessibility regulations</h3>
+		<p>
+			[ TODO before publication: list each problem, the WCAG 2.2 success criterion it fails,
+			and when you plan to fix it. Example: "Some images do not have a text alternative, so
+			people using a screen reader cannot access the information. This fails WCAG 2.2 success
+			criterion 1.1.1 (non-text content). We plan to add text alternatives by [date]." ]
+		</p>
+
+		<h3>Disproportionate burden</h3>
+		<p>
+			[ TODO before publication: list anything you are claiming would be a disproportionate
+			burden to fix, with the assessment behind that claim. If nothing, say so. ]
+		</p>
+
+		<h3>Content that's not within the scope of the accessibility regulations</h3>
+		<p>
+			[ TODO before publication: list out-of-scope content, for example PDFs or other
+			documents published before 23 September 2018 that are not essential to the service, and
+			live video. ]
+		</p>
+
+		<h2 id="improving">What we're doing to improve accessibility</h2>
+		<p>
+			[ TODO before publication: outline the accessibility roadmap, or delete this section. It
+			is optional. ]
+		</p>
+
+		<h2 id="preparation">Preparation of this accessibility statement</h2>
+		<p>This statement was prepared on [ TODO: date ]. It was last reviewed on [ TODO: date ].</p>
+		<p>This website was last tested on [ TODO: date ] against the WCAG 2.2 AA standard.</p>
+		<p>
+			[ TODO before publication: describe how the site was tested and who carried it out — for
+			example, automated testing by the website team plus a manual audit by a third party. ]
+		</p>
+			</Prose>
+
+			<Panel tone="neutral" title="Notes for the council">
+				<p>
+					The wording in the "Enforcement procedure" and "Technical information" sections, and
+					the three compliance status options, are legally required and must not be reworded.
+					The statement must be reviewed at least once a year.
+				</p>
+				<p>
+					This draft has not been audited. Automated checks and manual screen-reader testing
+					are listed as outstanding items in the project README.
+				</p>
+			</Panel>
+		</div>
+
+		<aside>
+			<OnThisPage items={sections} sticky={true} />
+		</aside>
+	</div>
 </BaseLayout>

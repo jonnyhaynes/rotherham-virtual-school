@@ -1,0 +1,43 @@
+---
+import BrandPattern from "./BrandPattern.astro";
+
+/**
+ * SectionDivider — the landscape from the logo, used once per page to join a
+ * white section to a pale-blue one, plus `pattern` and `rule` variants.
+ * Ported from `bundle.js`; decorative in every variant.
+ */
+interface Props {
+	variant?: "hills" | "pattern" | "rule";
+	height?: number;
+	flip?: boolean;
+	seed?: number;
+	class?: string;
+}
+
+const { variant = "hills", height = 64, flip = false, seed = 5, class: className } = Astro.props;
+---
+
+{
+	variant === "rule" ? (
+		<hr class:list={["rvs-divider-rule", className]} />
+	) : variant === "pattern" ? (
+		<div
+			class:list={["rvs-divider", "rvs-divider--pattern", className]}
+			aria-hidden="true"
+		>
+			<BrandPattern rows={1} cols={24} unit={24} gap={2} seed={seed} />
+		</div>
+	) : (
+		<div
+			class:list={["rvs-divider", "rvs-divider--hills", flip && "rvs-divider--flip", className]}
+			aria-hidden="true"
+		>
+			<svg viewBox="0 0 1200 80" preserveAspectRatio="none" width="100%" height={height} focusable="false">
+				<path class="rvs-fill-pale" d="M0 44C220 8 420 8 620 34s420 34 580 6V80H0z"></path>
+				<path class="rvs-fill-teal" d="M0 60c180-26 360-30 560-10s400 20 640-12V80H0z"></path>
+				<path class="rvs-fill-coral" d="M640 80c140-28 330-44 560-30V80z"></path>
+				<path class="rvs-fill-yellow" d="M0 80c110-20 250-26 380-14-60 6-120 10-160 14z"></path>
+			</svg>
+		</div>
+	)
+}

@@ -1,7 +1,8 @@
 ---
 import { search } from "emdash";
-import SearchForm from "../../components/SearchForm.astro";
-import PageHeader from "../../components/PageHeader.astro";
+import Hero from "../../components/ds/Hero.astro";
+import SearchInput from "../../components/ds/SearchInput.astro";
+import SearchResults from "../../components/ds/SearchResults.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const query = (Astro.url.searchParams.get("q") ?? "").trim();
@@ -25,8 +26,8 @@ const COLLECTION_LABELS: Record<string, string> = {
 interface Result {
 	href: string;
 	title: string;
-	snippet?: string;
-	label: string;
+	summary?: string;
+	type: string;
 }
 
 let results: Result[] = [];
@@ -39,14 +40,21 @@ if (query) {
 			const build = COLLECTION_ROUTES[item.collection];
 			const slug = item.slug ?? item.id;
 			if (!build || !slug) return [];
+			const title = item.title ?? slug;
+			// Sanitised by EmDash: HTML metacharacters escaped, with only <mark>
+			// allowed through for the matched terms. Some entries have no body
+			// beyond the title, so the snippet comes back as the title again —
+			// drop it rather than print the same line twice.
+			const snippet = item.snippet ?? null;
+			const snippetText = snippet
+				? snippet.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()
+				: "";
 			return [
 				{
 					href: build(slug),
-					title: item.title ?? slug,
-					// Sanitised by EmDash: HTML metacharacters escaped, with only
-					// <mark> allowed through for the matched terms.
-					snippet: item.snippet,
-					label: COLLECTION_LABELS[item.collection] ?? item.collection,
+					title,
+					summary: snippetText && snippetText !== title ? snippet : undefined,
+					type: COLLECTION_LABELS[item.collection] ?? item.collection,
 				},
 			];
 		});
@@ -59,97 +67,30 @@ if (query) {
 <BaseLayout
 	title={query ? `Search results for “${query}”` : "Search"}
 	description="Search the Rotherham Virtual School website."
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Search" }]}
-	showFeedback={false}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="Search"
 		lead="Search for guidance, news, training and documents across the Virtual School website."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Search" }]}
 	/>
 
-	{/* Named apart from the header's search panel, which is also on this page.
-	    Two `search` landmarks with the same name cannot be told apart, by sight
-	    or by screen reader, so this one says where it is. */}
-	<SearchForm
-		value={query}
-		inputId="rvs-search-page-input"
+	<SearchInput
+		size="large"
 		label="Search the Virtual School website"
+		defaultValue={query}
+		action="/search"
 	/>
 
 	{
 		query && (
-			<div class="rvs-search-results">
-				<h2 class="govuk-heading-l">
-					{results.length === 1
-						? `1 result for “${query}”`
-						: `${results.length} results for “${query}”`}
-				</h2>
-
-				{failed && (
-					<p class="govuk-body">
-						Sorry, there was a problem running your search. Please try again.
-					</p>
-				)}
-
-				{!failed && results.length === 0 && (
-					<p class="govuk-body">
-						Nothing matched your search. Try a different word, or browse using the menu.
-					</p>
-				)}
-
-				{results.length > 0 && (
-					<ul class="govuk-list rvs-search-results__list" role="list">
-						{results.map((result) => (
-							<li class="rvs-search-results__item">
-								<h3 class="govuk-heading-s rvs-search-results__title">
-									<a class="govuk-link" href={result.href}>
-										{result.title}
-									</a>
-								</h3>
-								<p class="govuk-body-s rvs-search-results__type">{result.label}</p>
-								{result.snippet && (
-									<p
-										class="govuk-body rvs-search-results__snippet"
-										set:html={result.snippet}
-									/>
-								)}
-							</li>
-						))}
-					</ul>
-				)}
-			</div>
+			<SearchResults
+				query={query}
+				results={results}
+				error={failed}
+				emptyText="Nothing matched your search. Try a different word, or browse using the menu."
+			/>
 		)
 	}
 </BaseLayout>
-
-<style>
-	.rvs-search-results {
-		margin-top: 2.5rem;
-	}
-
-	.rvs-search-results__list {
-		margin-top: 1.5rem;
-	}
-
-	.rvs-search-results__item {
-		border-top: 1px solid var(--rvs-border);
-		padding: 1.25rem 0;
-	}
-
-	.rvs-search-results__item:last-child {
-		border-bottom: 1px solid var(--rvs-border);
-	}
-
-	.rvs-search-results__title {
-		margin: 0 0 0.25rem;
-	}
-
-	.rvs-search-results__type {
-		color: var(--rvs-grey);
-		margin: 0 0 0.5rem;
-	}
-
-	.rvs-search-results__snippet {
-		margin: 0;
-	}
-</style>

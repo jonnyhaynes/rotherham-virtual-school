@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateSearch</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h('div',{className:'rvs-main'},
+  h('h1',{className:'rvs-legend__heading'},'Search'),
+  h('div',{style:{maxWidth:'640px',marginBottom:'30px'}},h(R.SearchInput,{label:'Search Rotherham Virtual School',hideLabel:true,size:'large',defaultValue:'pupil premium'})),
+  h('div',{className:'rvs-sidebar-layout'},
+   h(R.FilterPanel,{groups:[{id:'aud',legend:'Audience',options:[{value:'young-people',label:'Young people'},{value:'parents-carers',label:'Parents and carers'},{value:'schools',label:'Schools'},{value:'social-workers',label:'Social workers'},{value:'professionals',label:'Professionals'}]},{id:'type',legend:'Type',options:[{value:'page',label:'Pages'},{value:'news',label:'News'},{value:'event',label:'Training and events'},{value:'doc',label:'Documents'}]}]}),
+   h('div',null,h(R.SearchResults,{query:'pupil premium',total:2,results:[{type:'Page',title:'Schools and designated teachers',href:'#',summary:'Pupil Premium Plus is paid to the school for children in care and previously looked-after children. It is not a general budget top-up.'},{type:'Page',title:'Parents and carers',href:'#',summary:'Schools receive extra money called Pupil Premium Plus for every child in care.'}],emptyText:'Nothing matched your search. Try a different word, or browse using the menu.'}))))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

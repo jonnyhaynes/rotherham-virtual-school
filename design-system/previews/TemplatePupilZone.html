@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplatePupilZone</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#',active:true},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content','data-zone':'pupil'},h(R.Hero,{variant:'default',title:'Children and young people',lead:'This part of the website is for you. It explains the people who help with your education, and what you can ask for.',audience:'young-people',illustration:{name:'children',alt:''},breadcrumbs:[{label:'Home',href:'#'},{label:'Children and young people'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h('ul',{className:'rvs-pupil-cards'},
+   h('li',null,h(R.PupilCard,{href:'#your-pep',icon:'document',tone:'teal',title:'Your PEP',text:'What a Personal Education Plan is, and what should happen at your PEP meeting.'})),
+   h('li',null,h(R.PupilCard,{href:'#moving',icon:'school',tone:'yellow',title:'Moving to a new school',text:'What to expect when you change school or move to a new home.'})),
+   h('li',null,h(R.PupilCard,{href:'#',icon:'graduation',tone:'coral',title:'Going to college or work',text:'Help with what comes next after year 11, including money and support.'})),
+   h('li',null,h(R.PupilCard,{href:'#help',icon:'users',tone:'purple',title:'Who can help you',text:'The people you can talk to if something is worrying you at school.'}))),
+  h(R.Explainer,{id:'your-pep',icon:'document',tone:'teal',question:'Your PEP',answer:'PEP stands for Personal Education Plan. It is a document about you and your learning.',points:[{icon:'star',text:'What you are good at'},{icon:'heart',text:'What you find difficult and what help you will get'},{icon:'sprout',text:'What goals you are working towards'}],video:{title:'What happens at a PEP meeting (example)',videoId:'VIDEO_ID',duration:'2 minutes',transcriptHref:'#'}}),
+  h(R.Prose,{html:'<p>Your PEP is talked about in a meeting about three times a year. You should be asked what you think, and what you want to happen. If you do not want to go to the meeting, you can ask for your views to be written down and shared instead.</p>'}),
+  h(R.Panel,{tone:'info',icon:'message',title:'It’s your PEP'},h('p',null,'You have a right to have a say in your PEP. If you feel like nobody asked you, tell your social worker, your carer or your teacher.')),
+  h(R.Prose,{html:'<h2 id="moving">Moving to a new school</h2><p>Changing school can happen quickly, and it can feel like a lot. You should not lose any school time because of a move.</p><p>The Virtual School makes sure your new school knows what support you need, and that your PEP moves with you. You can ask to visit the new school before you start.</p><h2 id="help">Who can help you</h2><ul><li><strong>Your carer</strong> — they can raise things with your school.</li><li><strong>Your social worker</strong> — they come to your PEP meetings.</li><li><strong>Your designated teacher</strong> — every school has one. Their job is to look after the education of children in care at your school.</li><li><strong>The Virtual School</strong> — you can email us any time.</li></ul>'}),
+  h(R.Quote,{variant:'student-voice',label:'In their words',cite:'Care-experienced young person'},'A real quote from a young person goes here, with their consent.'),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Words you might hear'),h(R.Details,{summary:'What does “looked after” mean?'},'It means a child or young person who is in the care of the council. Some people say “child in care” instead.'),h(R.Details,{summary:'What does “designated teacher” mean?'},'A teacher at your school who is responsible for making sure children in care get the help they need.'),h(R.Details,{summary:'What is a “personal adviser”?'},'Someone who helps you plan what you will do after school, and supports you until you are 25 if you want them to.'),h(R.Link,{href:'#',variant:'arrow'},'All the words we use')),
+  h(R.ContactPanel,{title:'Not sure who to talk to?',email:'virtualschool@rotherham.gov.uk'})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

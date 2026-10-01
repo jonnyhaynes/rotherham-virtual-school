@@ -1,0 +1,15 @@
+---
+/**
+ * SkipLink — the first focusable element on the page, pointing at the main
+ * region. Ported from `bundle.js`. Must come immediately before the header.
+ */
+interface Props {
+	href?: string;
+}
+
+const { href = "#main-content" } = Astro.props;
+---
+
+<a class="rvs-skip-link" href={href}>
+	<slot>Skip to main content</slot>
+</a>

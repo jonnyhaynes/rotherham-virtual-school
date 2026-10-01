@@ -1,0 +1,40 @@
+---
+/**
+ * Breadcrumbs — the GOV.UK pattern in brand colours. Ported from `bundle.js`.
+ * The last item is the current page and is not a link.
+ */
+interface Props {
+	items: { label: string; href?: string }[];
+	/** For use on navy. */
+	inverse?: boolean;
+	class?: string;
+}
+
+const { items = [], inverse = false, class: className } = Astro.props;
+---
+
+{
+	items.length > 0 && (
+		<nav
+			class:list={["rvs-breadcrumbs", inverse && "rvs-breadcrumbs--inverse", className]}
+			aria-label="Breadcrumb"
+		>
+			<ol class="rvs-breadcrumbs__list">
+				{items.map((item, index) => {
+					const last = index === items.length - 1;
+					return (
+						<li class="rvs-breadcrumbs__item">
+							{last && !item.href ? (
+								<span aria-current="page">{item.label}</span>
+							) : (
+								<a class="rvs-breadcrumbs__link" href={item.href}>
+									{item.label}
+								</a>
+							)}
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
+	)
+}

@@ -1,0 +1,73 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * NotificationBanner — info, success, important, emergency, maintenance and
+ * status banners. Ported from `bundle.js`. Success and emergency announce
+ * urgently; the rest are labelled regions. Dismissal is an enhancement.
+ */
+type Tone = "info" | "important" | "success" | "emergency" | "maintenance" | "status";
+
+interface Props {
+	tone?: Tone;
+	title?: string | null;
+	label?: string;
+	dismissible?: boolean;
+	class?: string;
+}
+
+const {
+	tone = "info",
+	title = null,
+	label,
+	dismissible = false,
+	class: className,
+} = Astro.props;
+
+const BANNER: Record<Tone, [IconName, string]> = {
+	info: ["info", "Important"],
+	success: ["check-circle", "Success"],
+	important: ["alert", "Important"],
+	emergency: ["warning", "Emergency"],
+	maintenance: ["clock", "Planned maintenance"],
+	status: ["info", "Service status"],
+};
+
+const [icon, defaultLabel] = BANNER[tone];
+const live = tone === "success" || tone === "emergency";
+const labelId = `rvs-nb-${tone}`;
+---
+
+<div
+	class:list={["rvs-banner", `rvs-banner--${tone}`, className]}
+	role={live ? "alert" : "region"}
+	aria-labelledby={labelId}
+	data-rvs-banner
+>
+	<div class="rvs-banner__head">
+		<Icon name={icon} size={20} />
+		<Heading level={2} id={labelId} class="rvs-banner__label">{label ?? defaultLabel}</Heading>
+		{
+			dismissible && (
+				<button type="button" class="rvs-banner__dismiss" data-rvs-banner-dismiss>
+					<Icon name="close" size={18} />
+					<span class="rvs-visually-hidden">Dismiss</span>
+				</button>
+			)
+		}
+	</div>
+	<div class="rvs-banner__body">
+		{title && <p class="rvs-banner__title">{title}</p>}
+		<div class="rvs-banner__text"><slot /></div>
+	</div>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-banner]").forEach((banner) => {
+		banner.querySelector("[data-rvs-banner-dismiss]")?.addEventListener("click", () => {
+			banner.remove();
+		});
+	});
+</script>

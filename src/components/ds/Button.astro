@@ -1,0 +1,90 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * Button — the design system's button. Ported from `bundle.js`, keeping its
+ * variants, sizes and states (including `loading`, which swaps the icon for a
+ * spinner and marks the control `aria-disabled`).
+ *
+ * A button with `href` renders as an anchor with `role="button"`, as the design
+ * system does; without one it is a real `<button>`.
+ */
+interface Props {
+	variant?: "primary" | "secondary" | "secondary-dark" | "warning" | "inverse" | "tertiary";
+	size?: "sm" | "md" | "lg";
+	icon?: IconName | null;
+	iconPosition?: "start" | "end";
+	href?: string | null;
+	type?: "button" | "submit" | "reset";
+	loading?: boolean;
+	loadingLabel?: string;
+	disabled?: boolean;
+	fullWidth?: boolean;
+	name?: string;
+	value?: string;
+	form?: string;
+	autofocus?: boolean;
+	class?: string;
+}
+
+const {
+	variant = "primary",
+	size = "md",
+	icon = null,
+	iconPosition = "end",
+	href = null,
+	type = "button",
+	loading = false,
+	loadingLabel,
+	disabled = false,
+	fullWidth = false,
+	name,
+	value,
+	form,
+	autofocus = false,
+	class: className,
+} = Astro.props;
+
+const classes = [
+	"rvs-btn",
+	`rvs-btn--${variant}`,
+	`rvs-btn--${size}`,
+	fullWidth ? "rvs-btn--full" : null,
+	loading ? "rvs-btn--loading" : null,
+	className,
+].filter(Boolean);
+---
+
+{
+	href && !disabled ? (
+		<a class:list={classes} href={href} role="button" draggable="false">
+			{loading && <span class="rvs-spinner rvs-spinner--sm" aria-hidden="true" />}
+			{icon && iconPosition === "start" && !loading && <Icon name={icon} size={20} />}
+			<span class="rvs-btn__label">
+				<slot />
+			</span>
+			{icon && iconPosition === "end" && <Icon name={icon} size={20} />}
+			{loading && <span class="rvs-visually-hidden">{loadingLabel ?? " Loading"}</span>}
+		</a>
+	) : (
+		<button
+			class:list={classes}
+			type={type}
+			disabled={disabled || undefined}
+			aria-disabled={loading ? "true" : undefined}
+			name={name}
+			value={value}
+			form={form}
+			data-autofocus={autofocus ? true : undefined}
+		>
+			{loading && <span class="rvs-spinner rvs-spinner--sm" aria-hidden="true" />}
+			{icon && iconPosition === "start" && !loading && <Icon name={icon} size={20} />}
+			<span class="rvs-btn__label">
+				<slot />
+			</span>
+			{icon && iconPosition === "end" && <Icon name={icon} size={20} />}
+			{loading && <span class="rvs-visually-hidden">{loadingLabel ?? " Loading"}</span>}
+		</button>
+	)
+}

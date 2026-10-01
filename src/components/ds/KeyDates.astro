@@ -1,0 +1,82 @@
+---
+import Heading from "./Heading.astro";
+import Tag from "./Tag.astro";
+
+/**
+ * KeyDates — dated items with the next one flagged. Ported from `bundle.js`.
+ * `today` can be pinned so the "next" state is deterministic in a preview.
+ */
+interface KeyDate {
+	date: string;
+	label: string;
+	detail?: string;
+	href?: string;
+}
+
+interface Props {
+	dates: KeyDate[];
+	heading?: string;
+	highlightNext?: boolean;
+	today?: string;
+	class?: string;
+}
+
+const { dates = [], heading = "Key dates", highlightNext = true, today, class: className } = Astro.props;
+
+const MONTHS = [
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+const now = today ? new Date(today) : new Date();
+let nextIndex = -1;
+dates.forEach((item, i) => {
+	if (nextIndex < 0 && new Date(item.date) >= now) nextIndex = i;
+});
+
+const parsed = dates.map((item) => {
+	const d = new Date(item.date.length === 10 ? `${item.date}T12:00:00` : item.date);
+	const valid = !Number.isNaN(d.getTime());
+	return {
+		...item,
+		day: valid ? d.getDate() : "",
+		month: valid ? MONTHS[d.getMonth()] : "",
+		year: valid ? d.getFullYear() : "",
+		past: valid && d < now,
+	};
+});
+---
+
+<section class:list={["rvs-dates", className]} aria-labelledby="rvs-dates-h">
+	<Heading level={2} id="rvs-dates-h" class="rvs-dates__title">{heading}</Heading>
+	{
+		parsed.length === 0 ? (
+			<p class="rvs-muted">No upcoming dates.</p>
+		) : (
+			<ol class="rvs-dates__list">
+				{parsed.map((item, i) => (
+					<li
+						class:list={[
+							"rvs-dates__item",
+							item.past && "is-past",
+							highlightNext && i === nextIndex && "is-next",
+						]}
+					>
+						<time class="rvs-dates__tile" datetime={item.date}>
+							<span class="rvs-dates__day">{item.day}</span>
+							<span class="rvs-dates__month">{item.month}</span>
+							<span class="rvs-visually-hidden"> {item.year}</span>
+						</time>
+						<div class="rvs-dates__body">
+							{highlightNext && i === nextIndex && <Tag tone="yellow">Next</Tag>}
+							<p class="rvs-dates__label">
+								{item.href ? <a class="rvs-link" href={item.href}>{item.label}</a> : item.label}
+							</p>
+							{item.detail && <p class="rvs-dates__detail">{item.detail}</p>}
+						</div>
+					</li>
+				))}
+			</ol>
+		)
+	}
+</section>

@@ -1,0 +1,46 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * KeyFacts — a definition list of page facts, in a panel or as a plain list.
+ * Ported from `bundle.js`.
+ */
+interface Props {
+	items: { term: string; value: string }[];
+	title?: string | null;
+	icon?: IconName | null;
+	variant?: "panel" | "list";
+	class?: string;
+}
+
+const {
+	items = [],
+	title = null,
+	icon = null,
+	variant = "panel",
+	class: className,
+} = Astro.props;
+---
+
+<section class:list={["rvs-facts", `rvs-facts--${variant}`, className]} aria-labelledby={title ? "rvs-facts-h" : undefined}>
+	{
+		title && (
+			<Heading level={2} id="rvs-facts-h" class="rvs-facts__title">
+				{icon && <Icon name={icon} size={24} />}
+				{title}
+			</Heading>
+		)
+	}
+	<dl class="rvs-facts__list">
+		{
+			items.map((item) => (
+				<div class="rvs-facts__row">
+					<dt class="rvs-facts__term">{item.term}</dt>
+					<dd class="rvs-facts__value">{item.value}</dd>
+				</div>
+			))
+		}
+	</dl>
+</section>

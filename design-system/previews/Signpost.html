@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Signpost</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Signpost,{icon:'lock',iconTone:'teal',title:'Your Personal Education Plan (PEP)',text:'Your PEP sets out your education, health and wellbeing goals and helps make sure you get the support you need.',href:'#',linkLabel:'Find out more about your PEP'}))
+);
+</script>
+</body>
+</html>

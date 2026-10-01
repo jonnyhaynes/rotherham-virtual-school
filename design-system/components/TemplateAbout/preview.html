@@ -1,0 +1,28 @@
+<!-- @dsCard group="Page templates" height=1700 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateAbout</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'About Rotherham Virtual School',lead:'We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham.',breadcrumbs:[{label:'Home',href:'#'},{label:'About us'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h('div',{className:'rvs-two-col'},
+   h(R.Prose,{html:'<h2>What a virtual school is</h2><p>A virtual school is not a building and children do not attend it. Every local authority in England must have a Virtual School Head, whose job is to promote the educational achievement of the children the authority looks after.</p><p>Rotherham Virtual School works with the schools our children attend — in Rotherham and anywhere else in the country — as well as with carers, social workers and other services.</p>'}),
+   h(R.Quote,{variant:'pull'},'Every child. Every possibility.')),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Our vision'),h('p',{style:{maxWidth:'38em'}},'Children in care should have the same opportunity to succeed at school as any other child, and better support than most, because of what they have been through. We will:'),
+   h(R.Grid,{min:'200px'},
+    h(R.Card,{variant:'tinted',audience:'young-people',icon:'message',title:'Put the child first',text:'Their own views and aspirations at the centre of decisions about their education.'}),
+    h(R.Card,{variant:'tinted',audience:'schools',icon:'star',title:'High expectations',text:'Refuse to accept low attainment as inevitable.'}),
+    h(R.Card,{variant:'tinted',audience:'parents-carers',icon:'school',title:'A good school',text:'Every child in a good school that can meet their needs.'}),
+    h(R.Card,{variant:'tinted',audience:'social-workers',icon:'clock',title:'Act early',text:'When something starts to go wrong, rather than after the event.'}),
+    h(R.Card,{variant:'tinted',audience:'professionals',icon:'users',title:'Work together',text:'In partnership with carers, schools and social care.'}))),
+  h(R.Checklist,{interactive:false,heading:'What we are responsible for',items:[{id:'a',label:'Making sure children are in the right school and are making progress'},{id:'b',label:'Providing training and sharing effective practice with schools, carers and social workers'},{id:'c',label:'Monitoring the progress, attainment, attendance and exclusion of children in care'},{id:'d',label:'Overseeing Personal Education Plans and Pupil Premium Plus'},{id:'e',label:'Supporting transitions, including into care, between schools and on to post-16'}]}),
+  h(R.Panel,{tone:'neutral',title:'The law and guidance we work to'},h('p',null,'Our work is set out in the Children Act 1989 and in the Department for Education’s statutory guidance: ',h(R.Link,{href:'https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children',external:true},'Promoting the education of looked-after and previously looked-after children'),'.')),
+  h(R.Signpost,{icon:'users',title:'Meet the team',text:'Who works in the Virtual School, what they cover and how to contact them.',href:'#',linkLabel:'Our team'})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

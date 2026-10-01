@@ -1,0 +1,27 @@
+---
+/**
+ * Prose — body copy with the design system's type scale. Ported from
+ * `bundle.js`.
+ *
+ * Use it for content that arrives as markup (EmDash Portable Text, hand-authored
+ * pages, CMS entries) so headings, paragraphs and lists pick up the one scale
+ * without every page restating it.
+ */
+interface Props {
+	/** Pre-rendered HTML. When given, the default slot is ignored. */
+	html?: string | null;
+	class?: string;
+}
+
+const { html = null, class: className } = Astro.props;
+---
+
+{
+	html ? (
+		<div class:list={["rvs-prose", className]} set:html={html} />
+	) : (
+		<div class:list={["rvs-prose", className]}>
+			<slot />
+		</div>
+	)
+}

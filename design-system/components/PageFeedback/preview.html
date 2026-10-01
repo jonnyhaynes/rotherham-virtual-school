@@ -1,0 +1,14 @@
+<!-- @dsCard group="Feedback & states" height=200 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>PageFeedback</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.PageFeedback,null),h(R.PageFeedback,{state:'form'}))
+);
+</script>
+</body>
+</html>

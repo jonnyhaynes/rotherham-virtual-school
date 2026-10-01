@@ -1,0 +1,72 @@
+---
+import Icon from "./Icon.astro";
+import { formatDate } from "./assets";
+
+/**
+ * DocumentLink — a file or a document entry. Ported from `bundle.js`. The file
+ * type and size are announced with the title, and an accessible-format route is
+ * offered where the file may not suit assistive technology.
+ */
+interface Props {
+	title: string;
+	href: string;
+	fileType?: string | null;
+	fileSize?: string | null;
+	pages?: number | null;
+	description?: string | null;
+	updated?: string | null;
+	download?: boolean;
+	accessibleHref?: string | null;
+	variant?: "card" | "compact";
+	class?: string;
+}
+
+const {
+	title,
+	href,
+	fileType = "PDF",
+	fileSize = null,
+	pages = null,
+	description = null,
+	updated = null,
+	download = false,
+	accessibleHref = null,
+	variant = "card",
+	class: className,
+} = Astro.props;
+
+const type = (fileType ?? "PDF").toUpperCase();
+const meta = [type, fileSize, pages ? `${pages} pages` : null].filter(Boolean).join(", ");
+---
+
+<div class:list={["rvs-doc", `rvs-doc--${variant}`, className]}>
+	<span class="rvs-doc__thumb" aria-hidden="true">
+		<Icon name="document" size={28} />
+		<span class="rvs-doc__type">{type}</span>
+	</span>
+	<div class="rvs-doc__body">
+		<h3 class="rvs-doc__title">
+			<a class="rvs-link" href={href} download={download ? "" : undefined}>
+				{title}
+				<span class="rvs-visually-hidden"> ({meta})</span>
+			</a>
+		</h3>
+		<p class="rvs-doc__meta" aria-hidden="true">{meta}</p>
+		{description && <p class="rvs-doc__desc">{description}</p>}
+		{
+			updated && (
+				<p class="rvs-doc__meta">
+					Updated <time datetime={updated}>{formatDate(updated)}</time>
+				</p>
+			)
+		}
+		{
+			accessibleHref && (
+				<p class="rvs-doc__alt">
+					This file may not be suitable for users of assistive technology.{" "}
+					<a class="rvs-link" href={accessibleHref}>Request an accessible format</a>
+				</p>
+			)
+		}
+	</div>
+</div>

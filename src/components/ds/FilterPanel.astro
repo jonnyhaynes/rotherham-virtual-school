@@ -1,0 +1,114 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+
+/**
+ * FilterPanel — filter groups and an optional sort control. Ported from
+ * `bundle.js`.
+ *
+ * The reference implementation filters live. Here it is a real `GET` form so it
+ * works without JavaScript: the page reads the query string and renders the
+ * filtered list. Give it an `action` to enable the "Apply filters" button.
+ */
+interface Group {
+	id: string;
+	legend: string;
+	open?: boolean;
+	options: { value: string; label: string; count?: number }[];
+}
+
+interface Props {
+	groups: Group[];
+	selected?: Record<string, string[]>;
+	sortOptions?: { value: string; label: string }[];
+	sort?: string;
+	sortName?: string;
+	heading?: string;
+	action?: string | null;
+	class?: string;
+}
+
+const {
+	groups = [],
+	selected = {},
+	sortOptions = [],
+	sort = "",
+	sortName = "sort",
+	heading = "Filter",
+	action = null,
+	class: className,
+} = Astro.props;
+
+const count = Object.values(selected).reduce((total, list) => total + (list?.length ?? 0), 0);
+---
+
+<form class:list={["rvs-filters", className]} method="get" action={action ?? undefined}>
+	{
+		sortOptions.length > 0 && (
+			<div class="rvs-filters__sort">
+				<label class="rvs-label rvs-label--s" for="rvs-sort">Sort by</label>
+				<select id="rvs-sort" class="rvs-select" name={sortName}>
+					{sortOptions.map((option) => (
+						<option value={option.value} selected={option.value === sort}>{option.label}</option>
+					))}
+				</select>
+			</div>
+		)
+	}
+	<div class="rvs-filters__head">
+		<Heading level={2} class="rvs-filters__title">{heading}</Heading>
+		{
+			count > 0 && (
+				<button type="reset" class="rvs-linkbtn">
+					Clear filters<span class="rvs-visually-hidden"> ({count} selected)</span>
+				</button>
+			)
+		}
+	</div>
+	{
+		groups.map((group) => (
+			<details class="rvs-filters__group" open={group.open !== false}>
+				<summary class="rvs-filters__summary">
+					{group.legend}
+					{(selected[group.id]?.length ?? 0) > 0 && (
+						<span class="rvs-filters__badge">
+							{selected[group.id]?.length}
+							<span class="rvs-visually-hidden"> selected</span>
+						</span>
+					)}
+					<Icon name="chevron-down" size={18} class="rvs-filters__chev" />
+				</summary>
+				<fieldset class="rvs-fieldset rvs-filters__fs">
+					<legend class="rvs-visually-hidden">{group.legend}</legend>
+					{group.options.map((option) => {
+						const id = `f-${group.id}-${option.value}`;
+						const on = (selected[group.id] ?? []).includes(option.value);
+						return (
+							<div class="rvs-choice rvs-choice--checkbox rvs-choice--small">
+								<input
+									class="rvs-choice__input"
+									type="checkbox"
+									id={id}
+									name={group.id}
+									value={option.value}
+									checked={on}
+								/>
+								<label class="rvs-choice__label" for={id}>
+									{option.label}
+									{option.count !== undefined && <span class="rvs-muted"> ({option.count})</span>}
+								</label>
+							</div>
+						);
+					})}
+				</fieldset>
+			</details>
+		))
+	}
+	{
+		action && (
+			<div class="rvs-filters__apply">
+				<button type="submit" class="rvs-btn rvs-btn--secondary rvs-btn--sm">Apply filters</button>
+			</div>
+		)
+	}
+</form>

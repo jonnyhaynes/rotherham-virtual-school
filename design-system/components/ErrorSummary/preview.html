@@ -1,0 +1,14 @@
+<!-- @dsCard group="Interactive patterns" height=170 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ErrorSummary</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.ErrorSummary,{autoFocus:false,errors:[{href:'#email',text:'Enter an email address in the correct format, like name@school.org.uk'},{href:'#who',text:'Select who you are'}]}))
+);
+</script>
+</body>
+</html>

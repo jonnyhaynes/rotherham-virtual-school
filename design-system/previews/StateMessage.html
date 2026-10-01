@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>StateMessage</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.StateMessage,{state:'empty',title:'No training events match your filters'},h('p',null,'Try removing a filter, or ',h('a',{className:'rvs-link',href:'#'},'see all events'),'.')),
+ h(R.StateMessage,{state:'error',title:'Sorry, we couldn’t load the events',action:h(R.Button,{variant:'secondary',size:'sm'},'Try again')},h('p',null,'This is a problem on our side. Try again in a few minutes.')),
+ h(R.StateMessage,{state:'loading',title:'Loading events'}),
+ h(R.StateMessage,{state:'loading',skeleton:2}))
+);
+</script>
+</body>
+</html>

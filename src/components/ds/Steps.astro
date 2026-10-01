@@ -1,0 +1,99 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import Link from "./Link.astro";
+import type { IconName } from "./icons";
+
+/**
+ * Steps — the PEP process and support pathways. Ported from `bundle.js`.
+ *
+ * `vertical` is the numbered list; `journey` is the same list with a `current`
+ * marker for a learning journey. Each step's title is prefixed with a
+ * visually-hidden "Step n:" so the position is announced, not just shown.
+ */
+interface Step {
+	title: string;
+	label?: string;
+	text?: string;
+	items?: string[];
+	href?: string;
+	linkLabel?: string;
+	icon?: IconName;
+}
+
+interface Props {
+	steps: Step[];
+	variant?: "vertical" | "journey";
+	current?: number;
+	heading?: string | null;
+	intro?: string | null;
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	steps = [],
+	variant = "vertical",
+	current,
+	heading = null,
+	intro = null,
+	headingLevel = 2,
+	class: className,
+} = Astro.props;
+---
+
+<div class:list={["rvs-steps", `rvs-steps--${variant}`, className]}>
+	{heading && <Heading level={headingLevel} class="rvs-steps__heading">{heading}</Heading>}
+	{intro && <p class="rvs-steps__intro">{intro}</p>}
+	<ol class="rvs-steps__list">
+		{
+			steps.map((step, index) => {
+				const n = index + 1;
+				const state =
+					current === undefined
+						? ""
+						: n < current
+							? "is-done"
+							: n === current
+								? "is-current"
+								: "is-upcoming";
+				return (
+					<li
+						class:list={["rvs-steps__step", state]}
+						aria-current={n === current ? "step" : undefined}
+					>
+						<span class="rvs-steps__marker" aria-hidden="true">
+							{step.icon ? (
+								<Icon name={step.icon} size={22} />
+							) : state === "is-done" ? (
+								<Icon name="check" size={18} strokeWidth={3} />
+							) : (
+								n
+							)}
+						</span>
+						<div class="rvs-steps__body">
+							{step.label && <p class="rvs-steps__label">{step.label}</p>}
+							<h3 class="rvs-steps__title">
+								<span class="rvs-visually-hidden">Step {n}: </span>
+								{step.title}
+							</h3>
+							{step.text && <p class="rvs-steps__text">{step.text}</p>}
+							{step.items && (
+								<ul class="rvs-steps__items">
+									{step.items.map((item) => (
+										<li>{item}</li>
+									))}
+								</ul>
+							)}
+							{step.href && (
+								<Link href={step.href} variant="arrow">
+									{step.linkLabel ?? "Find out more"}
+								</Link>
+							)}
+						</div>
+					</li>
+				);
+			})
+		}
+	</ol>
+</div>

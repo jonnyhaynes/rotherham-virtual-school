@@ -1,0 +1,14 @@
+---
+/**
+ * Tag — a short label. Ported from `bundle.js`. Rendered as `<strong>`, so it
+ * carries emphasis as well as colour; the tone is decoration, not meaning.
+ */
+interface Props {
+	tone?: "neutral" | "teal" | "success" | "yellow" | "coral" | "purple" | "navy" | "error";
+	class?: string;
+}
+
+const { tone = "neutral", class: className } = Astro.props;
+---
+
+<strong class:list={["rvs-tag", `rvs-tag--${tone}`, className]}><slot /></strong>

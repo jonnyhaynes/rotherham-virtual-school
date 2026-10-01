@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=380 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>EditorialFeature</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.EditorialFeature,{variant:'case-study',audience:'schools',eyebrow:'Case study',title:'A smooth move to secondary school',text:'How a primary and a secondary school worked with the Virtual School to plan one pupil’s transition a full term early.',facts:[{term:'Stage',value:'Year 6 to 7'},{term:'Support',value:'PP+ mentoring'}],quote:'I already knew my form tutor on the first day.',image:{src:R.ASSETS['illustration-schools'],alt:''},href:'#'}))
+);
+</script>
+</body>
+</html>

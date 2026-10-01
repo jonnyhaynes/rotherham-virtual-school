@@ -1,0 +1,80 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import IconBadge from "./IconBadge.astro";
+import Link from "./Link.astro";
+import { uid } from "./assets";
+import type { IconName } from "./icons";
+
+/**
+ * Explainer — "What is a virtual school?" / "What is a PEP?": a question, a
+ * plain answer, and a few points. Ported from `bundle.js`.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+type BrandTone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Props {
+	question: string;
+	answer: string;
+	points?: { icon?: IconName; text: string }[] | null;
+	icon?: IconName | null;
+	tone?: BrandTone;
+	audience?: Audience;
+	href?: string | null;
+	linkLabel?: string;
+	headingLevel?: number;
+	id?: string;
+	class?: string;
+}
+
+const {
+	question,
+	answer,
+	points = null,
+	icon = null,
+	tone = "teal",
+	audience,
+	href = null,
+	linkLabel = "Find out more",
+	headingLevel = 2,
+	id,
+	class: className,
+} = Astro.props;
+
+const headingId = id ?? uid("rvs-expl");
+---
+
+<section
+	class:list={["rvs-explainer", className]}
+	data-audience={audience}
+	aria-labelledby={headingId}
+>
+	<div class="rvs-explainer__head">
+		{icon && <IconBadge icon={icon} tone={tone} size="lg" />}
+		<div>
+			<Heading level={headingLevel} id={headingId} class="rvs-explainer__q">{question}</Heading>
+			<p class="rvs-explainer__a">{answer}</p>
+		</div>
+	</div>
+	{
+		points && points.length > 0 && (
+			<ol class="rvs-explainer__points">
+				{points.map((point) => (
+					<li class="rvs-explainer__point">
+						<span class="rvs-explainer__icon" aria-hidden="true">
+							<Icon name={point.icon ?? "check"} size={28} />
+						</span>
+						<span class="rvs-explainer__text">{point.text}</span>
+					</li>
+				))}
+			</ol>
+		)
+	}
+	<slot />
+	{href && <p class="rvs-explainer__more"><Link href={href} variant="arrow">{linkLabel}</Link></p>}
+</section>

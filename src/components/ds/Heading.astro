@@ -1,0 +1,45 @@
+---
+/**
+ * Heading — renders the right heading element for a level.
+ *
+ * The design system's components take a `headingLevel` so the page outline stays
+ * correct. Astro's scoped styles cannot be applied to a tag built from a string,
+ * so the branches live here once and every component composes this.
+ */
+interface Props {
+	level?: number;
+	id?: string;
+	class?: string;
+}
+
+const { level = 2, id, class: className } = Astro.props;
+const l = Math.min(6, Math.max(1, level));
+---
+
+{
+	l === 1 ? (
+		<h1 class={className} id={id}>
+			<slot />
+		</h1>
+	) : l === 2 ? (
+		<h2 class={className} id={id}>
+			<slot />
+		</h2>
+	) : l === 3 ? (
+		<h3 class={className} id={id}>
+			<slot />
+		</h3>
+	) : l === 4 ? (
+		<h4 class={className} id={id}>
+			<slot />
+		</h4>
+	) : l === 5 ? (
+		<h5 class={className} id={id}>
+			<slot />
+		</h5>
+	) : (
+		<h6 class={className} id={id}>
+			<slot />
+		</h6>
+	)
+}

@@ -1,0 +1,73 @@
+---
+import Heading from "./Heading.astro";
+import IconBadge from "./IconBadge.astro";
+import type { IconName } from "./icons";
+
+/**
+ * StateMessage — the empty, error, loading, success and info states. Ported from
+ * `bundle.js`. The state is announced through `role`/`aria-live`, and each state
+ * carries an icon and a word, so it never relies on colour.
+ */
+type State = "empty" | "error" | "loading" | "success" | "info";
+
+interface Props {
+	state?: State;
+	title?: string | null;
+	skeleton?: number | null;
+	compact?: boolean;
+	icon?: IconName | null;
+	class?: string;
+}
+
+const {
+	state = "empty",
+	title = null,
+	skeleton = null,
+	compact = false,
+	icon = null,
+	class: className,
+} = Astro.props;
+
+const STATE_ICON: Record<string, IconName> = {
+	empty: "search",
+	error: "alert",
+	success: "check-circle",
+	info: "info",
+};
+
+const badgeTone = state === "error" ? "error" : state === "success" ? "success" : "pale";
+---
+
+{
+	state === "loading" && skeleton ? (
+		<div class="rvs-skeleton" role="status" aria-live="polite">
+			<span class="rvs-visually-hidden">{title ?? "Loading"}</span>
+			{Array.from({ length: skeleton }).map(() => (
+				<div class="rvs-skeleton__row" aria-hidden="true">
+					<span class="rvs-skeleton__line rvs-skeleton__line--title" />
+					<span class="rvs-skeleton__line" />
+					<span class="rvs-skeleton__line rvs-skeleton__line--short" />
+				</div>
+			))}
+		</div>
+	) : (
+		<div
+			class:list={["rvs-state", `rvs-state--${state}`, compact && "rvs-state--compact", className]}
+			role={state === "error" ? "alert" : "status"}
+			aria-live={state === "error" ? "assertive" : "polite"}
+		>
+			{
+				state === "loading" ? (
+					<span class="rvs-spinner" aria-hidden="true" />
+				) : (
+					<IconBadge icon={icon ?? STATE_ICON[state] ?? "info"} tone={badgeTone} size="lg" />
+				)
+			}
+			<div class="rvs-state__body">
+				{title && <Heading level={2} class="rvs-state__title">{title}</Heading>}
+				<div class="rvs-state__text"><slot /></div>
+				{Astro.slots.has("action") && <div class="rvs-state__action"><slot name="action" /></div>}
+			</div>
+		</div>
+	)
+}

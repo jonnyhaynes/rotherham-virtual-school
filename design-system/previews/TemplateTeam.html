@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateTeam</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'Our team',lead:'The Virtual School is a small team. Each member covers a phase or a specialist area, so you reach the right person quickly.',breadcrumbs:[{label:'Home',href:'#'},{label:'Our team'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h(R.Steps,{variant:'journey',heading:'Who covers what',steps:[{label:'Age 0–5',title:'Early years',text:'Headteacher and PEP coordinator'},{label:'Age 5–11',title:'Primary',text:'Primary phase lead'},{label:'Age 11–16',title:'Secondary',text:'Secondary phase lead'},{label:'Age 16–25',title:'Post-16 and care leavers',text:'Post-16 and care leavers lead'}]}),
+  h(R.Grid,{min:'340px'},h(R.TeamProfile,{role:'Virtual School Headteacher',remit:'Strategic lead for the education of children in care. Reports to the council and holds schools to account for the progress of children on their roll.',covers:['All phases']}),h(R.TeamProfile,{role:'Primary phase lead',remit:'Supports primary schools, tracks progress and attendance for children in key stages 1 and 2, and attends PEP meetings.',covers:['Key stage 1','Key stage 2'],audience:'schools'}),h(R.TeamProfile,{role:'Secondary phase lead',remit:'Supports secondary schools and colleges, with a focus on key stage 3, key stage 4 and preparing for adulthood.',covers:['Key stage 3','Key stage 4'],audience:'schools'}),h(R.TeamProfile,{role:'PEP coordinator',remit:'Coordinates the Personal Education Plan cycle, quality assures PEPs and supports designated teachers with the ePEP system.',covers:['ePEP','PEP quality'],audience:'social-workers'}),h(R.TeamProfile,{role:'Post-16 and care leavers lead',remit:'Works with care leavers and personal advisers on education, employment and training pathways after 16.',covers:['Post-16','Care leavers'],audience:'young-people'})),
+  h(R.Panel,{tone:'info',title:'Not sure who you need?'},h('p',null,'Email ',h(R.Link,{href:'mailto:virtualschool@rotherham.gov.uk'},'virtualschool@rotherham.gov.uk'),' and your message will be passed to the right person.'))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

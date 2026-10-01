@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Logo</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',null,
+ h('div',{className:'rvs-demo rvs-demo--row'},h(R.Logo,{variant:'primary',height:96}),h(R.Logo,{variant:'horizontal',height:56}),h(R.Logo,{variant:'mark',height:72}),h(R.Logo,{variant:'one-colour',height:56})),
+ h('div',{className:'rvs-demo rvs-demo--row',style:{background:'var(--navy)'}},h(R.Logo,{variant:'stacked',reversed:true,height:56}),h(R.Logo,{variant:'horizontal',reversed:true,height:48}),h(R.Logo,{variant:'one-colour',reversed:true,height:48}),h(R.Logo,{variant:'app-icon',height:72})))
+);
+</script>
+</body>
+</html>

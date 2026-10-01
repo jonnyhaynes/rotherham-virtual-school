@@ -1,0 +1,16 @@
+<!-- @dsCard group="Education patterns" height=280 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>EventCard</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Grid,{min:'320px'},
+ h(R.EventCard,{href:'#',date:'2026-10-14',title:'New designated teacher training',text:'Your role, the ePEP and Pupil Premium Plus.',time:'9:30am to 12:30pm',location:'Riverside House, Rotherham',format:'in-person',audience:'Designated teachers',status:'few'}),
+ h(R.EventCard,{href:'#',date:'2026-11-05',title:'Attachment-aware schools',time:'3:45pm to 5pm',location:'Microsoft Teams',format:'online',status:'full'})))
+);
+</script>
+</body>
+</html>

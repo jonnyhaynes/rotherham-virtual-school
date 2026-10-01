@@ -1,0 +1,37 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+
+/**
+ * ConfirmationPanel — the success end of a form journey. Ported from `bundle.js`.
+ * The tick is decorative; the words carry the confirmation.
+ */
+interface Props {
+	title?: string;
+	reference?: string | null;
+	referenceLabel?: string;
+	class?: string;
+}
+
+const {
+	title = "Form submitted",
+	reference = null,
+	referenceLabel = "Your reference number",
+	class: className,
+} = Astro.props;
+---
+
+<div class:list={["rvs-confirm", className]}>
+	<Icon name="check-circle" size={48} class="rvs-confirm__icon" />
+	<Heading level={1} class="rvs-confirm__title">{title}</Heading>
+	{
+		reference && (
+			<div class="rvs-confirm__body">
+				{referenceLabel}
+				<br />
+				<strong>{reference}</strong>
+			</div>
+		)
+	}
+	{Astro.slots.has("default") && <div class="rvs-confirm__body"><slot /></div>}
+</div>

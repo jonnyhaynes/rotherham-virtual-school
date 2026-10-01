@@ -1,0 +1,16 @@
+<!-- @dsCard group="Brand & visual language" height=420 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>CtaBanner</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.CtaBanner,{icon:'users',title:'Every child deserves the opportunity to succeed.',text:'Together we can remove barriers, raise aspirations and build brighter futures for children and young people in Rotherham.'}),
+ h(R.CtaBanner,{variant:'navy',id:'cta2',title:'Are you a new designated teacher?',text:'Book onto our induction training.',action:{label:'See training dates',href:'#'}}))
+);
+</script>
+</body>
+</html>

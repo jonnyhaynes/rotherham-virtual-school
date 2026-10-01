@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Dialog</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+(function(){function Demo(){var s=React.useState(true),o=s[0],set=s[1];return h('div',{style:{position:'relative',minHeight:'400px',padding:'20px'}},h(R.Button,{variant:'secondary',onClick:function(){set(true);}},'Leave this form'),h(R.Dialog,{inline:true,open:o,onClose:function(){set(false);},title:'Leave without saving?',size:'sm',actions:h(R.ButtonGroup,null,h(R.Button,{variant:'warning',onClick:function(){set(false);}},'Leave and delete answers'),h(R.Button,{variant:'secondary','data-autofocus':true,onClick:function(){set(false);}},'Keep going'))},h('p',null,'Your answers haven’t been sent. If you leave now you’ll need to start again.')));}return h(Demo);})()
+);
+</script>
+</body>
+</html>

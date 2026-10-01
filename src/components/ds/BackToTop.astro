@@ -1,0 +1,48 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * BackToTop — appears after the reader has scrolled a way down. Ported from
+ * `bundle.js`. Without JavaScript it stays hidden; the header logo and skip
+ * link already provide a way back to the top.
+ */
+interface Props {
+	href?: string;
+	threshold?: number;
+	alwaysVisible?: boolean;
+	fixed?: boolean;
+	label?: string;
+	class?: string;
+}
+
+const {
+	href = "#top",
+	threshold = 600,
+	alwaysVisible = false,
+	fixed = false,
+	label = "Back to top",
+	class: className,
+} = Astro.props;
+---
+
+<div
+	class:list={["rvs-back-to-top", alwaysVisible && "is-visible", fixed && "rvs-back-to-top--fixed", className]}
+	data-rvs-top
+	data-threshold={String(threshold)}
+	data-always={alwaysVisible ? "true" : undefined}
+>
+	<a class="rvs-back-to-top__link" href={href}>
+		<Icon name="arrow-up" size={20} />
+		{label}
+	</a>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-top]").forEach((wrap) => {
+		if (wrap.dataset.always === "true") return;
+		const threshold = Number(wrap.dataset.threshold ?? "600");
+		const update = () => wrap.classList.toggle("is-visible", window.scrollY > threshold);
+		window.addEventListener("scroll", update, { passive: true });
+		update();
+	});
+</script>

@@ -1,7 +1,13 @@
 ---
 import { getEmDashCollection } from "emdash";
-import PageHeader from "../../components/PageHeader.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
+import Card from "../../components/ds/Card.astro";
+import DocumentLink from "../../components/ds/DocumentLink.astro";
+import FilterPanel from "../../components/ds/FilterPanel.astro";
+import Grid from "../../components/ds/Grid.astro";
+import Hero from "../../components/ds/Hero.astro";
+import StateMessage from "../../components/ds/StateMessage.astro";
+import { formatDate } from "../../components/ds/assets";
+import { AUDIENCES } from "../../data/audiences";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const { entries, cacheHint } = await getEmDashCollection("documents", { limit: 200 });
@@ -17,9 +23,33 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_ORDER = ["policy", "guidance", "form", "report", "other"];
 
-const documents = [...entries].sort((a, b) =>
-	String(a.data.title).localeCompare(String(b.data.title)),
-);
+const AUDIENCE_LABELS: Record<string, string> = {
+	"young-people": "Young people",
+	"parents-carers": "Parents and carers",
+	schools: "Schools",
+	"social-workers": "Social workers",
+	professionals: "Professionals",
+	all: "Everyone",
+};
+
+const selectedAudiences = Astro.url.searchParams.getAll("audience");
+
+const documents = [...entries]
+	.filter((doc) => {
+		if (selectedAudiences.length === 0) return true;
+		const audience = String(doc.data.audience ?? "all");
+		return audience === "all" || selectedAudiences.includes(audience);
+	})
+	.sort((a, b) => String(a.data.title).localeCompare(String(b.data.title)));
+
+const asString = (value: unknown) => (value == null ? null : String(value));
+
+const fileType = (url?: string | null) => {
+	if (!url) return null;
+	const name = url.split("?")[0];
+	const ext = name.includes(".") ? name.split(".").pop() : null;
+	return ext ? ext.toUpperCase() : null;
+};
 
 const groups = CATEGORY_ORDER.map((category) => ({
 	category,
@@ -27,113 +57,79 @@ const groups = CATEGORY_ORDER.map((category) => ({
 	items: documents.filter((doc) => doc.data.category === category),
 })).filter((group) => group.items.length > 0);
 
-const linkFor = (doc: (typeof documents)[number]) => {
-	if (doc.data.external_url) {
-		return { href: doc.data.external_url, external: true };
-	}
-	if (doc.data.file?.url) {
-		return { href: doc.data.file.url, external: false };
-	}
-	return null;
-};
-
-const formatDate = (value: unknown) =>
-	value
-		? new Date(value as string).toLocaleDateString("en-GB", {
-				month: "long",
-				year: "numeric",
-			})
-		: null;
+const filterGroups = [
+	{
+		id: "audience",
+		legend: "Audience",
+		options: AUDIENCES.map((audience) => ({
+			value: audience.id,
+			label: AUDIENCE_LABELS[audience.id] ?? audience.title,
+		})),
+	},
+];
 ---
 
 <BaseLayout
 	title="Documents"
 	description="Policies, guidance, forms and reports from Rotherham Virtual School."
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Documents" }]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="Documents"
 		lead="Policies, statutory guidance, forms and reports. Where a document is published nationally, we link to the original source so you always have the current version."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Documents" }]}
+	/>
+
+	<FilterPanel
+		groups={filterGroups}
+		selected={{ audience: selectedAudiences }}
+		action="/documents/"
 	/>
 
 	{
 		groups.length === 0 ? (
-			<InsetText title="No documents yet">
-				<p class="govuk-body">
-					Documents will appear here as they are published. In the meantime, contact the
-					team if you need a specific policy or form.
+			<StateMessage state="empty" title="No documents to show">
+				<p>
+					No documents match your filters. Clear them, or contact the team if you need a
+					specific policy or form.
 				</p>
-			</InsetText>
+			</StateMessage>
 		) : (
 			groups.map((group) => (
 				<section aria-labelledby={`docs-${group.category}`}>
-					<h2 class="govuk-heading-l" id={`docs-${group.category}`}>
-						{group.label}
-					</h2>
-					<ul class="rvs-doc-list" role="list">
+					<h2 class="rvs-section-title" id={`docs-${group.category}`}>{group.label}</h2>
+					<Grid as="ul" min="280px">
 						{group.items.map((doc) => {
-							const link = linkFor(doc);
-							const updated = formatDate(doc.data.updated_on);
-							return (
-								<li class="rvs-doc">
-									<h3 class="govuk-heading-s rvs-doc__title">
-										{link ? (
-											<a
-												class="govuk-link"
-												href={link.href}
-												rel={link.external ? "noopener" : undefined}
-											>
-												{doc.data.title}
-											</a>
-										) : (
-											doc.data.title
-										)}
-									</h3>
-									{doc.data.summary && (
-										<p class="govuk-body rvs-doc__summary">{doc.data.summary}</p>
-									)}
-									<p class="govuk-body-s rvs-doc__meta">
-										{link?.external && <span>External link</span>}
-										{link?.external && updated && <span>, </span>}
-										{updated && <span>Updated {updated}</span>}
-										{doc.data.doc_version && <span>. Version {doc.data.doc_version}</span>}
-									</p>
+							const externalUrl = asString(doc.data.external_url);
+							const fileUrl = doc.data.file?.url ?? null;
+							const updated = asString(doc.data.updated_on);
+							return externalUrl ? (
+								<Card
+									as="li"
+									href={externalUrl}
+									external={true}
+									title={String(doc.data.title)}
+									text={asString(doc.data.summary)}
+									meta={updated ? formatDate(updated) : null}
+								/>
+							) : (
+								<li>
+									<DocumentLink
+										title={String(doc.data.title)}
+										href={fileUrl ?? "#"}
+										fileType={fileType(fileUrl)}
+										description={asString(doc.data.summary)}
+										updated={updated}
+										download={Boolean(fileUrl)}
+										variant="compact"
+									/>
 								</li>
 							);
 						})}
-					</ul>
+					</Grid>
 				</section>
 			))
 		)
 	}
 </BaseLayout>
-
-<style>
-	.rvs-doc-list {
-		list-style: none;
-		padding: 0;
-		margin: 1rem 0 2rem;
-	}
-
-	.rvs-doc {
-		border-top: 1px solid var(--rvs-border);
-		padding: 1rem 0;
-	}
-
-	.rvs-doc:last-child {
-		border-bottom: 1px solid var(--rvs-border);
-	}
-
-	.rvs-doc__title {
-		margin: 0 0 0.25rem;
-	}
-
-	.rvs-doc__summary {
-		margin: 0 0 0.25rem;
-	}
-
-	.rvs-doc__meta {
-		color: var(--rvs-grey);
-		margin: 0;
-	}
-</style>

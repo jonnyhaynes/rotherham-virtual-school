@@ -1,83 +1,100 @@
 ---
-import PageHeader from "../../components/PageHeader.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
+import Hero from "../../components/ds/Hero.astro";
+import OnThisPage from "../../components/ds/OnThisPage.astro";
+import Prose from "../../components/ds/Prose.astro";
+import Table from "../../components/ds/Table.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SITE_DEFAULTS } from "../../utils/site";
+
+const sections = [
+	{ id: "cookies", label: "Cookies" },
+	{ id: "personal-information", label: "Personal information" },
+	{ id: "your-rights", label: "Your rights" },
+	{ id: "contact", label: "Contact" },
+];
 ---
 
 <BaseLayout
 	title="Privacy and cookies"
 	description="How Rotherham Virtual School handles personal information and uses cookies on this website."
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Privacy and cookies" }]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="Privacy and cookies"
 		lead="How we handle personal information, and the cookies this website uses."
-		meta="[TODO before launch: confirm with the council's Data Protection Officer and insert the review date.]"
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Privacy and cookies" }]}
 	/>
 
-	<h2 class="govuk-heading-l">Cookies</h2>
-	<p class="govuk-body">
-		Cookies are small files saved on your device when you visit a website. This website uses
-		<strong>essential cookies only</strong>.
-	</p>
-	<table class="govuk-table">
-		<caption class="govuk-table__caption govuk-table__caption--s">
-			Essential cookies
-		</caption>
-		<thead class="govuk-table__head">
-			<tr class="govuk-table__row">
-				<th scope="col" class="govuk-table__header">Name</th>
-				<th scope="col" class="govuk-table__header">Purpose</th>
-				<th scope="col" class="govuk-table__header">Expires</th>
-			</tr>
-		</thead>
-		<tbody class="govuk-table__body">
-			<tr class="govuk-table__row">
-				<td class="govuk-table__cell">session</td>
-				<td class="govuk-table__cell">
-					Keeps you signed in to the content management system. Only set for Virtual School
-					staff.
-				</td>
-				<td class="govuk-table__cell">When you close your browser</td>
-			</tr>
-		</tbody>
-	</table>
-	<InsetText>
-		<p class="govuk-body">
+	<div class="rvs-two-col">
+		<div class="rvs-stack">
+			<Prose>
+				<p class="rvs-meta">
+			[TODO before launch: confirm with the council's Data Protection Officer and insert the
+			review date.]
+		</p>
+
+		<h2 id="cookies">Cookies</h2>
+		<p>
+			Cookies are small files saved on your device when you visit a website. This website uses <strong>essential cookies only</strong>.
+		</p>
+	</Prose>
+
+	<Table
+		caption="Essential cookies"
+		firstColumnHeader={true}
+		columns={[
+			{ key: "name", label: "Name" },
+			{ key: "purpose", label: "Purpose" },
+			{ key: "expires", label: "Expires" },
+		]}
+		rows={[
+			{
+				name: "session",
+				purpose:
+					"Keeps you signed in to the content management system. Only set for Virtual School staff.",
+				expires: "When you close your browser",
+			},
+		]}
+	/>
+
+	<Prose>
+		<p>
 			We do not use advertising or analytics cookies, so there is no cookie banner to dismiss.
 			If we add analytics in future, we will ask for your consent first and add a way to change
 			your mind.
 		</p>
-	</InsetText>
 
-	<h2 class="govuk-heading-l">Personal information</h2>
-	<p class="govuk-body">
-		This website is a source of information. It has no forms, and does not collect personal
-		information about visitors.
-	</p>
-	<p class="govuk-body">
-		If you email the Virtual School, we will use your message and contact details only to deal
-		with your enquiry. Information about a child's education is held in the council's case
-		management systems under the council's
-		<a class="govuk-link" href="https://www.rotherham.gov.uk/privacy" rel="noopener"
-			>corporate privacy notice</a
-		>, not on this website.
-	</p>
+		<h2 id="personal-information">Personal information</h2>
+		<p>
+			This website is a source of information. We collect as little as possible about visitors,
+			and none of it is used to identify you or to build a profile of you.
+		</p>
+		<p>
+			If you email the Virtual School, we will use your message and contact details only to
+			deal with your enquiry. Information about a child's education is held in the council's
+			case management systems under the council's <a href="https://www.rotherham.gov.uk/privacy" rel="noopener">corporate privacy notice</a
+			>, not on this website.
+		</p>
 
-	<h2 class="govuk-heading-l">Your rights</h2>
-	<p class="govuk-body">
-		You have rights under data protection law, including the right to ask for a copy of the
-		information we hold about you. To make a request, contact the council's Data Protection
-		Officer through
-		<a class="govuk-link" href="https://www.rotherham.gov.uk/privacy" rel="noopener"
-			>Rotherham Council's privacy pages</a
-		>.
-	</p>
+		<h2 id="your-rights">Your rights</h2>
+		<p>
+			You have rights under data protection law, including the right to ask for a copy of the
+			information we hold about you. To make a request, contact the council's Data Protection
+			Officer through <a href="https://www.rotherham.gov.uk/privacy" rel="noopener"
+				>Rotherham Council's privacy pages</a
+			>.
+		</p>
 
-	<h2 class="govuk-heading-l">Contact</h2>
-	<p class="govuk-body">
-		Questions about this notice can be sent to
-		<a class="govuk-link" href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>.
-	</p>
+		<h2 id="contact">Contact</h2>
+		<p>
+			Questions about this notice can be sent to <a href={`mailto:${SITE_DEFAULTS.email}`}>{SITE_DEFAULTS.email}</a>.
+		</p>
+			</Prose>
+		</div>
+
+		<aside>
+			<OnThisPage items={sections} sticky={true} />
+		</aside>
+	</div>
 </BaseLayout>

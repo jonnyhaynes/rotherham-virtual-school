@@ -1,0 +1,16 @@
+<!-- @dsCard group="Education patterns" height=560 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Steps</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.Steps,{heading:'The PEP process',intro:'The PEP meeting happens at least once a term. Here’s what to expect:',steps:[{title:'Before the meeting',items:['Think about the child’s strengths, needs and aspirations','Share any updates with their school or social worker','Make a note of any questions or concerns']},{title:'During the meeting',items:['Discuss progress, wellbeing and next steps','Agree actions and support','Make sure your views are recorded']},{title:'After the meeting',items:['You’ll get a copy of the PEP','Check that agreed actions are followed up']}]}),
+ h(R.Steps,{variant:'journey',heading:'Your learning journey',current:3,steps:[{label:'Age 0–5',title:'Early years'},{label:'Age 5–11',title:'Primary school'},{label:'Age 11–16',title:'Secondary school'},{label:'Age 16–18',title:'College or training'},{label:'18+',title:'Adulthood'}]}))
+);
+</script>
+</body>
+</html>

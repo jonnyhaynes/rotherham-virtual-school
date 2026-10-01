@@ -1,19 +1,40 @@
 ---
+import AudienceSelector from "../components/ds/AudienceSelector.astro";
+import Hero from "../components/ds/Hero.astro";
+import SearchInput from "../components/ds/SearchInput.astro";
+import { AUDIENCES } from "../data/audiences";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+// The audience router here is the same `AudienceSelector` the home page uses, so
+// the five audiences carry the same icon, accent and arrow in both places.
+const audiences = AUDIENCES.map((audience) => ({
+	id: audience.id,
+	label: audience.title,
+	description: audience.description,
+	href: audience.href,
+}));
 ---
 
 <BaseLayout
 	title="Page not found"
 	description="The page you were looking for does not exist."
-	showFeedback={false}
 >
-	<h1 class="govuk-heading-xl">Page not found</h1>
-	<p class="govuk-body">If you typed the web address, check it is correct.</p>
-	<p class="govuk-body">
-		If you pasted the web address, check you copied the entire address.
-	</p>
-	<p class="govuk-body">
-		You can also <a class="govuk-link" href="/">go to the home page</a> or
-		<a class="govuk-link" href="/contact/">contact the Virtual School</a>.
-	</p>
+	<Hero
+		slot="hero"
+		variant="compact"
+		title="Page not found"
+		lead="If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address."
+	/>
+
+	<p class="rvs-intro">You can search the website, or browse the section for you:</p>
+
+	<SearchInput size="large" label="Search the Virtual School website" />
+
+	<AudienceSelector
+		heading="Browse by audience"
+		label="Browse by audience"
+		audiences={audiences}
+	/>
+
+	<p><a class="rvs-link" href="/contact/">Contact the Virtual School</a></p>
 </BaseLayout>

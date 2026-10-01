@@ -1,0 +1,39 @@
+---
+import CtaBanner from "./ds/CtaBanner.astro";
+
+/**
+ * Rotherham's Ofsted judgement, for the pages that reference it.
+ *
+ * Rotherham's children's services were inspected from 3 to 7 November 2025 and
+ * judged Outstanding overall. The Virtual School sits inside children's
+ * services, so the judgement is a shared result: a service the site can point
+ * to as evidence rather than assert.
+ *
+ * Built on the design system's `CtaBanner` — the branded statement band — in the
+ * `navy` variant, so the recognition reads as a prominent, on-brand band rather
+ * than one more paragraph, and every page that cites the report highlights it
+ * the same way. The report is linked at source so a reader always lands on the
+ * current version.
+ *
+ * Pass `quote` to show a line from the report instead of the summary — used on
+ * the About page, where the band replaces a pull quote.
+ */
+interface Props {
+	/** A line from the report to show in the band, in place of the summary. */
+	quote?: string | null;
+}
+
+const { quote = null } = Astro.props;
+
+const REPORT_URL = "https://files.ofsted.gov.uk/v1/file/50292638";
+const SUMMARY =
+	"Ofsted inspected Rotherham Metropolitan Borough Council's children's services in November 2025 and judged overall effectiveness Outstanding.";
+---
+
+<CtaBanner
+	variant="navy"
+	headingLevel={2}
+	title="Ofsted rated Rotherham's children's services Outstanding"
+	text={quote ?? SUMMARY}
+	action={{ label: "Read the Ofsted report", href: REPORT_URL }}
+/>

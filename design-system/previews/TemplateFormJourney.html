@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateFormJourney</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+(function(){
+ var Q=[{id:'who',q:'Who are you?',opts:[['carer','A carer'],['sw','A social worker'],['school','School staff'],['young-people','A young person']]},{id:'about',q:'What is your question about?',opts:[['pep','The PEP'],['pp','Pupil Premium Plus'],['adm','Admissions or a school move'],['other','Something else']]},{id:'how',q:'How should we contact you?',opts:[['email','Email'],['phone','Phone']]}];
+ function Journey(){
+  var s=React.useState(0),step=s[0],setStep=s[1];var a=React.useState({}),ans=a[0],setAns=a[1];var e=React.useState(''),err=e[0],setErr=e[1];
+  if(step===Q.length+1) return h('div',{className:'rvs-stack--s'},h(R.ConfirmationPanel,{title:'Question sent',reference:'RVS-4829-KT'}),h('h2',{className:'rvs-section-title'},'What happens next'),h('p',null,'We’ll reply within 5 working days.'),h(R.Button,{variant:'secondary',onClick:function(){setStep(0);setAns({});}},'Ask another question'));
+  if(step===Q.length) return h('div',null,h(R.ProgressIndicator,{current:Q.length+1,steps:['About you','Your question','Contact','Check answers']}),h('h1',{className:'rvs-legend__heading'},'Check your answers'),h(R.KeyFacts,{variant:'list',items:Q.map(function(q){var o=q.opts.filter(function(x){return x[0]===ans[q.id];})[0];return {term:q.q,value:o?o[1]:''};})}),h('div',{style:{marginTop:'30px'}},h(R.ButtonGroup,null,h(R.Button,{onClick:function(){setStep(step+1);}},'Send question'),h(R.Link,{href:'#',onClick:function(ev){ev.preventDefault();setStep(0);}},'Change answers'))));
+  var q=Q[step];
+  function next(){ if(!ans[q.id]){setErr('Select an option');return;} setErr(''); setStep(step+1); }
+  return h('div',null,
+   step>0?h('p',null,h(R.Link,{href:'#',onClick:function(ev){ev.preventDefault();setErr('');setStep(step-1);}},'Back')):null,
+   h(R.ProgressIndicator,{current:step+1,steps:['About you','Your question','Contact','Check answers']}),
+   err?h(R.ErrorSummary,{key:'es'+step,errors:[{href:'#'+q.id+'-0',text:err}]}):null,
+   h(R.ChoiceGroup,{key:q.id,name:q.id,legend:q.q,legendSize:'l',error:err||undefined,value:ans[q.id]||'',onChange:function(v){var n=Object.assign({},ans);n[q.id]=v;setAns(n);},options:q.opts.map(function(o){return {value:o[0],label:o[1]};})}),
+   h(R.Button,{onClick:next},'Continue'));
+ }
+ return h('div',{className:'rvs-page'},h(R.Header,{navigation:[],search:false}),h('main',{id:'main-content',className:'rvs-main',style:{maxWidth:'720px'}},h(Journey)));
+})()
+);
+</script>
+</body>
+</html>

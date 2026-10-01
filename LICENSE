@@ -3,8 +3,8 @@ Copyright (c) 2026 Jonny Haynes (code and original content). All rights reserved
 
 PROPRIETARY SOFTWARE AND CONTENT — ALL RIGHTS RESERVED
 
-This repository contains three distinct bodies of material, owned by different
-parties. Sections 1 to 3 set out which is which.
+This repository contains four distinct bodies of material, owned by different
+parties. Sections 1 to 4 set out which is which.
 
 
 1. CODE AND ORIGINAL CONTENT — JONNY HAYNES
@@ -57,7 +57,31 @@ with licensed or original wording before any real use. (The hexadecimal colour
 values of the brand palette are factual and are not themselves protected.)
 
 
-3. THIRD-PARTY COMPONENTS — THEIR RESPECTIVE AUTHORS
+3. OFSTED INSPECTION REPORT — CROWN COPYRIGHT
+
+The Ofsted judgement carried on the site — the inspection grades for Rotherham
+Metropolitan Borough Council's children's services, and the short extract from
+the report's findings about the Virtual School — is Crown copyright. It is
+reproduced under the terms of the Open Government Licence, which permits reuse
+of Ofsted's information free of charge, excluding logos, provided the source is
+acknowledged. The source is:
+
+    Ofsted, "Inspection of Rotherham Metropolitan Borough Council local
+    authority children's services", inspection dates 3 to 7 November 2025,
+    published 16 December 2025.
+    https://files.ofsted.gov.uk/v1/file/50292638
+
+This material is NOT covered by section 1. It appears in:
+
+    src/components/OfstedRecognition.astro
+    src/pages/about/index.astro
+    src/pages/index.astro
+    seed/seed.json
+
+Licence: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+
+
+4. THIRD-PARTY COMPONENTS — THEIR RESPECTIVE AUTHORS
 
 This project depends on third-party open source packages that are licensed to
 you directly by their respective authors, principally Astro, EmDash, GOV.UK

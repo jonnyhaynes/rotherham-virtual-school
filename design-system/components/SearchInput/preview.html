@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation & discovery" height=160 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>SearchInput</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.SearchInput,{label:'Search Rotherham Virtual School',size:'large',defaultValue:'pupil premium'}),h('div',{style:{maxWidth:'360px'}},h(R.SearchInput,{label:'Search guidance',hideLabel:true,placeholder:'Search guidance'})))
+);
+</script>
+</body>
+</html>

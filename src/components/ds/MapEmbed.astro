@@ -1,0 +1,85 @@
+---
+import Icon from "./Icon.astro";
+import IconBadge from "./IconBadge.astro";
+import Link from "./Link.astro";
+
+/**
+ * MapEmbed — a consent-first map. Ported from `bundle.js`. The map is not loaded
+ * until the reader asks for it.
+ */
+interface Props {
+	title?: string | null;
+	address?: string | string[] | null;
+	query?: string | null;
+	lat?: number | null;
+	lng?: number | null;
+	src?: string | null;
+	directionsHref?: string | null;
+	consentText?: string | null;
+	class?: string;
+}
+
+const {
+	title = null,
+	address = null,
+	query = null,
+	lat = null,
+	lng = null,
+	src = null,
+	directionsHref = null,
+	consentText = null,
+	class: className,
+} = Astro.props;
+
+const addressText = address ? (Array.isArray(address) ? address : [address]) : [];
+const q = encodeURIComponent(query ?? addressText.join(", "));
+const d = 0.006;
+const mapSrc =
+	src ??
+	(lat !== null && lng !== null
+		? `https://www.openstreetmap.org/export/embed.html?bbox=${lng - d}%2C${lat - d / 2}%2C${lng + d}%2C${lat + d / 2}&layer=mapnik&marker=${lat}%2C${lng}`
+		: `https://maps.google.com/maps?q=${q}&output=embed`);
+const directions = directionsHref ?? `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+const usingOsm = lat !== null && lng !== null;
+const note = consentText ?? (usingOsm ? "The map loads from OpenStreetMap." : "The map loads from Google Maps, which may set cookies.");
+---
+
+<figure class:list={["rvs-map", className]} data-rvs-map data-src={mapSrc} data-title={title ?? "our location"}>
+	<div class="rvs-map__frame">
+		<div class="rvs-map__placeholder" data-rvs-map-placeholder>
+			<svg class="rvs-map__grid" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+				<path class="rvs-map__road" d="M-10 170C80 150 140 90 230 100s130 40 190 10" />
+				<path class="rvs-map__road rvs-map__road--minor" d="M120 -10C130 60 150 140 140 240" />
+				<path class="rvs-map__road rvs-map__road--minor" d="M260 -10c-10 80 20 150 60 240" />
+			</svg>
+			<div class="rvs-map__overlay">
+				<IconBadge icon="map-pin" tone="coral" size="lg" />
+				<button type="button" class="rvs-video__play" data-rvs-map-play>
+					<Icon name="map" size={22} />
+					<span>Show map<span class="rvs-visually-hidden">: {title ?? ""}</span></span>
+				</button>
+				<p class="rvs-map__note">{note}</p>
+			</div>
+		</div>
+	</div>
+	<figcaption class="rvs-map__caption">
+		{title && <span class="rvs-video__title">{title}</span>}
+		{addressText.length > 0 && <span> — {addressText.join(", ")}</span>}
+		<span class="rvs-map__dir"><Link href={directions} external={true}>Get directions</Link></span>
+	</figcaption>
+</figure>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-map]").forEach((figure) => {
+		figure.querySelector("[data-rvs-map-play]")?.addEventListener("click", () => {
+			const frame = figure.querySelector<HTMLElement>(".rvs-map__frame");
+			const src = figure.dataset.src;
+			if (!frame || !src) return;
+			const iframe = document.createElement("iframe");
+			iframe.src = src;
+			iframe.title = `Map: ${figure.dataset.title ?? "our location"}`;
+			iframe.loading = "lazy";
+			frame.replaceChildren(iframe);
+		});
+	});
+</script>

@@ -1,0 +1,99 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import { uid } from "./assets";
+
+/**
+ * Checklist — a "before you start" list that can be ticked. Ported from
+ * `bundle.js`. `interactive={false}` renders a plain, non-interactive list for
+ * an eligibility summary. The tick state is not persisted; it is a reading aid.
+ */
+interface Item {
+	id: string;
+	label: string;
+	hint?: string;
+	done?: boolean;
+}
+
+interface Props {
+	items: Item[];
+	heading?: string;
+	interactive?: boolean;
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	items = [],
+	heading = "Checklist",
+	interactive = true,
+	headingLevel = 2,
+	class: className,
+} = Astro.props;
+
+const base = uid("rvs-chk");
+const initialDone = items.filter((item) => item.done).length;
+---
+
+<section class:list={["rvs-checklist", className]} aria-labelledby={`${base}-h`} data-rvs-checklist>
+	<div class="rvs-checklist__head">
+		<Heading level={headingLevel} id={`${base}-h`} class="rvs-checklist__title">{heading}</Heading>
+		{
+			interactive && (
+				<p class="rvs-checklist__progress" aria-live="polite" data-rvs-checklist-progress>
+					{initialDone} of {items.length} done
+				</p>
+			)
+		}
+	</div>
+	{
+		interactive && (
+			<div class="rvs-progress-bar" aria-hidden="true">
+				<span data-rvs-checklist-bar style={`width: ${items.length ? (100 * initialDone) / items.length : 0}%`} />
+			</div>
+		)
+	}
+	<ul class="rvs-checklist__list">
+		{
+			items.map((item) => {
+				const id = `${base}-${item.id}`;
+				return interactive ? (
+					<li class="rvs-choice rvs-choice--checkbox">
+						<input
+							class="rvs-choice__input"
+							type="checkbox"
+							id={id}
+							checked={Boolean(item.done)}
+							data-rvs-checklist-item
+						/>
+						<label class="rvs-choice__label" for={id}>{item.label}</label>
+						{item.hint && <div class="rvs-hint rvs-choice__hint">{item.hint}</div>}
+					</li>
+				) : (
+					<li class="rvs-checklist__static">
+						<Icon name="check-circle" size={24} class="rvs-tone-text-teal" />
+						<span>
+							<span class="rvs-checklist__label">{item.label}</span>
+							{item.hint && <span class="rvs-hint">{item.hint}</span>}
+						</span>
+					</li>
+				);
+			})
+		}
+	</ul>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-checklist]").forEach((root) => {
+		const boxes = Array.from(root.querySelectorAll<HTMLInputElement>("[data-rvs-checklist-item]"));
+		const progress = root.querySelector<HTMLElement>("[data-rvs-checklist-progress]");
+		const bar = root.querySelector<HTMLElement>("[data-rvs-checklist-bar]");
+		if (boxes.length === 0) return;
+		const update = () => {
+			const done = boxes.filter((box) => box.checked).length;
+			if (progress) progress.textContent = `${done} of ${boxes.length} done`;
+			if (bar) bar.style.width = `${(100 * done) / boxes.length}%`;
+		};
+		boxes.forEach((box) => box.addEventListener("change", update));
+	});
+</script>

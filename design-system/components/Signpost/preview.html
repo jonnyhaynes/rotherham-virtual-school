@@ -1,0 +1,14 @@
+<!-- @dsCard group="Core" height=150 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Signpost</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Signpost,{icon:'lock',iconTone:'teal',title:'Your Personal Education Plan (PEP)',text:'Your PEP sets out your education, health and wellbeing goals and helps make sure you get the support you need.',href:'#',linkLabel:'Find out more about your PEP'}))
+);
+</script>
+</body>
+</html>

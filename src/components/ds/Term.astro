@@ -1,0 +1,43 @@
+---
+import { uid } from "./assets";
+
+/**
+ * Term — an inline definition for a word or acronym. Ported from `bundle.js`.
+ *
+ * The trigger is a real button, so it works by keyboard; the meaning is revealed
+ * in place and announced. The definition is in the DOM even before opening, so
+ * it is always available to a screen reader.
+ */
+interface Props {
+	definition: string;
+	expansion?: string | null;
+	class?: string;
+}
+
+const { definition, expansion = null, class: className } = Astro.props;
+const id = uid("rvs-term");
+---
+
+<span class:list={["rvs-term", className]} data-rvs-term>
+	<button type="button" class="rvs-term__btn" aria-expanded="false" aria-controls={id}>
+		<slot />
+		<span class="rvs-visually-hidden"> (what does this mean?)</span>
+	</button>
+	<span id={id} class="rvs-term__def" role="note" hidden>
+		{expansion && <strong>{expansion}. </strong>}
+		{definition}
+	</span>
+</span>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-term]").forEach((term) => {
+		const btn = term.querySelector<HTMLButtonElement>(".rvs-term__btn");
+		const def = term.querySelector<HTMLElement>(".rvs-term__def");
+		if (!btn || !def) return;
+		btn.addEventListener("click", () => {
+			const open = btn.getAttribute("aria-expanded") === "true";
+			btn.setAttribute("aria-expanded", String(!open));
+			def.hidden = open;
+		});
+	});
+</script>

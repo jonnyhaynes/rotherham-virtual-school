@@ -1,0 +1,14 @@
+<!-- @dsCard group="Interactive patterns" height=260 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Tabs</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Tabs,{label:'PEP by stage',tabs:[{id:'ey',label:'Early years',content:h('p',null,'Early years PEPs start from age 2 and focus on development and transitions into school.')},{id:'sa',label:'School age',content:h('p',null,'Termly PEPs led by the designated teacher, including Pupil Premium Plus targets.')},{id:'p16',label:'Post-16',content:h('p',null,'PEPs continue to 18 and focus on attendance, qualifications and next steps.')}]}))
+);
+</script>
+</body>
+</html>

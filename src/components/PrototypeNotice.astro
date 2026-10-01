@@ -18,8 +18,8 @@
 	aria-label="Prototype notice"
 	hidden
 >
-	<div class="govuk-width-container rvs-prototype__inner">
-		<p class="govuk-body-s rvs-prototype__text">
+	<div class="rvs-container rvs-prototype__inner">
+		<p class="rvs-prototype__text">
 			<strong>Prototype.</strong> This is a demonstration build, not the live Rotherham Virtual
 			School website. It is not affiliated with, commissioned by or endorsed by Rotherham
 			Metropolitan Borough Council. The council logo is used for demonstration purposes only
@@ -76,7 +76,7 @@
 		z-index: 1000;
 		background: #0b0c0c;
 		color: #fff;
-		border-top: 4px solid var(--rvs-yellow);
+		border-top: 4px solid var(--focus);
 	}
 
 	.rvs-prototype__inner {
@@ -91,11 +91,11 @@
 
 	.rvs-prototype__text {
 		margin: 0;
-		/* `govuk-body-s` sets GOV.UK's own text colour, and a colour applied
-		   directly to an element beats the one it would inherit, so the bar's
-		   white never reached this paragraph. It measured 1.37:1 — dark grey on
-		   near-black — which left the notice explaining that this is a prototype
-		   the least legible text on the page. */
+		font-size: 16px;
+		line-height: 20px;
+		/* The bar's own colour, not an inherited one: dark grey on near-black
+		   would leave the notice explaining that this is a prototype the least
+		   legible text on the page. */
 		color: inherit;
 		/* 42rem is 672px, roughly 70ch at 16px. Fixed width rather than ch so the
 		   notice keeps the same measure in the fallback font. */

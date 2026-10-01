@@ -1,0 +1,18 @@
+<!-- @dsCard group="Page templates" height=1250 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateOutcomes</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'How our children are doing',lead:'The Virtual School monitors the progress, attainment, attendance and exclusions of children in care. These are the headline figures, explained in plain English.',breadcrumbs:[{label:'Home',href:'#'},{label:'Outcomes'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h(R.NotificationBanner,{tone:'important',title:'These figures are illustrative, not real'},h('p',null,'Placeholder data from the prototype, to show the layout. Replace with Rotherham’s published outcomes before launch.')),
+  h(R.StatsPanel,{heading:'Academic year 2025/26 (illustrative)',source:'Prototype placeholder figures',stats:[{value:'94.1%',label:'Attendance',description:'All Rotherham pupils: 95.0%'},{value:'12.4%',label:'Persistent absence',description:'All Rotherham pupils: 8.9%'},{value:'1 in 9',label:'Fixed-term exclusions',description:'All Rotherham pupils: 1 in 22'},{value:'58%',label:'Care leavers in education, employment or training',description:'National average: 55%'}]}),
+  h(R.Table,{caption:'Children in care in Rotherham, 2025/26 (illustrative)',columns:[{key:'m',label:'Measure'},{key:'v',label:'Rotherham children in care'},{key:'c',label:'Comparison'}],rows:[{m:'Attendance',v:'94.1%',c:'All Rotherham pupils: 95.0%'},{m:'Persistent absence',v:'12.4%',c:'All Rotherham pupils: 8.9%'},{m:'Fixed-term exclusions',v:'1 in 9',c:'All Rotherham pupils: 1 in 22'},{m:'Care leavers in education, employment or training',v:'58%',c:'National average: 55%'}]})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

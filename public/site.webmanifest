@@ -1,0 +1,22 @@
+{
+	"name": "Rotherham Virtual School",
+	"short_name": "Virtual School",
+	"description": "Education support for children in care, previously looked-after children and care leavers in Rotherham.",
+	"start_url": "/",
+	"scope": "/",
+	"display": "standalone",
+	"background_color": "#eaf4f7",
+	"theme_color": "#172b4d",
+	"icons": [
+		{
+			"src": "/assets/rvs/rvs-app-icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml"
+		},
+		{
+			"src": "/assets/rvs/rvs-app-icon.png",
+			"sizes": "360x360",
+			"type": "image/png"
+		}
+	]
+}

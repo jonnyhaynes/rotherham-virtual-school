@@ -1,0 +1,16 @@
+<!-- @dsCard group="Core" height=380 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ContactPanel</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h('div',{style:{maxWidth:'380px'}},h(R.ContactPanel,{address:['Virtual School Rotherham','Rockingham Professional Development Centre','Roughwood Road, Rotherham S61 4HY'],phone:'01709 334610',email:'virtualschool@rotherham.gov.uk',contactHref:'#'})),
+ h(R.ContactPanel,{variant:'inline',title:'Need advice?',phone:'01709 334610',email:'virtualschool@rotherham.gov.uk',contactHref:'#'}))
+);
+</script>
+</body>
+</html>

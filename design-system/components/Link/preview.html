@@ -1,0 +1,17 @@
+<!-- @dsCard group="Core" height=150 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Link</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h('p',null,'Read our ',h(R.Link,{href:'#'},'guidance for designated teachers'),' before the autumn term.'),
+ h('p',null,h(R.Link,{href:'#',variant:'arrow'},'Find out more about your PEP')),
+ h('p',null,'Contact ',h(R.Link,{href:'https://www.gov.uk',external:true},'the Department for Education'),' about national policy.'))
+);
+</script>
+</body>
+</html>

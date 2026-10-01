@@ -1,0 +1,26 @@
+---
+/**
+ * Details — GOV.UK's disclosure pattern in the design system's styling. Ported
+ * from `bundle.js`.
+ *
+ * Native `<details>`/`<summary>`, so it works with no JavaScript and is keyboard
+ * operable for free. Use it for a single piece of disclosure (an FAQ answer, a
+ * glossary word); use `Accordion` for grouped sections.
+ */
+interface Props {
+	summary: string;
+	open?: boolean;
+	class?: string;
+}
+
+const { summary, open = false, class: className } = Astro.props;
+---
+
+<details class:list={["rvs-details", className]} open={open || undefined}>
+	<summary class="rvs-details__summary">
+		<span class="rvs-details__text">{summary}</span>
+	</summary>
+	<div class="rvs-details__content">
+		<slot />
+	</div>
+</details>

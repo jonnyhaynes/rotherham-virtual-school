@@ -1,0 +1,214 @@
+---
+import Icon from "./Icon.astro";
+import Logo from "./Logo.astro";
+import SearchInput from "./SearchInput.astro";
+import { uid } from "./assets";
+
+/**
+ * Header — the site masthead: reversed stacked logo on navy, audience
+ * navigation and a search toggle. Ported from `bundle.js`.
+ *
+ * The design system's toggle is driven by JavaScript, so two things are added
+ * here to keep the page working without it:
+ *
+ *   1. `is-enhanced` is set by the script below. Until then the stylesheet keeps
+ *      the navigation visible instead of collapsing it behind an inert button
+ *      (see the `@container` override in ./_overrides.scss).
+ *   2. Search is real `GET` form to `/search`, so the panel is only an
+ *      enhancement; a `<noscript>` link keeps search reachable regardless.
+ *
+ * The menu and search glyphs are both rendered and swapped by CSS on
+ * `aria-expanded`, so the state is never carried by colour or icon alone.
+ */
+interface Props {
+	/** Audiences and "About us" — not every page. */
+	navigation?: { label: string; href: string; active?: boolean }[];
+	search?: boolean;
+	/** Render the search panel already open (for a search-first page). */
+	searchOpen?: boolean;
+	searchAction?: string;
+	logoHref?: string;
+	logoHeight?: number;
+	class?: string;
+}
+
+const {
+	navigation = [],
+	search = true,
+	searchOpen = false,
+	searchAction = "/search",
+	logoHref = "/",
+	logoHeight = 44,
+	class: className,
+} = Astro.props;
+
+const navId = uid("rvs-nav");
+const searchId = uid("rvs-hsearch");
+---
+
+<header class:list={["rvs-header", className]} data-rvs-header>
+	<div class="rvs-header__inner">
+		<Logo
+			variant="stacked"
+			reversed={true}
+			height={logoHeight}
+			href={logoHref}
+			alt="Rotherham Virtual School"
+			homeLabel=" homepage"
+		/>
+
+		<div class="rvs-header__tools">
+			{
+				navigation.length > 0 && (
+					<button
+						type="button"
+						class="rvs-header__toggle"
+						aria-controls={navId}
+						aria-expanded="false"
+					>
+						<span class="rvs-toggle-icon rvs-toggle-icon--open">
+							<Icon name="menu" size={22} />
+						</span>
+						<span class="rvs-toggle-icon rvs-toggle-icon--close">
+							<Icon name="close" size={22} />
+						</span>
+						<span>Menu</span>
+					</button>
+				)
+			}
+
+			{
+				navigation.length > 0 && (
+					<nav id={navId} class="rvs-header__nav" aria-label="Menu">
+						<ul class="rvs-header__list">
+							{navigation.map((item) => (
+								<li class:list={["rvs-header__item", item.active && "is-active"]}>
+									<a
+										class="rvs-header__link"
+										href={item.href}
+										aria-current={item.active ? "page" : undefined}
+									>
+										{item.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				)
+			}
+
+			{
+				search && (
+					<button
+						type="button"
+						class="rvs-header__search-toggle"
+						aria-controls={searchId}
+						aria-expanded={searchOpen ? "true" : "false"}
+					>
+						<span class="rvs-toggle-icon rvs-toggle-icon--open">
+							<Icon name="search" size={22} />
+						</span>
+						<span class="rvs-toggle-icon rvs-toggle-icon--close">
+							<Icon name="close" size={22} />
+						</span>
+						<span class="rvs-visually-hidden">Search this site</span>
+					</button>
+				)
+			}
+		</div>
+	</div>
+
+	{
+		search && (
+			<div id={searchId} class="rvs-header__search" hidden={!searchOpen}>
+				<div class="rvs-header__search-inner">
+					<SearchInput
+						label="Search Rotherham Virtual School"
+						hideLabel={true}
+						action={searchAction}
+						inverse={true}
+					/>
+					<noscript>
+						<p class="rvs-header__search-noscript">
+							<a class="rvs-link rvs-link--inverse" href={searchAction}>Search the website</a>
+						</p>
+					</noscript>
+				</div>
+			</div>
+		)
+	}
+</header>
+
+<script>
+	// Progressive enhancement for the masthead. Without this the markup is still
+	// complete and usable — the stylesheet keeps the navigation visible until
+	// `is-enhanced` is set (see ./_overrides.scss).
+	//
+	// The navigation uses the design system's own `is-open` class; the search
+	// panel uses the `hidden` attribute, as the reference implementation does.
+	document.querySelectorAll<HTMLElement>("[data-rvs-header]").forEach((header) => {
+		header.classList.add("is-enhanced");
+
+		const navToggle = header.querySelector<HTMLButtonElement>(".rvs-header__toggle");
+		const nav = header.querySelector<HTMLElement>(".rvs-header__nav");
+		const searchToggle = header.querySelector<HTMLButtonElement>(".rvs-header__search-toggle");
+		const search = header.querySelector<HTMLElement>(".rvs-header__search");
+
+		const isOpen = (toggle: HTMLButtonElement | null) =>
+			toggle?.getAttribute("aria-expanded") === "true";
+
+		function setNav(open: boolean) {
+			if (!navToggle || !nav) return;
+			nav.classList.toggle("is-open", open);
+			navToggle.setAttribute("aria-expanded", String(open));
+		}
+
+		function setSearch(open: boolean) {
+			if (!searchToggle || !search) return;
+			search.hidden = !open;
+			searchToggle.setAttribute("aria-expanded", String(open));
+			if (open) search.querySelector<HTMLInputElement>("input")?.focus();
+		}
+
+		// Opening one closes the other, so the two panels never overlap.
+		navToggle?.addEventListener("click", () => {
+			const open = !isOpen(navToggle);
+			setNav(open);
+			if (open) setSearch(false);
+		});
+
+		searchToggle?.addEventListener("click", () => {
+			const open = !isOpen(searchToggle);
+			setSearch(open);
+			if (open) setNav(false);
+		});
+
+		// Escape closes the open panel and returns focus to its control.
+		document.addEventListener("keydown", (event) => {
+			if (event.key !== "Escape") return;
+			if (isOpen(navToggle)) {
+				setNav(false);
+				navToggle?.focus();
+			} else if (isOpen(searchToggle)) {
+				setSearch(false);
+				searchToggle?.focus();
+			}
+		});
+
+		// A click outside closes the open panel; clicks on the control itself are
+		// already handled above.
+		document.addEventListener("click", (event) => {
+			const target = event.target as Node;
+			if (isOpen(navToggle) && !(navToggle && navToggle.contains(target)) && !(nav && nav.contains(target))) {
+				setNav(false);
+			}
+			if (
+				isOpen(searchToggle) &&
+				!(searchToggle && searchToggle.contains(target)) &&
+				!(search && search.contains(target))
+			) {
+				setSearch(false);
+			}
+		});
+	});
+</script>

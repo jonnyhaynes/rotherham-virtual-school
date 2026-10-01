@@ -105,13 +105,14 @@ export default defineConfig({
 	integrations: [
 		react(),
 		sitemap({
-			// The CMS admin, the health endpoint, the API and the search results
-			// page are not content.
+			// The CMS admin, the health endpoint, the API, the search results
+			// page and the internal style guide are not content.
 			filter: (page) =>
 				!page.includes("/_emdash/") &&
 				!page.includes("/health") &&
 				!page.includes("/api/") &&
-				!page.includes("/search"),
+				!page.includes("/search") &&
+				!page.includes("/style-guide"),
 		}),
 		emdash({
 			database,

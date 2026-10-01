@@ -1,0 +1,114 @@
+---
+import Button from "./Button.astro";
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import Link from "./Link.astro";
+import { uid } from "./assets";
+
+/**
+ * ContactPanel — phone and email with an optional call to action. Ported from
+ * `bundle.js`. `inline` is the yellow-50 strip used at the foot of an audience
+ * landing page; `stacked` is the pale-blue panel used in a sidebar.
+ *
+ * The phone number is written out in full, as the design system's content rules
+ * require, and the `tel:` link strips its spaces.
+ *
+ * `text` and `contactLabel` are site additions: this service's contact panel
+ * carries a short line of reassurance and names its own link, and neither the
+ * copy nor the destination is ours to change.
+ */
+interface Props {
+	title?: string;
+	/** A short line under the title. */
+	text?: string | null;
+	address?: string | string[] | null;
+	phone?: string | null;
+	phoneHours?: string | null;
+	email?: string | null;
+	contactHref?: string | null;
+	/** Label for the call to action. */
+	contactLabel?: string;
+	variant?: "stacked" | "inline";
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	title = "Need to get in touch?",
+	text = null,
+	address = null,
+	phone = null,
+	phoneHours = null,
+	email = null,
+	contactHref = null,
+	contactLabel = "Contact us",
+	variant = "stacked",
+	headingLevel = 2,
+	class: className,
+} = Astro.props;
+
+const headingId = uid("rvs-contact");
+const tel = phone ? phone.replace(/\s/g, "") : null;
+const addressLines = address ? (Array.isArray(address) ? address : [address]) : [];
+---
+
+<section
+	class:list={["rvs-contact", `rvs-contact--${variant}`, className]}
+	aria-labelledby={headingId}
+>
+	<Heading level={headingLevel} id={headingId} class="rvs-contact__title">{title}</Heading>
+	{text && <p class="rvs-contact__text">{text}</p>}
+	<ul class="rvs-contact__list">
+		{
+			addressLines.length > 0 && (
+				<li class="rvs-contact__item">
+					<Icon name="map-pin" size={22} />
+					<address class="rvs-contact__address">
+						{addressLines.map((line, i) => (
+							<>
+								{i > 0 && <br />}
+								{line}
+							</>
+						))}
+					</address>
+				</li>
+			)
+		}
+		{
+			phone && (
+				<li class="rvs-contact__item">
+					<Icon name="phone" size={22} />
+					<span>
+						<a class="rvs-contact__value" href={`tel:${tel}`}>
+							{phone}
+						</a>
+						{phoneHours && <span class="rvs-contact__hint">{phoneHours}</span>}
+					</span>
+				</li>
+			)
+		}
+		{
+			email && (
+				<li class="rvs-contact__item">
+					<Icon name="mail" size={22} />
+					<a class="rvs-contact__value" href={`mailto:${email}`}>
+						{email}
+					</a>
+				</li>
+			)
+		}
+	</ul>
+	{
+		contactHref && (
+			<div class="rvs-contact__action">
+				{variant === "inline" ? (
+					<Button href={contactHref} variant="secondary-dark" size="sm" icon="arrow-right">
+						{contactLabel}
+					</Button>
+				) : (
+					<Link href={contactHref} variant="arrow">{contactLabel}</Link>
+				)}
+			</div>
+		)
+	}
+</section>

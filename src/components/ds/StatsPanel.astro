@@ -1,0 +1,43 @@
+---
+import Heading from "./Heading.astro";
+
+/**
+ * StatsPanel — the headline numbers, on a light or navy ground. Ported from
+ * `bundle.js`. Figures must be real and sourced; the prototype's are invented
+ * placeholders and must not ship as fact.
+ */
+interface Props {
+	stats: { value: string; label: string; description?: string }[];
+	heading?: string | null;
+	source?: string | null;
+	variant?: "default" | "navy";
+	class?: string;
+}
+
+const {
+	stats = [],
+	heading = null,
+	source = null,
+	variant = "default",
+	class: className,
+} = Astro.props;
+---
+
+<section
+	class:list={["rvs-stats", variant === "navy" && "rvs-stats--navy", className]}
+	aria-labelledby={heading ? "rvs-stats-h" : undefined}
+>
+	{heading && <Heading level={2} id="rvs-stats-h" class="rvs-stats__title">{heading}</Heading>}
+	<dl class="rvs-stats__list">
+		{
+			stats.map((stat) => (
+				<div class="rvs-stats__item">
+					<dt class="rvs-stats__label">{stat.label}</dt>
+					<dd class="rvs-stats__value">{stat.value}</dd>
+					{stat.description && <dd class="rvs-stats__desc">{stat.description}</dd>}
+				</div>
+			))
+		}
+	</dl>
+	{source && <p class="rvs-stats__source">Source: {source}</p>}
+</section>

@@ -1,0 +1,50 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Quote — testimonial, student voice or a pull quote. Ported from `bundle.js`.
+ *
+ * `student-voice` adds the "In their words" eyebrow. A child or young person is
+ * never named or pictured, so cite by age or year group only.
+ */
+type Variant = "testimonial" | "student-voice" | "pull";
+
+interface Props {
+	cite?: string | null;
+	role?: string | null;
+	variant?: Variant;
+	label?: string;
+	image?: { src: string } | null;
+	class?: string;
+}
+
+const {
+	cite = null,
+	role = null,
+	variant = "testimonial",
+	label,
+	image = null,
+	class: className,
+} = Astro.props;
+---
+
+<figure class:list={["rvs-quote", `rvs-quote--${variant}`, className]}>
+	{
+		variant === "student-voice" && (
+			<p class="rvs-eyebrow rvs-quote__label">{label ?? "In their words"}</p>
+		)
+	}
+	<Icon name="quote" size={36} class="rvs-quote__mark" />
+	<blockquote class="rvs-quote__text"><slot /></blockquote>
+	{
+		cite && (
+			<figcaption class="rvs-quote__cite">
+				{image && <img class="rvs-quote__avatar" src={image.src} alt="" />}
+				<span>
+					<span class="rvs-quote__name">{cite}</span>
+					{role && <span class="rvs-quote__role">{role}</span>}
+				</span>
+			</figcaption>
+		)
+	}
+</figure>

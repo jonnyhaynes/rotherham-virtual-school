@@ -1,0 +1,14 @@
+<!-- @dsCard group="Core" height=200 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Grid</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Grid,{min:'200px'},['Your voice matters','You have opportunities','You’re not alone','You belong'].map(function(t,i){return h(R.Card,{key:i,variant:'tinted',title:t,icon:['message','star','users','heart'][i],iconTone:['teal','yellow','teal','coral'][i],text:'We listen to your views and help make sure you’re heard.'});})))
+);
+</script>
+</body>
+</html>

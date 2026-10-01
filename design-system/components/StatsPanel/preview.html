@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>StatsPanel</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.StatsPanel,{heading:'Why speech and language support matters',source:'Royal College of Speech and Language Therapists and I CAN joint factsheet, as cited on the Virtual School’s speech and language therapy page',stats:[{value:'63%',label:'of children in care',description:'have speech, language and communication needs (SLCN)'},{value:'81%',label:'of children with emotional and behavioural disorders',description:'have significant unidentified SLCN'},{value:'4 days',label:'a week of therapy time',description:'from two NHS therapists seconded to the Virtual School, since April 2020'}]}))
+);
+</script>
+</body>
+</html>

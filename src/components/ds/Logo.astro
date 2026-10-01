@@ -1,0 +1,72 @@
+---
+import { ASSETS, LOGO_RATIO } from "./assets";
+
+/**
+ * Logo — the brand lock-up. Ported from `bundle.js`.
+ *
+ * The artwork is a raster extract from the brand board; replace it with the
+ * master vector when supplied. Which variant to use where is the design system's
+ * rule: on white or pale-blue use `primary`/`horizontal`/`mark`, and on navy use
+ * the `reversed` versions — the header and footer use `stacked` reversed. Never
+ * set the full-colour logo on navy.
+ */
+type Variant = "primary" | "stacked" | "horizontal" | "mark" | "one-colour" | "app-icon";
+
+interface Props {
+	variant?: Variant;
+	reversed?: boolean;
+	height?: number;
+	href?: string;
+	alt?: string;
+	/** Override the file entirely — the hook for the master SVG artwork. */
+	src?: string;
+	assetBase?: string;
+	/** Extra accessible label, e.g. " homepage", when the logo is the home link. */
+	homeLabel?: string;
+	class?: string;
+}
+
+const {
+	variant = "stacked",
+	reversed = false,
+	height = 48,
+	href,
+	alt,
+	src,
+	assetBase = "",
+	homeLabel,
+	class: className,
+} = Astro.props;
+
+const key = variant + (reversed && variant !== "app-icon" ? "-reversed" : "");
+const resolvedSrc = src ?? `${assetBase}${ASSETS[key]}`;
+const resolvedAlt = alt === undefined ? "Rotherham Virtual School" : alt;
+const width = Math.round(height * (LOGO_RATIO[variant] ?? 3));
+---
+
+{
+	href ? (
+		<a class:list={["rvs-logo", className]} href={href}>
+			<img
+				class="rvs-logo__img"
+				src={resolvedSrc}
+				alt={resolvedAlt}
+				height={height}
+				width={width}
+				style={`height: ${height}px; width: auto`}
+			/>
+			{homeLabel && <span class="rvs-visually-hidden">{homeLabel}</span>}
+		</a>
+	) : (
+		<span class:list={["rvs-logo", className]}>
+			<img
+				class="rvs-logo__img"
+				src={resolvedSrc}
+				alt={resolvedAlt}
+				height={height}
+				width={width}
+				style={`height: ${height}px; width: auto`}
+			/>
+		</span>
+	)
+}

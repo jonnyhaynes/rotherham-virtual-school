@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>Button</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h('p',{className:'rvs-demo__label'},'Variants'),
+ h(R.ButtonGroup,null,
+  h(R.Button,{icon:'arrow-right'},'Find out about your PEP'),
+  h(R.Button,{variant:'secondary'},'Save as draft'),
+  h(R.Button,{variant:'secondary-dark'},'Contact us'),
+  h(R.Button,{variant:'warning'},'Delete account'),
+  h(R.Button,{variant:'tertiary',icon:'print',iconPosition:'start'},'Print this page')),
+ h('p',{className:'rvs-demo__label'},'Sizes and states'),
+ h(R.ButtonGroup,null,
+  h(R.Button,{size:'sm'},'Small'),h(R.Button,null,'Default'),h(R.Button,{size:'lg',icon:'arrow-right'},'Start now'),
+  h(R.Button,{loading:true},'Sending'),h(R.Button,{disabled:true},'Disabled')),
+ h('div',{className:'rvs-demo rvs-demo--row',style:{background:'var(--navy)',borderRadius:'8px'}},h(R.Button,{variant:'inverse',icon:'arrow-right'},'How we can help')))
+);
+</script>
+</body>
+</html>

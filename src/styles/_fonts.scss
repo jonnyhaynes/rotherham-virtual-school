@@ -1,63 +1,62 @@
 // =============================================================================
 // Font faces (self-hosted)
 // =============================================================================
-// Mulish is the current name for Muli, the typeface Rotherham Council uses.
+// The design system specifies one family: Noto Sans (400/600/700), the open
+// alternative to GOV.UK's Transport, with a Helvetica/Arial fallback.
 //
-// Self-hosted rather than loaded from a third-party CDN. A public-sector site
-// should not send visitor IP addresses to Google as a side effect of rendering
-// its own text, and the German courts have already treated that as a breach.
-// The file sits in the repository and is served from our own origin.
+// It is self-hosted rather than imported from Google Fonts, as the design
+// system's own stylesheet does. A public-sector site should not send visitor IP
+// addresses to Google as a side effect of rendering its own text, and the German
+// courts have already treated that as a breach. The file sits in the repository
+// and is served from our own origin.
 //
-// One file covers every weight: Mulish ships as a variable font, so the weight
-// axis is declared as a range rather than downloading a file per weight.
+// Google serves one variable file per subset for Noto Sans v42, so a single file
+// covers the whole 400–700 range — the same file the weights 400, 600 and 700
+// each point at in Google's own stylesheet. (Verified: at 100px the same string
+// measures 2439.5px at 400 and 2557.9px at 700, so the weights are real, not
+// synthesised.)
 //
-// Background: this family was previously declared in the font stack but never
-// actually loaded, so the site silently rendered in a locally-installed Muli
-// or, for everyone else, Arial. See the typography finding in
-// .commandcode/design/review-report.md.
-//
-// Licensed under the SIL Open Font License 1.1 — see public/fonts/Mulish-OFL.txt.
-// Copyright 2016 The Mulish Project Authors (https://github.com/googlefonts/mulish).
+// Licensed under the SIL Open Font License 1.1 — see public/fonts/Noto-Sans-OFL.txt.
 
 @font-face {
-	font-family: "Mulish";
+	font-family: "Noto Sans";
 	font-style: normal;
-	// Variable font: one file serves the regular and bold weights we use.
+	// Variable font: one file serves every weight the design system uses.
 	font-weight: 400 700;
 	// Swap rather than block: body text renders immediately in the fallback and
 	// upgrades when the font arrives, so first paint is never held up.
 	font-display: swap;
-	src: url("/fonts/mulish-latin.woff2") format("woff2");
-	// Latin subset, matching the ranges the font was cut for.
+	src: url("/fonts/noto-sans-latin.woff2") format("woff2");
+	// Latin subset, matching the ranges the file was cut for.
 	unicode-range:
 		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-		U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
-		U+2215, U+FEFF, U+FFFD;
+		U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+		U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 // -----------------------------------------------------------------------------
 // Metric-compatible fallback
 // -----------------------------------------------------------------------------
 // `font-display: swap` means text paints immediately in the fallback and then
-// swaps to Mulish. If the two have different metrics, every line reflows at the
-// swap — a visible jump on a slow connection.
+// swaps to Noto Sans. If the two have different metrics, every line reflows at
+// the swap — a visible jump on a slow connection.
 //
-// This declares Arial (the declared fallback) with Mulish's metrics, so the
+// This declares Arial (the declared fallback) with Noto Sans's metrics, so the
 // swap changes the glyphs and nothing else. The values were solved empirically
-// in the browser, by matching the rendered advance width and line box of a
-// sample paragraph against Mulish at the same size:
+// in the browser, by measuring a sample string and its line box in both fonts at
+// 100px:
 //
-//   unadjusted Arial   width -4.32%   line box -8.33%   (visible reflow)
-//   these values       width +0.04%   line box  0.00%
+//   Noto Sans    width 2439.5px   ascent 107   descent 29   box 136
+//   Arial        width 2306.1px   ascent  92   descent 23   box 115
 //
-// size-adjust is what removes the horizontal shift: Mulish is a little wider
-// than Arial. The vertical overrides are expressed after that scaling, which is
-// why they are not simply Mulish's raw ascent and descent.
+// size-adjust is what removes the horizontal shift: Noto Sans is 5.78% wider than
+// Arial (2439.5 / 2306.1). The vertical overrides are expressed after that
+// scaling, so they are not simply Noto Sans's raw ascent and descent.
 @font-face {
-	font-family: "Mulish Fallback";
+	font-family: "Noto Sans Fallback";
 	src: local("Arial");
-	size-adjust: 104.5%;
-	ascent-override: 94.6%;
-	descent-override: 23.4%;
+	size-adjust: 105.78%;
+	ascent-override: 101.15%;
+	descent-override: 27.41%;
 	line-gap-override: 0%;
 }

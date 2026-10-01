@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=150 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ContentMeta</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.ContentMeta,{published:'2025-04-01',updated:'2026-09-22',nextReview:'2027-04-01',owner:'Virtual School',updateNotice:{date:'2026-09-22',text:'Deadlines for the autumn term ePEP have changed.'}}))
+);
+</script>
+</body>
+</html>

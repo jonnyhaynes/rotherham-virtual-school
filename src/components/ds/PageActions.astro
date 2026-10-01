@@ -1,0 +1,92 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * PageActions — copy link, share and print. Ported from `bundle.js`. Each is a
+ * real button; the confirmation is announced through a polite status. Without
+ * JavaScript the buttons do nothing, so only use this where the page is still
+ * usable without the actions.
+ */
+interface Props {
+	actions?: ("copy" | "share" | "print")[];
+	url?: string | null;
+	title?: string | null;
+	copyText?: string | null;
+	copyLabel?: string;
+	class?: string;
+}
+
+const {
+	actions = ["copy", "share", "print"],
+	url = null,
+	title = null,
+	copyText = null,
+	copyLabel = "Copy link",
+	class: className,
+} = Astro.props;
+---
+
+<div
+	class:list={["rvs-page-actions", className]}
+	data-rvs-page-actions
+	data-url={url ?? undefined}
+	data-title={title ?? undefined}
+	data-copy={copyText ?? undefined}
+>
+	{actions.includes("copy") && (
+		<button type="button" class="rvs-btn rvs-btn--tertiary rvs-btn--sm" data-action="copy">
+			<Icon name="copy" size={20} />
+			<span class="rvs-btn__label">{copyLabel}</span>
+		</button>
+	)}
+	{actions.includes("share") && (
+		<button type="button" class="rvs-btn rvs-btn--tertiary rvs-btn--sm" data-action="share">
+			<Icon name="share" size={20} />
+			<span class="rvs-btn__label">Share</span>
+		</button>
+	)}
+	{actions.includes("print") && (
+		<button type="button" class="rvs-btn rvs-btn--tertiary rvs-btn--sm" data-action="print">
+			<Icon name="print" size={20} />
+			<span class="rvs-btn__label">Print this page</span>
+		</button>
+	)}
+	<span class="rvs-page-actions__msg" role="status" aria-live="polite" data-rvs-page-actions-msg></span>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-page-actions]").forEach((wrap) => {
+		const msg = wrap.querySelector<HTMLElement>("[data-rvs-page-actions-msg]");
+		const say = (text: string) => {
+			if (!msg) return;
+			msg.textContent = text;
+			if (text) setTimeout(() => { if (msg.textContent === text) msg.textContent = ""; }, 3000);
+		};
+		const url = wrap.dataset.url || window.location.href;
+		wrap.querySelector('[data-action="copy"]')?.addEventListener("click", async () => {
+			try {
+				await navigator.clipboard.writeText(wrap.dataset.copy || url);
+				say(wrap.dataset.copy ? "Copied" : "Link copied");
+			} catch {
+				say("Could not copy. Select the address bar and copy it instead.");
+			}
+		});
+		wrap.querySelector('[data-action="share"]')?.addEventListener("click", async () => {
+			if (navigator.share) {
+				try {
+					await navigator.share({ title: wrap.dataset.title || document.title, url });
+				} catch {
+					/* dismissed */
+				}
+			} else {
+				try {
+					await navigator.clipboard.writeText(url);
+					say("Link copied");
+				} catch {
+					say("Could not copy. Select the address bar and copy it instead.");
+				}
+			}
+		});
+		wrap.querySelector('[data-action="print"]')?.addEventListener("click", () => window.print());
+	});
+</script>

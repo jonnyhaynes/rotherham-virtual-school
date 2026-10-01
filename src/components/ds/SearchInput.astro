@@ -1,0 +1,67 @@
+---
+import Icon from "./Icon.astro";
+import { uid } from "./assets";
+
+/**
+ * SearchInput — the GOV.UK search pattern in brand colours. Ported from
+ * `bundle.js`.
+ *
+ * It is a plain `GET` form to `/search`, so search works with no JavaScript at
+ * all; `onSearch` is only the React bundle's client-side hook and has no
+ * equivalent here.
+ */
+interface Props {
+	label?: string;
+	hideLabel?: boolean;
+	placeholder?: string;
+	defaultValue?: string;
+	name?: string;
+	action?: string;
+	size?: "default" | "large";
+	inverse?: boolean;
+	class?: string;
+}
+
+const {
+	label = "Search",
+	hideLabel = false,
+	placeholder,
+	defaultValue = "",
+	name = "q",
+	action = "/search",
+	size = "default",
+	inverse = false,
+	class: className,
+} = Astro.props;
+
+const id = uid("rvs-search");
+---
+
+<form
+	class:list={[
+		"rvs-search",
+		size === "large" && "rvs-search--large",
+		inverse && "rvs-search--inverse",
+		className,
+	]}
+	role="search"
+	action={action}
+	method="get"
+>
+	<label class:list={["rvs-label", hideLabel && "rvs-visually-hidden"]} for={id}>{label}</label>
+	<div class="rvs-search__row">
+		<input
+			id={id}
+			class="rvs-search__input"
+			type="search"
+			name={name}
+			value={defaultValue}
+			placeholder={placeholder}
+			autocomplete="off"
+		/>
+		<button class="rvs-search__submit" type="submit">
+			<Icon name="search" size={22} />
+			<span class="rvs-visually-hidden">Search</span>
+		</button>
+	</div>
+</form>

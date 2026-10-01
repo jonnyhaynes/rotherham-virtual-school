@@ -1,0 +1,14 @@
+<!-- @dsCard group="Content presentation" height=320 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Accordion</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Accordion,{items:[{heading:'What is a PEP?',summary:'The plan and who is involved',content:h('p',null,'A Personal Education Plan is a record of what needs to happen for a looked-after child to fulfil their potential.'),open:true},{heading:'How often are PEPs reviewed?',content:h('p',null,'Every term, and whenever the child changes school or placement.')},{heading:'Can I see my child’s PEP?',content:h('p',null,'Yes. Ask the designated teacher or the child’s social worker for a copy.')}]}))
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+---
+import Heading from "./Heading.astro";
+import Link from "./Link.astro";
+import StateMessage from "./StateMessage.astro";
+import { uid } from "./assets";
+
+/**
+ * Glossary — the words and acronyms the service uses. Ported from `bundle.js`.
+ *
+ * Terms are sorted server-side. The filter input narrows the list with a small
+ * script; without JavaScript every term is still shown.
+ */
+interface TermItem {
+	term: string;
+	expansion?: string;
+	definition: string;
+	href?: string;
+	linkLabel?: string;
+}
+
+interface Props {
+	terms: TermItem[];
+	heading?: string | null;
+	headingLevel?: number;
+	searchable?: boolean;
+	searchLabel?: string;
+	askHref?: string;
+	class?: string;
+}
+
+const {
+	terms = [],
+	heading = null,
+	headingLevel = 2,
+	searchable = true,
+	searchLabel = "Find a word",
+	askHref = "/contact/",
+	class: className,
+} = Astro.props;
+
+const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));
+const id = uid("rvs-gloss");
+---
+
+<section class:list={["rvs-glossary", className]} aria-labelledby={heading ? `${id}-h` : undefined} data-rvs-glossary>
+	{heading && <Heading level={headingLevel} id={`${id}-h`} class="rvs-section-title">{heading}</Heading>}
+	{
+		searchable && (
+			<div class="rvs-glossary__search">
+				<label class="rvs-label rvs-label--s" for={`${id}-q`}>{searchLabel}</label>
+				<input
+					id={`${id}-q`}
+					class="rvs-input"
+					type="search"
+					autocomplete="off"
+					data-rvs-glossary-input
+				/>
+				<p class="rvs-glossary__count" aria-live="polite" data-rvs-glossary-count>
+					{sorted.length} of {sorted.length} words
+				</p>
+			</div>
+		)
+	}
+	<dl class="rvs-glossary__list" data-rvs-glossary-list>
+		{
+			sorted.map((item) => (
+				<div class="rvs-glossary__row" data-rvs-glossary-row data-search={`${item.term} ${item.expansion ?? ""} ${item.definition}`.toLowerCase()}>
+					<dt class="rvs-glossary__term">
+						{item.term}
+						{item.expansion && <span class="rvs-glossary__exp">{item.expansion}</span>}
+					</dt>
+					<dd class="rvs-glossary__def">
+						{item.definition}
+						{item.href && <> <Link href={item.href} variant="arrow">{item.linkLabel ?? "Find out more"}</Link></>}
+					</dd>
+				</div>
+			))
+		}
+	</dl>
+	<div data-rvs-glossary-empty hidden>
+		<StateMessage state="empty" compact={true} title="No words match that search">
+			<p>Try a shorter word, or <a class="rvs-link" href={askHref}>ask us what it means</a>.</p>
+		</StateMessage>
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-glossary]").forEach((root) => {
+		const input = root.querySelector<HTMLInputElement>("[data-rvs-glossary-input]");
+		const rows = Array.from(root.querySelectorAll<HTMLElement>("[data-rvs-glossary-row]"));
+		const count = root.querySelector<HTMLElement>("[data-rvs-glossary-count]");
+		const empty = root.querySelector<HTMLElement>("[data-rvs-glossary-empty]");
+		if (!input || rows.length === 0) return;
+		const total = rows.length;
+		input.addEventListener("input", () => {
+			const q = input.value.trim().toLowerCase();
+			let shown = 0;
+			rows.forEach((row) => {
+				const match = !q || (row.dataset.search ?? "").includes(q);
+				row.hidden = !match;
+				if (match) shown += 1;
+			});
+			if (count) count.textContent = `${shown} of ${total} words`;
+			if (empty) empty.hidden = shown !== 0;
+		});
+	});
+</script>

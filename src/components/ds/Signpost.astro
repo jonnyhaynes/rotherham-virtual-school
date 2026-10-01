@@ -1,0 +1,47 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import Link from "./Link.astro";
+import type { IconName } from "./icons";
+
+/**
+ * Signpost — a glyph, a heading and a route on to the next thing. Ported from
+ * `bundle.js`. Icons always sit beside words, so the glyph never carries meaning
+ * on its own.
+ */
+type BrandTone = "teal" | "yellow" | "coral" | "purple" | "navy" | "pale";
+
+interface Props {
+	title: string;
+	text?: string | null;
+	href?: string | null;
+	linkLabel?: string;
+	icon?: IconName;
+	iconTone?: BrandTone;
+	iconSize?: number;
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	title,
+	text = null,
+	href = null,
+	linkLabel = "Find out more",
+	icon = "document",
+	iconTone = "teal",
+	iconSize = 40,
+	headingLevel = 2,
+	class: className,
+} = Astro.props;
+---
+
+<div class:list={["rvs-signpost", className]}>
+	<Icon name={icon} size={iconSize} class={`rvs-signpost__icon rvs-tone-text-${iconTone}`} />
+	<div class="rvs-signpost__body">
+		<Heading level={headingLevel} class="rvs-signpost__title">{title}</Heading>
+		{text && <p class="rvs-signpost__text">{text}</p>}
+		<slot />
+		{href && <Link href={href} variant="arrow">{linkLabel}</Link>}
+	</div>
+</div>

@@ -1,0 +1,90 @@
+---
+import BrandPattern from "./BrandPattern.astro";
+import Heading from "./Heading.astro";
+import Link from "./Link.astro";
+
+/**
+ * EditorialFeature — a large image-and-text feature, or a case study. Ported
+ * from `bundle.js`. Without an image it draws the brand pattern instead.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+interface Props {
+	title: string;
+	eyebrow?: string | null;
+	text?: string | null;
+	image?: { src: string; alt?: string } | null;
+	href?: string | null;
+	linkLabel?: string;
+	variant?: "feature" | "case-study";
+	facts?: { term: string; value: string }[] | null;
+	quote?: string | null;
+	reverse?: boolean;
+	audience?: Audience;
+	headingLevel?: number;
+	patternSeed?: number;
+	class?: string;
+}
+
+const {
+	title,
+	eyebrow = null,
+	text = null,
+	image = null,
+	href = null,
+	linkLabel,
+	variant = "feature",
+	facts = null,
+	quote = null,
+	reverse = false,
+	audience,
+	headingLevel = 2,
+	patternSeed = 21,
+	class: className,
+} = Astro.props;
+---
+
+<article
+	class:list={["rvs-feature", `rvs-feature--${variant}`, reverse && "rvs-feature--reverse", className]}
+	data-audience={audience}
+>
+	<div class="rvs-feature__media">
+		{
+			image ? (
+				<img src={image.src} alt={image.alt ?? ""} />
+			) : (
+				<BrandPattern rows={4} cols={4} unit={60} seed={patternSeed} />
+			)
+		}
+	</div>
+	<div class="rvs-feature__body">
+		{eyebrow && <p class="rvs-eyebrow">{eyebrow}</p>}
+		<Heading level={headingLevel} class="rvs-feature__title">{title}</Heading>
+		{text && <p class="rvs-feature__text">{text}</p>}
+		{
+			facts && (
+				<dl class="rvs-feature__facts">
+					{facts.map((f) => (
+						<div>
+							<dt>{f.term}</dt>
+							<dd>{f.value}</dd>
+						</div>
+					))}
+				</dl>
+			)
+		}
+		{quote && <blockquote class="rvs-feature__quote"><p>{quote}</p></blockquote>}
+		{
+			href && (
+				<Link href={href} variant="arrow">
+					{linkLabel ?? (variant === "case-study" ? "Read the case study" : "Read more")}
+				</Link>
+			)
+		}
+	</div>
+</article>

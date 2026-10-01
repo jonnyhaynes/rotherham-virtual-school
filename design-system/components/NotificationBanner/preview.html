@@ -1,0 +1,18 @@
+<!-- @dsCard group="Feedback & states" height=620 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>NotificationBanner</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.NotificationBanner,{tone:'info'},h('p',null,'Autumn term ePEPs are now open. ',h('a',{href:'#'},'Read the guidance'),'.')),
+ h(R.NotificationBanner,{tone:'success',title:'Your request has been sent'},h('p',null,'We’ll reply within 5 working days.')),
+ h(R.NotificationBanner,{tone:'emergency',title:'The Virtual School office is closed today due to severe weather',dismissible:false},h('p',null,'Email us and we’ll reply tomorrow. If a child is in immediate danger, call 999.')),
+ h(R.NotificationBanner,{tone:'maintenance',dismissible:true},h('p',null,'The ePEP system will be unavailable on Saturday 10 October from 8am to 12pm.')))
+);
+</script>
+</body>
+</html>

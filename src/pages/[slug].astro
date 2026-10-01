@@ -1,11 +1,8 @@
 ---
-import {
-	decodeSlug,
-	getEmDashEntry,
-	getSeoMeta,
-	getSiteSettings,
-} from "emdash";
+import { decodeSlug, getEmDashEntry, getSeoMeta, getSiteSettings } from "emdash";
 import { PortableText } from "emdash/ui";
+import Hero from "../components/ds/Hero.astro";
+import Prose from "../components/ds/Prose.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { resolveSiteIdentity } from "../utils/site";
 
@@ -29,6 +26,8 @@ const seo = getSeoMeta(page, {
 	siteUrl: Astro.url.origin,
 	path: Astro.url.pathname.replace(/\/$/, ""),
 });
+
+const summary = page.data.summary ? String(page.data.summary) : null;
 ---
 
 <BaseLayout
@@ -37,11 +36,16 @@ const seo = getSeoMeta(page, {
 	description={seo.description}
 	canonical={seo.canonical}
 	content={{ collection: "pages", id: page.data.id, slug }}
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: page.data.title }]}
 >
-	<h1 class="govuk-heading-xl" {...page.edit.title}>{page.data.title}</h1>
+	<Hero
+		slot="hero"
+		variant="compact"
+		title={String(page.data.title)}
+		lead={summary}
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: String(page.data.title) }]}
+	/>
 
-	<div class="rvs-prose">
+	<Prose>
 		<PortableText value={page.data.content} />
-	</div>
+	</Prose>
 </BaseLayout>

@@ -1,11 +1,10 @@
 ---
-import {
-	decodeSlug,
-	getEmDashEntry,
-	getSeoMeta,
-	getSiteSettings,
-} from "emdash";
+import { decodeSlug, getEmDashEntry, getSeoMeta, getSiteSettings } from "emdash";
 import { PortableText } from "emdash/ui";
+import ContentMeta from "../../components/ds/ContentMeta.astro";
+import Hero from "../../components/ds/Hero.astro";
+import Prose from "../../components/ds/Prose.astro";
+import QuickLinks from "../../components/ds/QuickLinks.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { resolveSiteIdentity } from "../../utils/site";
 
@@ -24,14 +23,7 @@ const seo = getSeoMeta(item, {
 	path: Astro.url.pathname.replace(/\/$/, ""),
 });
 
-const publishedOn = item.data.published_on;
-const publishedLabel = publishedOn
-	? new Date(publishedOn).toLocaleDateString("en-GB", {
-			day: "numeric",
-			month: "long",
-			year: "numeric",
-		})
-	: null;
+const publishedOn = item.data.published_on ? String(item.data.published_on) : null;
 ---
 
 <BaseLayout
@@ -41,46 +33,57 @@ const publishedLabel = publishedOn
 	canonical={seo.canonical}
 	image={seo.ogImage}
 	content={{ collection: "news", id: item.data.id, slug }}
-	breadcrumbs={[
-		{ label: "Home", href: "/" },
-		{ label: "News", href: "/news/" },
-		{ label: item.data.title },
-	]}
 >
-	<article class="rvs-article">
-		<h1 class="govuk-heading-xl" {...item.edit.title}>{item.data.title}</h1>
-		{
-			publishedLabel && (
-				<p class="govuk-body-s rvs-article__meta">
-					Published{" "}
-					<time datetime={new Date(publishedOn).toISOString()}>{publishedLabel}</time>
-				</p>
-			)
-		}
-		{
-			item.data.featured_image && (
-				<div class="rvs-article__image" {...item.edit.featured_image}>
-					<img
-						src={item.data.featured_image.src}
-						alt={item.data.featured_image.alt ?? ""}
-					/>
-				</div>
-			)
-		}
-		<div class="rvs-prose">
-			<PortableText value={item.data.content} />
-		</div>
-	</article>
+	<Hero
+		slot="hero"
+		variant="compact"
+		eyebrow="News"
+		title={String(item.data.title)}
+		breadcrumbs={[
+			{ label: "Home", href: "/" },
+			{ label: "News", href: "/news/" },
+			{ label: String(item.data.title) },
+		]}
+	/>
+
+	<div class="rvs-two-col">
+		<article class="rvs-stack--s">
+			{publishedOn && <ContentMeta published={publishedOn} />}
+
+			{
+				item.data.featured_image && (
+					<div class="rvs-article__image" {...item.edit.featured_image}>
+						<img
+							src={item.data.featured_image.src}
+							alt={item.data.featured_image.alt ?? ""}
+						/>
+					</div>
+				)
+			}
+
+			<Prose>
+				<PortableText value={item.data.content} />
+			</Prose>
+		</article>
+
+		<aside>
+			<QuickLinks
+				heading="Related"
+				links={[
+					{ label: "All news", href: "/news/" },
+					{ label: "Training and events", href: "/training-events/" },
+					{ label: "Contact the Virtual School", href: "/contact/" },
+				]}
+			/>
+		</aside>
+	</div>
 </BaseLayout>
 
 <style>
-	.rvs-article__meta {
-		color: var(--rvs-grey);
-	}
-
 	.rvs-article__image img {
-		max-width: 100%;
+		display: block;
+		width: 100%;
 		height: auto;
-		margin-bottom: 1.5rem;
+		border-radius: var(--radius-md);
 	}
 </style>

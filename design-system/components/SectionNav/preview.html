@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation & discovery" height=300 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>SectionNav</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'300px'}},h(R.SectionNav,{audience:'young-people',title:'How we support learning',titleHref:'#',items:[{label:'Attachment aware and trauma-informed settings',href:'#'},{label:'Creative mentoring',href:'#',current:true},{label:'Speech and language therapy',href:'#'},{label:'The Letterbox Club',href:'#'},{label:'Training and development',href:'#'}]}))
+);
+</script>
+</body>
+</html>

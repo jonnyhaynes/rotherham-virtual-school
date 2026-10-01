@@ -1,0 +1,87 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import IconBadge from "./IconBadge.astro";
+import type { IconName } from "./icons";
+
+/**
+ * Panel — a tinted or ruled container for a message that sits apart from the
+ * body text. Ported from `bundle.js`. It covers the PEP information panel, "If
+ * something isn't going right", advice and eligibility boxes, and GOV.UK's inset
+ * and warning text.
+ *
+ * Tones: `info`/`pep` pale-blue ground with a teal glyph; `help` no ground with a
+ * coral alert disc (always include a route to help); `advice` yellow-50 ground;
+ * `neutral` the GOV.UK inset rule; `warning` a navy disc with the hidden
+ * "Warning:" prefix, for legal or deadline consequences only.
+ */
+type BrandTone = "teal" | "yellow" | "coral" | "navy" | "pale";
+
+interface Props {
+	tone?: "info" | "pep" | "help" | "advice" | "neutral" | "warning";
+	title?: string | null;
+	/** `undefined` uses the tone's default glyph; `null` removes it. */
+	icon?: IconName | null;
+	headingLevel?: number;
+	/** Accessible name, used only when there is no title. */
+	label?: string;
+	as?: "section" | "div" | "aside";
+	class?: string;
+}
+
+const {
+	tone = "info",
+	title = null,
+	icon,
+	headingLevel = 2,
+	label,
+	as = "section",
+	class: className,
+} = Astro.props;
+
+const PANEL_ICON: Record<string, IconName | null> = {
+	info: "info",
+	help: "alert",
+	advice: "message",
+	warning: "warning",
+	neutral: null,
+	pep: "document",
+};
+
+const BADGE_TONE: Record<string, BrandTone> = {
+	info: "teal",
+	help: "coral",
+	advice: "yellow",
+	warning: "navy",
+	pep: "teal",
+};
+
+const resolvedIcon = icon === undefined ? PANEL_ICON[tone] : icon;
+const badgeTone = BADGE_TONE[tone] ?? "teal";
+const Tag = as;
+---
+
+<Tag class={`rvs-panel rvs-panel--${tone}${className ? ` ${className}` : ""}`} aria-label={title ? undefined : label}>
+	{
+		resolvedIcon &&
+			(tone === "help" || tone === "warning" ? (
+				<IconBadge icon={resolvedIcon} tone={tone === "help" ? "coral" : "navy"} size="md" />
+			) : (
+				<Icon name={resolvedIcon} size={40} class={`rvs-panel__icon rvs-tone-text-${badgeTone}`} />
+			))
+	}
+	<div class="rvs-panel__body">
+		{title && <Heading level={headingLevel} class="rvs-panel__title">{title}</Heading>}
+		{tone === "warning" && <span class="rvs-visually-hidden">Warning: </span>}
+		<div class="rvs-panel__content">
+			<slot />
+		</div>
+		{
+			Astro.slots.has("actions") && (
+				<div class="rvs-panel__actions">
+					<slot name="actions" />
+				</div>
+			)
+		}
+	</div>
+</Tag>

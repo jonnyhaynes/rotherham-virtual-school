@@ -1,0 +1,26 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+/**
+ * PupilCard — a large, friendly navigation tile for the Pupil Zone. Ported from
+ * `bundle.js`. The whole tile is one link; the glyph is decorative.
+ */
+interface Props {
+	href: string;
+	title: string;
+	text?: string | null;
+	icon?: IconName;
+	tone?: "teal" | "yellow" | "coral" | "purple";
+	class?: string;
+}
+
+const { href, title, text = null, icon = "star", tone = "teal", class: className } = Astro.props;
+---
+
+<a class:list={["rvs-pupil-card", `rvs-pupil-card--${tone}`, className]} href={href}>
+	<span class="rvs-pupil-card__icon" aria-hidden="true"><Icon name={icon} size={36} /></span>
+	<span class="rvs-pupil-card__title">{title}</span>
+	{text && <span class="rvs-pupil-card__text">{text}</span>}
+	<Icon name="arrow-right" size={24} class="rvs-pupil-card__arrow" />
+</a>

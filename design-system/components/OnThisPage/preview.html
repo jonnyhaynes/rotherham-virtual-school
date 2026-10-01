@@ -1,0 +1,14 @@
+<!-- @dsCard group="Navigation & discovery" height=220 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>OnThisPage</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo',style:{maxWidth:'320px'}},h(R.OnThisPage,{activeId:'s2',items:[{id:'s1',label:'What a PEP is'},{id:'s2',label:'Before the meeting'},{id:'s3',label:'During the meeting'},{id:'s4',label:'After the meeting'}]}))
+);
+</script>
+</body>
+</html>

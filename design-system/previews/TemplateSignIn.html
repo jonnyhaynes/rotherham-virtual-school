@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateSignIn</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h('div',{className:'rvs-main',style:{maxWidth:'720px'}},
+  h(R.Breadcrumbs,{items:[{label:'Home',href:'#'},{label:'Sign in'}]}),
+  h('h1',{className:'rvs-legend__heading'},'Sign in to training and resources'),
+  h('form',{onSubmit:function(e){e.preventDefault();}},
+   h(R.TextInput,{id:'email',label:'Email address',type:'email',autoComplete:'email',spellCheck:false}),
+   h(R.PasswordInput,{id:'pw',label:'Password'}),
+   h(R.ButtonGroup,null,h(R.Button,{type:'submit'},'Sign in'),h(R.Link,{href:'#'},'I’ve forgotten my password'))),
+  h('div',{style:{marginTop:'40px'}},h(R.Panel,{tone:'info',title:'Who can sign in?',icon:'lock'},h('p',null,'Designated teachers, social workers and foster carers who have booked Virtual School training. Ask the team for an account.'))))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

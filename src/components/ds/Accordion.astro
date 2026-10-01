@@ -1,0 +1,123 @@
+---
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import { uid } from "./assets";
+
+/**
+ * Accordion — grouped sections opened one at a time. Ported from `bundle.js`,
+ * where the reference is a React component; here the open/closed state is a
+ * progressive-enhancement script over real buttons.
+ *
+ * Each section heading is a button with `aria-expanded`/`aria-controls`; a
+ * collapsed panel is `hidden`, so it leaves the reading order rather than being
+ * merely clipped. Both chevrons are rendered and swapped in CSS, so the state is
+ * carried by `aria-expanded` rather than by a re-render.
+ */
+interface Item {
+	heading: string;
+	summary?: string;
+	/** Rendered as HTML. */
+	content: string;
+	open?: boolean;
+}
+
+interface Props {
+	items: Item[];
+	showAll?: boolean;
+	headingLevel?: number;
+	class?: string;
+}
+
+const { items = [], showAll = true, headingLevel = 2, class: className } = Astro.props;
+const base = uid("rvs-acc");
+---
+
+<div class:list={["rvs-accordion", className]} data-rvs-accordion>
+	{
+		showAll && items.length > 1 && (
+			<button type="button" class="rvs-accordion__all" aria-expanded="false" data-rvs-accordion-all>
+				<Icon name="chevron-down" size={18} />
+				<span data-rvs-accordion-all-label>Show all sections</span>
+			</button>
+		)
+	}
+	{
+		items.map((item, i) => {
+			const bid = `${base}-b${i}`;
+			const isOpen = Boolean(item.open);
+			return (
+				<div class:list={["rvs-accordion__section", isOpen && "is-open"]} data-rvs-accordion-section>
+					<Heading level={headingLevel} class="rvs-accordion__heading">
+						<button
+							type="button"
+							class="rvs-accordion__button"
+							aria-expanded={isOpen ? "true" : "false"}
+							aria-controls={bid}
+							data-rvs-accordion-button
+						>
+							<span class="rvs-accordion__text">
+								{item.heading}
+								{item.summary && <span class="rvs-accordion__summary">{item.summary}</span>}
+							</span>
+							<span class="rvs-accordion__toggle">
+								<span class="rvs-acc-chev rvs-acc-chev--down"><Icon name="chevron-down" size={18} /></span>
+								<span class="rvs-acc-chev rvs-acc-chev--up"><Icon name="chevron-up" size={18} /></span>
+								<span data-rvs-accordion-label>{isOpen ? "Hide" : "Show"}</span>
+								<span class="rvs-visually-hidden"> this section</span>
+							</span>
+						</button>
+					</Heading>
+					<div id={bid} class="rvs-accordion__content" hidden={!isOpen} set:html={item.content} />
+				</div>
+			);
+		})
+	}
+</div>
+
+<style>
+	.rvs-acc-chev {
+		display: inline-flex;
+	}
+	.rvs-acc-chev--up {
+		display: none;
+	}
+	button[aria-expanded="true"] .rvs-acc-chev--down {
+		display: none;
+	}
+	button[aria-expanded="true"] .rvs-acc-chev--up {
+		display: inline-flex;
+	}
+</style>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-rvs-accordion]").forEach((accordion) => {
+		const sections = Array.from(accordion.querySelectorAll<HTMLElement>("[data-rvs-accordion-section]"));
+		const allButton = accordion.querySelector<HTMLButtonElement>("[data-rvs-accordion-all]");
+		const allLabel = accordion.querySelector<HTMLElement>("[data-rvs-accordion-all-label]");
+
+		const setOpen = (section: HTMLElement, open: boolean) => {
+			const button = section.querySelector<HTMLButtonElement>("[data-rvs-accordion-button]");
+			const panel = section.querySelector<HTMLElement>(".rvs-accordion__content");
+			const label = section.querySelector<HTMLElement>("[data-rvs-accordion-label]");
+			if (!button || !panel) return;
+			section.classList.toggle("is-open", open);
+			button.setAttribute("aria-expanded", String(open));
+			panel.hidden = !open;
+			if (label) label.textContent = open ? "Hide" : "Show";
+		};
+
+		sections.forEach((section) => {
+			const button = section.querySelector<HTMLButtonElement>("[data-rvs-accordion-button]");
+			button?.addEventListener("click", () =>
+				setOpen(section, button.getAttribute("aria-expanded") !== "true"),
+			);
+		});
+
+		allButton?.addEventListener("click", () => {
+			const allOpen = sections.every((s) => s.classList.contains("is-open"));
+			sections.forEach((s) => setOpen(s, !allOpen));
+			allButton.setAttribute("aria-expanded", String(!allOpen));
+			if (allLabel) allLabel.textContent = allOpen ? "Show all sections" : "Hide all sections";
+		});
+	});
+</script>

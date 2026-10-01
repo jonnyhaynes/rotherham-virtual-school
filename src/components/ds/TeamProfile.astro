@@ -1,0 +1,108 @@
+---
+import Details from "./Details.astro";
+import Heading from "./Heading.astro";
+import Icon from "./Icon.astro";
+import Tag from "./Tag.astro";
+import { SITE_DEFAULTS } from "../../utils/site";
+
+/**
+ * TeamProfile — a role-based profile: what someone covers and how to reach them.
+ * Ported from `bundle.js`.
+ *
+ * Pages are owned by the service, not individuals, so a name and photo are
+ * optional and only used with consent; without them the role and its initials
+ * carry the card.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+interface Props {
+	role: string;
+	name?: string | null;
+	pronouns?: string | null;
+	photo?: string | null;
+	remit?: string | null;
+	covers?: string[] | null;
+	bio?: string | null;
+	email?: string | null;
+	audience?: Audience;
+	variant?: "default" | "compact";
+	headingLevel?: number;
+	class?: string;
+}
+
+const {
+	role,
+	name = null,
+	pronouns = null,
+	photo = null,
+	remit = null,
+	covers = null,
+	bio = null,
+	email = null,
+	audience,
+	variant = "default",
+	headingLevel = 2,
+	class: className,
+} = Astro.props;
+
+const initials = (name ?? role)
+	.split(/\s+/)
+	.filter(Boolean)
+	.slice(0, 2)
+	.map((word) => word[0])
+	.join("")
+	.toUpperCase();
+
+const contactEmail = email ?? SITE_DEFAULTS.email;
+---
+
+<article
+	class:list={["rvs-profile", variant === "compact" && "rvs-profile--compact", className]}
+	data-audience={audience}
+>
+	<div class="rvs-profile__photo">
+		{
+			photo ? (
+				<img src={photo} alt="" width="120" height="120" />
+			) : (
+				<span class="rvs-profile__initials" aria-hidden="true">{initials}</span>
+			)
+		}
+	</div>
+	<div class="rvs-profile__body">
+		<Heading level={headingLevel} class="rvs-profile__role">{role}</Heading>
+		{
+			name && (
+				<p class="rvs-profile__name">
+					{name}
+					{pronouns && <span class="rvs-muted"> ({pronouns})</span>}
+				</p>
+			)
+		}
+		{remit && <p class="rvs-profile__remit">{remit}</p>}
+		{
+			covers && covers.length > 0 && (
+				<ul class="rvs-profile__tags" aria-label="Covers">
+					{covers.map((cover) => <li><Tag tone="neutral">{cover}</Tag></li>)}
+				</ul>
+			)
+		}
+		{
+			bio && (
+				<Details summary={`About ${name ? name.split(" ")[0] : "this role"}`}>
+					<div set:html={bio} />
+				</Details>
+			)
+		}
+		<slot />
+		<p class="rvs-profile__contact">
+			<Icon name="mail" size={18} />
+			<a class="rvs-link" href={`mailto:${contactEmail}`}>{contactEmail}</a>
+		</p>
+	</div>
+</article>

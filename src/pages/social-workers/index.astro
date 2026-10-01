@@ -1,66 +1,81 @@
 ---
-import FaqList from "../../components/FaqList.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
-import AudienceLayout from "../../layouts/AudienceLayout.astro";
+import AudienceAside from "../../components/AudienceAside.astro";
+import Panel from "../../components/ds/Panel.astro";
+import Prose from "../../components/ds/Prose.astro";
+import AudienceLanding from "../../layouts/AudienceLanding.astro";
+
+// The service's own content for social workers, word for word as the live site
+// has it. The placement-moves inset becomes a design-system advice panel with the
+// same words.
 ---
 
-<AudienceLayout
+<AudienceLanding
+	audience="social-workers"
+	eyebrow="For social workers"
 	title="Social workers"
-	lead="Your role in the Personal Education Plan, and how to work with the Virtual School to improve a child's education."
+	headline="Your role in the Personal Education Plan"
+	lead="How to work with the Virtual School to improve a child's education."
+	illustration={{ name: "home", alt: "" }}
+	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Social workers" }]}
 	description="Your part in the PEP, how to refer a child, and how we work together to improve outcomes."
-	accent="var(--rvs-audience-social)"
 >
-	<h2 class="govuk-heading-l">Your role in the PEP</h2>
-	<p class="govuk-body">
-		The PEP forms part of the child's care plan. It is a shared responsibility between the social
-		worker, the school and the Virtual School, and it should be a live document that reflects the
-		child's day-to-day experience.
-	</p>
-	<p class="govuk-body">As the social worker, you are responsible for:</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>making sure the PEP happens within the statutory timescales</li>
-		<li>chairing or attending the PEP meeting, and making sure the child's views are captured</li>
-		<li>making sure the PEP links to the wider care plan — health, contact, placement stability</li>
-		<li>escalating to the Virtual School when a school is not meeting the child's needs</li>
-	</ul>
-	<InsetText title="Placement moves and school">
-		<p class="govuk-body">
-			Tell us as early as possible about a placement move. A rushed school move is the single
-			biggest cause of lost school time for children in care, and we can usually prevent it if
-			we have notice.
+	<Prose>
+		<h2>Your role in the PEP</h2>
+		<p>
+			The PEP forms part of the child's care plan. It is a shared responsibility between the social
+			worker, the school and the Virtual School, and it should be a live document that reflects the
+			child's day-to-day experience.
 		</p>
-	</InsetText>
+		<p>As the social worker, you are responsible for:</p>
+		<ul>
+			<li>making sure the PEP happens within the statutory timescales</li>
+			<li>chairing or attending the PEP meeting, and making sure the child's views are captured</li>
+			<li>making sure the PEP links to the wider care plan — health, contact, placement stability</li>
+			<li>escalating to the Virtual School when a school is not meeting the child's needs</li>
+		</ul>
+	</Prose>
 
-	<h2 class="govuk-heading-l">Raising a concern</h2>
-	<p class="govuk-body">
-		If you think a child's education is at risk — attendance is dropping, a school is not putting
-		the PEP provision in place, or an exclusion is being considered — contact the Virtual School
-		directly rather than waiting for the next review.
-	</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>Email the team: <a class="govuk-link" href="mailto:virtualschool@rotherham.gov.uk">virtualschool@rotherham.gov.uk</a></li>
-		<li>See <a class="govuk-link" href="/our-team/">our team</a> for the phase lead for your child</li>
-	</ul>
+	<Panel tone="advice" title="Placement moves and school">
+		<p>
+			Tell us as early as possible about a placement move. A rushed school move is the single
+			biggest cause of lost school time for children in care, and we can usually prevent it if we
+			have notice.
+		</p>
+	</Panel>
 
-	<h2 class="govuk-heading-l">Attendance and exclusions</h2>
-	<p class="govuk-body">
-		We monitor attendance and exclusion data for every child in care. Where a child is at risk of
-		exclusion, we expect to be involved before a decision is made, so that support can be put in
-		place instead.
-	</p>
+	<Prose>
+		<h2>Raising a concern</h2>
+		<p>
+			If you think a child's education is at risk — attendance is dropping, a school is not putting
+			the PEP provision in place, or an exclusion is being considered — contact the Virtual School
+			directly rather than waiting for the next review.
+		</p>
+		<ul>
+			<li>
+				Email the team: <a href="mailto:virtualschool@rotherham.gov.uk">virtualschool@rotherham.gov.uk</a>
+			</li>
+			<li>See <a href="/our-team/">our team</a> for the phase lead for your child</li>
+		</ul>
 
-	<h2 class="govuk-heading-l">Post-16 and care leavers</h2>
-	<p class="govuk-body">
-		Education support does not stop at 16. We work with personal advisers on pathways into
-		college, apprenticeships, training and work, and on the financial support available to care
-		leavers.
-	</p>
+		<h2>Attendance and exclusions</h2>
+		<p>
+			We monitor attendance and exclusion data for every child in care. Where a child is at risk of
+			exclusion, we expect to be involved before a decision is made, so that support can be put in
+			place instead.
+		</p>
 
-	<h2 class="govuk-heading-l">Training</h2>
-	<p class="govuk-body">
-		We run workshops for social workers on writing and reviewing high-quality PEPs. See
-		<a class="govuk-link" href="/training-events/">training and events</a> to book.
-	</p>
+		<h2>Post-16 and care leavers</h2>
+		<p>
+			Education support does not stop at 16. We work with personal advisers on pathways into
+			college, apprenticeships, training and work, and on the financial support available to care
+			leavers.
+		</p>
 
-	<FaqList audience="social-workers" />
-</AudienceLayout>
+		<h2>Training</h2>
+		<p>
+			We run workshops for social workers on writing and reviewing high-quality PEPs. See <a href="/training-events/">training and events</a> to book.
+		</p>
+	</Prose>
+
+	<AudienceAside slot="aside" />
+</AudienceLanding>

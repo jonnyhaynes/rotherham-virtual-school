@@ -1,0 +1,17 @@
+<!-- @dsCard group="Page templates" height=1250 page -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>TemplateArticle</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'Celebrating our care leavers’ results',eyebrow:'News',breadcrumbs:[{label:'Home',href:'#'},{label:'News',href:'#'},{label:'Celebrating our care leavers’ results'}]}),
+ h('div',{className:'rvs-main'},h('div',{className:'rvs-two-col'},
+  h('article',{className:'rvs-stack--s'},h(R.ContentMeta,{published:'2026-08-20'}),h(R.Prose,{html:'<p class="lead">Congratulations to the young people who collected results this summer and are moving on to college, training or work.</p><p>Whatever your results, there is a next step for you. Your personal adviser and the Virtual School can help you work out what comes next.</p>'}),h(R.Quote,{cite:'Care leaver, starting college',variant:'testimonial'},'A real quote, with consent, goes here.')),
+  h('aside',null,h(R.QuickLinks,{variant:'panel',heading:'Related',links:[{label:'Going to college or work',href:'#'},{label:'Our team: post-16 and care leavers lead',href:'#'}]})))),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

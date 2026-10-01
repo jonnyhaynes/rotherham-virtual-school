@@ -144,29 +144,6 @@
 			]
 		},
 		{
-			"slug": "faqs",
-			"label": "FAQs",
-			"labelSingular": "FAQ",
-			"description": "Frequently asked questions, grouped by audience",
-			"sortOrder": 60,
-			"routable": false,
-			"titleField": "question",
-			"fields": [
-				{ "slug": "question", "label": "Question", "type": "string", "required": true, "searchable": true },
-				{ "slug": "answer", "label": "Answer", "type": "portableText", "searchable": true },
-				{
-					"slug": "audience",
-					"label": "Audience",
-					"type": "select",
-					"defaultValue": "all",
-					"validation": {
-						"options": ["all", "young-people", "parents-carers", "schools", "social-workers", "professionals"]
-					}
-				},
-				{ "slug": "order", "label": "Order", "type": "number", "defaultValue": 100 }
-			]
-		},
-		{
 			"slug": "outcomes",
 			"label": "Outcomes",
 			"labelSingular": "Outcome figure",
@@ -432,6 +409,19 @@
 				}
 			},
 			{
+				"id": "doc-ofsted-childrens-services-2025",
+				"slug": "ofsted-inspection-childrens-services-2025",
+				"status": "published",
+				"data": {
+					"title": "Ofsted inspection of Rotherham's children's services, 2025",
+					"summary": "Ofsted's inspection of Rotherham Metropolitan Borough Council's children's services, published December 2025. Overall effectiveness was judged Outstanding.",
+					"category": "report",
+					"audience": "all",
+					"external_url": "https://files.ofsted.gov.uk/v1/file/50292638",
+					"updated_on": "2025-12-16T00:00:00.000Z"
+				}
+			},
+			{
 				"id": "doc-navsh",
 				"slug": "national-association-of-virtual-school-heads",
 				"status": "published",
@@ -489,96 +479,6 @@
 					"remit": "Works with care leavers and personal advisers on education, employment and training pathways after 16.",
 					"email": "virtualschool@rotherham.gov.uk",
 					"order": 50
-				}
-			}
-		],
-		"faqs": [
-			{
-				"id": "faq-what-is-vs",
-				"data": {
-					"question": "What is a virtual school?",
-					"audience": "all",
-					"order": 10,
-					"answer": [
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "A virtual school is not a building and children do not attend it. Every local authority in England must have one. It is a team of professionals who champion the education of children in care and make sure schools, carers and social workers are working together.",
-									"_key": "k1"
-								}
-							],
-							"_key": "k0"
-						}
-					]
-				}
-			},
-			{
-				"id": "faq-what-is-pep",
-				"data": {
-					"question": "What is a PEP?",
-					"audience": "all",
-					"order": 20,
-					"answer": [
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "A Personal Education Plan (PEP) is a legal document that records what a child needs to do well in education, what support they will get, and who is responsible for it. Every child in care of school age must have a PEP that is reviewed at least three times a year.",
-									"_key": "k1"
-								}
-							],
-							"_key": "k0"
-						}
-					]
-				}
-			},
-			{
-				"id": "faq-ppp",
-				"data": {
-					"question": "What is Pupil Premium Plus?",
-					"audience": "schools",
-					"order": 30,
-					"answer": [
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "Pupil Premium Plus (PP+) is additional funding paid to schools for children in care and previously looked-after children. It is meant to be spent on the specific educational needs identified in the child's PEP.",
-									"_key": "k1"
-								}
-							],
-							"_key": "k0"
-						}
-					]
-				}
-			},
-			{
-				"id": "faq-ask-for-help",
-				"data": {
-					"question": "How do I ask for help with a child's education?",
-					"audience": "parents-carers",
-					"order": 40,
-					"answer": [
-						{
-							"_type": "block",
-							"style": "normal",
-							"children": [
-								{
-									"_type": "span",
-									"text": "Start with your child's school or their social worker. If you are still worried, email the Virtual School and someone will get back to you.",
-									"_key": "k1"
-								}
-							],
-							"_key": "k0"
-						}
-					]
 				}
 			}
 		],

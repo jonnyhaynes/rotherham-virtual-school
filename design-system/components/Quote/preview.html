@@ -1,0 +1,17 @@
+<!-- @dsCard group="Content presentation" height=440 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Quote</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.Quote,{variant:'student-voice',cite:'Young person, Year 10',label:'Student voice'},'My PEP meeting was the first time someone asked what I actually wanted to do after school.'),
+ h(R.Quote,{cite:'Designated teacher',role:'Secondary school, Rotherham'},'The Virtual School helped us put the right support in place quickly.'),
+ h(R.Quote,{variant:'pull'},'Every child in care should have the same chances as their classmates.'))
+);
+</script>
+</body>
+</html>

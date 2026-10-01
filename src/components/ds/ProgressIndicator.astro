@@ -1,0 +1,69 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * ProgressIndicator — the multi-step form header, as a step list or a bar.
+ * Ported from `bundle.js`.
+ */
+interface Props {
+	steps?: string[];
+	current?: number;
+	total?: number;
+	stepLabel?: string;
+	variant?: "steps" | "bar";
+	class?: string;
+}
+
+const {
+	steps = [],
+	current = 1,
+	total = steps.length,
+	stepLabel = null,
+	variant = "steps",
+	class: className,
+} = Astro.props;
+
+const asBar = variant === "bar" || steps.length === 0;
+---
+
+{
+	asBar ? (
+		<div class:list={["rvs-progress", className]}>
+			<p class="rvs-progress__label">
+				Step {current} of {total}
+				{stepLabel && <span class="rvs-muted"> — {stepLabel}</span>}
+			</p>
+			<div
+				class="rvs-progress-bar"
+				role="progressbar"
+				aria-valuemin="1"
+				aria-valuemax={total}
+				aria-valuenow={current}
+				aria-label="Progress"
+			>
+				<span style={`width: ${(100 * current) / total}%`} />
+			</div>
+		</div>
+	) : (
+		<nav class:list={["rvs-progress", "rvs-progress--steps", className]} aria-label="Progress">
+			<p class="rvs-progress__label">Step {current} of {total}</p>
+			<ol class="rvs-progress__list">
+				{steps.map((step, i) => {
+					const n = i + 1;
+					const state = n < current ? "is-done" : n === current ? "is-current" : "";
+					return (
+						<li class:list={["rvs-progress__step", state]} aria-current={n === current ? "step" : undefined}>
+							<span class="rvs-progress__num" aria-hidden="true">
+								{n < current ? <Icon name="check" size={14} strokeWidth={3} /> : n}
+							</span>
+							<span class="rvs-progress__text">
+								{step}
+								{n < current && <span class="rvs-visually-hidden"> (completed)</span>}
+							</span>
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
+	)
+}

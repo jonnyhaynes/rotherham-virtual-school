@@ -1,0 +1,99 @@
+---
+import Breadcrumbs from "./Breadcrumbs.astro";
+import BrandPattern from "./BrandPattern.astro";
+import SectionDivider from "./SectionDivider.astro";
+import { ASSETS, uid } from "./assets";
+
+/**
+ * Hero — the top of a landing or content page: breadcrumbs, audience eyebrow,
+ * `h1`, lead paragraph, one or two actions and the audience illustration.
+ * Ported from `bundle.js`.
+ *
+ * The illustration is decorative and takes an empty `alt`, as the design system
+ * requires — the title and lead carry the meaning. Without one, the `default`
+ * and `home` variants show a brand pattern block instead.
+ *
+ * One hero per page. The reference implementation hard-codes the title's id;
+ * this generates one per instance so a page that renders more than one (the
+ * style guide) does not produce duplicate ids. The `aria-labelledby` contract is
+ * unchanged.
+ */
+type Audience =
+	| "young-people"
+	| "parents-carers"
+	| "schools"
+	| "social-workers"
+	| "professionals";
+
+interface Props {
+	title: string;
+	eyebrow?: string | null;
+	lead?: string | null;
+	illustration?: {
+		name?: "home" | "children" | "parents-carers" | "schools";
+		src?: string;
+		alt?: string;
+		width?: number;
+		height?: number;
+	} | null;
+	audience?: Audience;
+	breadcrumbs?: { label: string; href?: string }[] | null;
+	variant?: "default" | "home" | "compact";
+	patternSeed?: number;
+	class?: string;
+}
+
+const {
+	title,
+	eyebrow = null,
+	lead = null,
+	illustration = null,
+	audience,
+	breadcrumbs = null,
+	variant = "default",
+	patternSeed = 3,
+	class: className,
+} = Astro.props;
+
+const titleId = uid("rvs-hero-title");
+const showPattern = !illustration && variant !== "compact";
+---
+
+<section
+	class:list={["rvs-hero", `rvs-hero--${variant}`, className]}
+	data-audience={audience}
+	aria-labelledby={titleId}
+>
+	<div class="rvs-hero__inner">
+		<div class="rvs-hero__text">
+			{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+			{eyebrow && <p class="rvs-eyebrow">{eyebrow}</p>}
+			<h1 id={titleId} class="rvs-hero__title">{title}</h1>
+			{lead && <p class="rvs-hero__lead">{lead}</p>}
+			{
+				Astro.slots.has("actions") && (
+					<div class="rvs-hero__actions">
+						<slot name="actions" />
+					</div>
+				)
+			}
+		</div>
+		{
+			illustration ? (
+				<div class="rvs-hero__art">
+					<img
+						src={illustration.src ?? ASSETS[`illustration-${illustration.name ?? "home"}`]}
+						alt={illustration.alt ?? ""}
+						width={illustration.width}
+						height={illustration.height}
+					/>
+				</div>
+			) : showPattern ? (
+				<div class="rvs-hero__art rvs-hero__art--pattern" aria-hidden="true">
+					<BrandPattern rows={3} cols={4} unit={56} seed={patternSeed} />
+				</div>
+			) : null
+		}
+	</div>
+	{variant === "home" && <SectionDivider variant="hills" height={40} />}
+</section>

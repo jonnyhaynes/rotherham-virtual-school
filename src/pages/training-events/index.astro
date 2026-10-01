@@ -1,12 +1,23 @@
 ---
 import { getEmDashCollection } from "emdash";
-import EventCard from "../../components/EventCard.astro";
-import PageHeader from "../../components/PageHeader.astro";
-import InsetText from "../../components/govuk/InsetText.astro";
+import EventCard from "../../components/ds/EventCard.astro";
+import Grid from "../../components/ds/Grid.astro";
+import Hero from "../../components/ds/Hero.astro";
+import QuickLinks from "../../components/ds/QuickLinks.astro";
+import StateMessage from "../../components/ds/StateMessage.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const { entries, cacheHint } = await getEmDashCollection("events", { limit: 100 });
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const AUDIENCE_LABELS: Record<string, string> = {
+	"young-people": "Young people",
+	"parents-carers": "Parents and carers",
+	schools: "Schools",
+	"social-workers": "Social workers",
+	professionals: "Professionals",
+	all: "Everyone",
+};
 
 const now = Date.now();
 const sorted = [...entries].sort(
@@ -15,75 +26,75 @@ const sorted = [...entries].sort(
 		new Date(b.data.starts_at ?? 0).getTime(),
 );
 
-const upcoming = sorted.filter(
-	(event) => new Date(event.data.starts_at ?? 0).getTime() >= now,
-);
+const upcoming = sorted.filter((event) => new Date(event.data.starts_at ?? 0).getTime() >= now);
 const past = sorted
 	.filter((event) => new Date(event.data.starts_at ?? 0).getTime() < now)
 	.reverse();
+
+const timeLabel = (event: (typeof sorted)[number]) => {
+	const starts = event.data.starts_at;
+	if (!starts) return null;
+	const start = new Date(starts).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+	const ends = event.data.ends_at;
+	if (!ends) return start;
+	return `${start} to ${new Date(ends).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
+};
 ---
 
 <BaseLayout
 	title="Training and events"
 	description="CPD, workshops and network meetings from Rotherham Virtual School."
-	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Training and events" }]}
 >
-	<PageHeader
+	<Hero
+		slot="hero"
+		variant="compact"
 		title="Training and events"
 		lead="Continuing professional development for designated teachers, social workers and other professionals supporting children in care."
+		breadcrumbs={[{ label: "Home", href: "/" }, { label: "Training and events" }]}
 	/>
 
-	<h2 class="govuk-heading-l">Upcoming</h2>
-	{
-		upcoming.length === 0 ? (
-			<InsetText title="Nothing scheduled yet">
-				<p class="govuk-body">
-					We are finalising the programme. Contact the team if you would like to be told when
-					new dates are released.
-				</p>
-			</InsetText>
-		) : (
-			<ul class="rvs-event-list" role="list">
-				{upcoming.map((event) => (
-					<EventCard
-						title={event.data.title}
-						href={`/training-events/${event.id}`}
-						summary={event.data.summary}
-						startsAt={event.data.starts_at}
-						endsAt={event.data.ends_at}
-						location={event.data.location}
-						isOnline={event.data.is_online}
-					/>
-				))}
-			</ul>
-		)
-	}
+	<section>
+		<h2 class="rvs-section-title">Upcoming</h2>
+		{
+			upcoming.length === 0 ? (
+				<StateMessage state="empty" title="Nothing scheduled yet">
+					<p>
+						We are finalising the programme. Contact the team if you would like to be told
+						when new dates are released.
+					</p>
+				</StateMessage>
+			) : (
+				<Grid as="ul" min="280px">
+					{upcoming.map((event) => (
+						<li>
+							<EventCard
+								title={String(event.data.title)}
+								href={`/training-events/${event.id}`}
+								date={String(event.data.starts_at)}
+								time={timeLabel(event)}
+								location={event.data.location ? String(event.data.location) : null}
+								format={event.data.is_online ? "online" : "in-person"}
+								audience={AUDIENCE_LABELS[String(event.data.audience)] ?? null}
+								text={event.data.summary ? String(event.data.summary) : null}
+							/>
+						</li>
+					))}
+				</Grid>
+			)
+		}
+	</section>
 
 	{
 		past.length > 0 && (
-			<>
-				<h2 class="govuk-heading-l">Past sessions</h2>
-				<ul class="govuk-list" role="list">
-					{past.map((event) => (
-						<li>
-							<a class="govuk-link" href={`/training-events/${event.id}`}>
-								{event.data.title}
-							</a>
-						</li>
-					))}
-				</ul>
-			</>
+			<section>
+				<QuickLinks
+					heading="Past sessions"
+					links={past.map((event) => ({
+						label: String(event.data.title),
+						href: `/training-events/${event.id}`,
+					}))}
+				/>
+			</section>
 		)
 	}
 </BaseLayout>
-
-<style>
-	.rvs-event-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 1.5rem 2rem;
-		list-style: none;
-		padding: 0;
-		margin: 1.5rem 0 0;
-	}
-</style>

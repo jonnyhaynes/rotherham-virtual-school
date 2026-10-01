@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>TemplateTraining</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-page'},h(R.SkipLink,null),h(R.Header,{navigation:[{label:'Young people',href:'#'},{label:'Parents and carers',href:'#'},{label:'Schools',href:'#'},{label:'Social workers',href:'#'},{label:'Professionals',href:'#'}]}),h('main',{id:'main-content'},h(R.Hero,{variant:'compact',title:'Training and events',lead:'Continuing professional development for designated teachers, social workers and other professionals supporting children in care.',breadcrumbs:[{label:'Home',href:'#'},{label:'Training and events'}]}),
+ h('div',{className:'rvs-main rvs-stack'},
+  h(R.Tabs,{label:'Training by audience',tabs:[
+   {id:'all',label:'All',content:h(R.Grid,{min:'320px'},
+    h(R.EventCard,{href:'#',date:'2026-10-14',title:'Designated teacher training: autumn term',text:'Core training for designated teachers, covering the PEP cycle, Pupil Premium Plus and working with social care.',time:'4:30pm to 6pm',location:'Riverside House, Main Street, Rotherham',format:'in-person',audience:'Designated teachers',status:'open'}),
+    h(R.EventCard,{href:'#',date:'2026-11-05',title:'PEP quality assurance workshop',text:'A practical workshop for social workers on writing and reviewing high-quality Personal Education Plans.',time:'1pm to 3pm',location:'Online (Microsoft Teams)',format:'online',audience:'Social workers',status:'open'}))},
+   {id:'schools',label:'Schools',content:h(R.EventCard,{href:'#',date:'2026-10-14',title:'Designated teacher training: autumn term',time:'4:30pm to 6pm',location:'Riverside House, Main Street, Rotherham',format:'in-person',status:'open'})},
+   {id:'sw',label:'Social workers',content:h(R.EventCard,{href:'#',date:'2026-11-05',title:'PEP quality assurance workshop',time:'1pm to 3pm',location:'Online (Microsoft Teams)',format:'online',status:'open'})},
+   {id:'fc',label:'Foster carers',content:h(R.StateMessage,{state:'empty',compact:true,title:'Nothing scheduled yet'},h('p',null,'We are finalising the programme. Contact the team if you would like to be told when new dates are released.'))}]}),
+  h('section',null,h('h2',{className:'rvs-section-title'},'Watch again'),h('p',{className:'rvs-muted',style:{marginTop:'-10px',marginBottom:'20px'}},'Short recordings of past sessions, 10 to 15 minutes each. Captions and transcripts included.'),h(R.Grid,{min:'300px'},
+   h(R.VideoEmbed,{title:'Writing SMART targets in a PEP (example)',videoId:'VIDEO_ID',duration:'12 minutes',transcriptHref:'#'}),
+   h(R.VideoEmbed,{title:'Pupil Premium Plus in 2 minutes (example)',videoId:'VIDEO_ID',duration:'2 minutes',transcriptHref:'#'}))),
+  h(R.QuickLinks,{heading:'Past sessions',links:[{label:'Attachment Aware Schools: summer network',href:'#',meta:'Recording available'},{label:'Designated teacher training: summer term',href:'#'}]})),h('div',{className:'rvs-container'},h(R.PageFeedback,null))),h(R.Footer,{links:[{label:'Our team',href:'#'},{label:'Training and events',href:'#'},{label:'News',href:'#'},{label:'Documents and policies',href:'#'},{label:'Words we use',href:'#'},{label:'Contact us',href:'#'},{label:'Accessibility statement',href:'#'},{label:'Privacy and cookies',href:'#'}],partner:h(R.Link,{href:'https://www.rotherham.gov.uk/',variant:'inverse'},'Rotherham Council services')}))
+);
+</script>
+</body>
+</html>

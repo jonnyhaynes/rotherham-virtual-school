@@ -1,0 +1,16 @@
+<!-- @dsCard group="Education patterns" height=520 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Explainer</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},
+ h(R.Explainer,{audience:'young-people',icon:'document',tone:'teal',question:'What is a PEP?',answer:'PEP stands for Personal Education Plan. It is a plan about you and your learning.',points:[{icon:'star',text:'What you are good at'},{icon:'heart',text:'What you find hard and the help you will get'},{icon:'sprout',text:'The goals you are working towards'},{icon:'message',text:'What you think — it’s your plan'}],href:'#',linkLabel:'More about your PEP'}),
+ h(R.Explainer,{audience:'parents-carers',icon:'school',tone:'coral',id:'ex2',question:'What is a virtual school?',answer:'Not a building. A team of people who make sure children in care get the education they deserve, wherever they go to school.'}))
+);
+</script>
+</body>
+</html>

@@ -1,13 +1,17 @@
 ---
 import { getEmDashCollection, getSiteSettings } from "emdash";
-import AudienceCard from "../components/AudienceCard.astro";
-import ContactPanel from "../components/ContactPanel.astro";
-import HeroBanner from "../components/HeroBanner.astro";
-import NewsCard from "../components/NewsCard.astro";
-import InsetText from "../components/govuk/InsetText.astro";
+import AudienceSelector from "../components/ds/AudienceSelector.astro";
+import Card from "../components/ds/Card.astro";
+import Explainer from "../components/ds/Explainer.astro";
+import Grid from "../components/ds/Grid.astro";
+import Hero from "../components/ds/Hero.astro";
+import Panel from "../components/ds/Panel.astro";
+import Link from "../components/ds/Link.astro";
+import OfstedRecognition from "../components/OfstedRecognition.astro";
 import { AUDIENCES } from "../data/audiences";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { resolveSiteIdentity } from "../utils/site";
+import { formatDate } from "../components/ds/assets";
 
 const { siteTagline } = resolveSiteIdentity(await getSiteSettings());
 
@@ -23,128 +27,99 @@ const latestNews = [...newsEntries]
 			new Date(a.data.published_on ?? 0).getTime(),
 	)
 	.slice(0, 3);
+
+// The design system's five audience ids match this service's five sections one
+// to one, so the card colour and glyph come straight from `AudienceSelector`.
+// The words are the service's own.
+const audiences = AUDIENCES.map((audience) => ({
+	id: audience.id,
+	label: audience.title,
+	description: audience.description,
+	href: audience.href,
+}));
 ---
 
-<BaseLayout title="Home" description={siteTagline}>
-	<HeroBanner
+<BaseLayout
+	title="Home"
+	description={siteTagline}
+>
+	<Hero
 		slot="hero"
+		variant="home"
 		title="Rotherham Virtual School"
 		lead="We are champions for the education of children in care, previously looked-after children and care leavers in Rotherham — wherever they live and whatever school they go to."
+		illustration={{ name: "home", alt: "" }}
 	/>
 
-	<section class="rvs-section rvs-section--opening" aria-labelledby="who-are-you">
-		<h2 class="govuk-heading-l" id="who-are-you">Who are you?</h2>
-		<p class="govuk-body-l">
-			Choose the option that fits you best. Each section is written for you.
-		</p>
-		<ul class="rvs-audience-grid" role="list">
-			{AUDIENCES.map((audience) => <AudienceCard {...audience} />)}
-		</ul>
+	<section>
+		<h2 class="rvs-section-title">Who are you?</h2>
+		<p class="rvs-intro">Choose the option that fits you best. Each section is written for you.</p>
+		<AudienceSelector
+			audiences={audiences}
+			heading={null}
+			label="Who are you? Choose the option that fits you best"
+		/>
 	</section>
 
-	<section class="rvs-section" aria-labelledby="what-we-do">
-		<h2 class="govuk-heading-l" id="what-we-do">What we do</h2>
-		<p class="govuk-body">
-			A virtual school is not a building and children do not attend it. We are a team of
-			professionals who work with schools, carers and social workers to make sure the children
-			we support get the education they deserve.
+	<Explainer
+		id="what-is-a-virtual-school"
+		icon="school"
+		tone="teal"
+		question="What is a virtual school?"
+		answer="A virtual school is not a building and children do not attend it. We are a team of professionals who work with schools, carers and social workers to make sure the children we support get the education they deserve."
+		points={[
+			{ icon: "school", text: "The right school, making progress" },
+			{ icon: "graduation", text: "Training and good practice" },
+			{ icon: "check-circle", text: "Progress, attendance and exclusions" },
+			{ icon: "transition", text: "Moving school, year group or on to college" },
+		]}
+		href="/about/"
+		linkLabel="About us"
+	/>
+
+	<Panel tone="help" title="Are you worried about a child?">
+		<p>
+			If you are worried about a child or young person's safety, contact Rotherham's Children's
+			Social Care team.
 		</p>
-		<ul class="govuk-list govuk-list--bullet">
-			<li>Make sure every child is in the right school and is making progress</li>
-			<li>Provide training and share effective practice with schools, carers and social workers</li>
-			<li>Monitor the progress, attainment, attendance and exclusion of children in care</li>
-			<li>Support transitions between schools, year groups and on to college or training</li>
-		</ul>
-		<InsetText title="Are you worried about a child?">
-			<p class="govuk-body">
-				If you are worried about a child or young person's safety, contact Rotherham's
-				Children's Social Care team.
-			</p>
-			<p class="govuk-body">
-				<a
-					class="govuk-link"
-					href="https://www.rotherham.gov.uk/child-protection/report-concern-child-young-person"
-					>Report a concern about a child or young person</a
-				>
-			</p>
-		</InsetText>
-	</section>
+		<Link
+			slot="actions"
+			href="https://www.rotherham.gov.uk/child-protection/report-concern-child-young-person"
+			variant="arrow"
+			external={true}
+		>
+			Report a concern about a child or young person
+		</Link>
+	</Panel>
+
+	<OfstedRecognition />
 
 	{
 		latestNews.length > 0 && (
-			<section class="rvs-section" aria-labelledby="latest-news">
-				<h2 class="govuk-heading-l" id="latest-news">
-					Latest news
-				</h2>
-				<ul class="rvs-news-grid" role="list">
+			<section>
+				<h2 class="rvs-section-title">Latest news</h2>
+				<Grid as="ul" min="280px">
 					{latestNews.map((item) => (
-						<NewsCard
-							title={item.data.title}
+						<Card
+							as="li"
 							href={`/news/${item.id}`}
-							summary={item.data.summary}
-							publishedOn={item.data.published_on}
+							title={String(item.data.title)}
+							text={item.data.summary ? String(item.data.summary) : null}
+							meta={item.data.published_on ? formatDate(String(item.data.published_on)) : null}
 						/>
 					))}
-				</ul>
-				<p class="govuk-body">
-					<a class="govuk-link" href="/news/">
-						See all news
-					</a>
+				</Grid>
+				<p class="rvs-home__more">
+					<Link href="/news/" variant="arrow">See all news</Link>
 				</p>
 			</section>
 		)
 	}
 
-	<section class="rvs-section" aria-labelledby="contact">
-		<h2 class="govuk-heading-l" id="contact">Get in touch</h2>
-		<ContactPanel />
-	</section>
 </BaseLayout>
 
 <style>
-	/*
-		Section rhythm, on GOV.UK's 5px ladder rather than the bespoke rem values
-		that used to sit here. The separating rule between sections is gone: at
-		0/5/10/15/20/25/30/40/50/60, space alone separates the groups, and a rule
-		on top of generous space only says it twice.
-	*/
-	.rvs-section {
-		padding-block: var(--rvs-space-5);
-	}
-
-	/*
-		The who-are-you router is the page's decision, so it rides tight under the
-		hero band instead of starting a new thought below it. The gap above it is
-		smaller than the gaps between the later sections, which is what makes the
-		band and the router read as one opening.
-	*/
-	.rvs-section--opening {
-		padding-block-start: var(--rvs-space-4);
-	}
-
-	@media (min-width: 40.0625em) {
-		.rvs-section {
-			padding-block: var(--rvs-space-8);
-		}
-
-		.rvs-section--opening {
-			padding-block-start: var(--rvs-space-6);
-		}
-	}
-
-	/*
-		The audience grid's composition lives in `_overrides.scss`. Astro scopes a
-		page's styles to elements that page renders, and the grid's children are
-		`<li>`s rendered by `AudienceCard`, so `:nth-child` rules written here
-		matched nothing and every card fell back to one track.
-	*/
-
-	.rvs-news-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: var(--rvs-space-5) var(--rvs-space-6);
-		margin: var(--rvs-space-5) 0;
-		padding: 0;
-		list-style: none;
+	.rvs-home__more {
+		margin: var(--space-4) 0 0;
 	}
 </style>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/components/bundle.css"><script src="/lib/react.production.min.js"></script><script src="/lib/react-dom.production.min.js"></script><script src="/components/bundle.js"></script><meta charset="utf-8"><title>QuickLinks</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h(R.Grid,{min:'260px'},
+ h(R.QuickLinks,{heading:'Popular pages',links:[{label:'What is a PEP?',href:'#'},{label:'Pupil Premium Plus',href:'#'},{label:'Designated teacher guidance',href:'#'},{label:'Contact the Virtual School',href:'#'}]}),
+ h(R.QuickLinks,{variant:'panel',heading:'Statutory guidance',links:[{label:'Designated teacher for looked-after and previously looked-after children',href:'https://www.gov.uk/government/publications/designated-teacher-for-looked-after-children',external:true},{label:'Promoting the education of looked-after and previously looked-after children',href:'https://www.gov.uk/government/publications/promoting-the-education-of-looked-after-children',external:true}]})))
+);
+</script>
+</body>
+</html>

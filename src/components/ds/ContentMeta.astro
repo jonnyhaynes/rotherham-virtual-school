@@ -1,0 +1,68 @@
+---
+import Icon from "./Icon.astro";
+import { formatDate } from "./assets";
+
+/**
+ * ContentMeta — publication metadata: published, updated, reviewed, next review,
+ * owner and format, plus an optional "content update" notice. Ported from
+ * `bundle.js`.
+ *
+ * A description list, so the relationship between term and value is available to
+ * assistive tech rather than implied by layout.
+ */
+interface Props {
+	published?: string | null;
+	updated?: string | null;
+	reviewed?: string | null;
+	nextReview?: string | null;
+	owner?: string | null;
+	format?: string | null;
+	updateNotice?: { date: string; text: string } | null;
+	class?: string;
+}
+
+const {
+	published = null,
+	updated = null,
+	reviewed = null,
+	nextReview = null,
+	owner = null,
+	format = null,
+	updateNotice = null,
+	class: className,
+} = Astro.props;
+
+const rows: { term: string; value: string; iso?: string }[] = [];
+if (published) rows.push({ term: "Published", value: formatDate(published), iso: published });
+if (updated) rows.push({ term: "Last updated", value: formatDate(updated), iso: updated });
+if (reviewed) rows.push({ term: "Last reviewed", value: formatDate(reviewed), iso: reviewed });
+if (nextReview) rows.push({ term: "Next review", value: formatDate(nextReview), iso: nextReview });
+if (owner) rows.push({ term: "Owner", value: owner });
+if (format) rows.push({ term: "Format", value: format });
+---
+
+<div class:list={["rvs-meta", className]}>
+	{
+		updateNotice && (
+			<div class="rvs-meta__notice" role="note">
+				<Icon name="info" size={20} />
+				<p>
+					<strong>Updated {formatDate(updateNotice.date)}: </strong>
+					{updateNotice.text}
+				</p>
+			</div>
+		)
+	}
+	<dl class="rvs-meta__list">
+		{
+			rows.map((row) => (
+				<div class="rvs-meta__row">
+					<dt>{row.term}</dt>
+					<dd>
+						{row.iso ? <time datetime={row.iso}>{row.value}</time> : row.value}
+					</dd>
+				</div>
+			))
+		}
+	</dl>
+</div>

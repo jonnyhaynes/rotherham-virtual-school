@@ -1,100 +1,156 @@
 // =============================================================================
-// Design tokens
+// Design tokens — Rotherham Virtual School
 // =============================================================================
-// Rotherham Metropolitan Borough Council brand colours, sampled from the
-// council's own "Orbit" stylesheet, plus Virtual School accents for the
-// audience zones and the Pupil Zone sub-brand.
+// Generated from `design-system/tokens.json`. The design-system folder is the
+// source of truth for the visual language; this file is its token layer in the
+// site's build.
 //
-// These are exposed as CSS custom properties so Astro components and the
-// per-audience theme layers can consume them without recompiling Sass.
+// Token names are kept exactly as the design system defines them (`--navy`,
+// `--teal-700`, `--space-4`, …). Everything is emitted as a CSS custom property
+// from a Sass variable, so the same value is available to Sass (for configuring
+// GOV.UK Frontend) and to components.
+//
+// Colour rules from the design system's brand book:
+//   - `navy` is the backbone: header, footer, headings, body text (14:1 on white).
+//   - `teal`, `yellow`, `coral` and `purple` are GRAPHIC colours: illustration,
+//     icon badges, pattern, dividers, accents. None reaches 4.5:1 with white, so
+//     they are never small text and never carry white text. Their accessible
+//     partners are `teal-700` (6.3:1), `coral-700`, `yellow-800` and
+//     `purple-700`. Purple is an audience colour only (social workers) — it is
+//     not used in the brand pattern, illustrations or the logo.
+//   - `pale-blue` is the main tinted ground; the `-50` tints are for audience
+//     cards, advice panels and status backgrounds.
+//   - Status is `error` (#B42318) and `success` (= `teal-700`) — success is teal,
+//     off the red–green axis, and both always carry an icon and a word.
 // =============================================================================
 
-// --- Core palette (Rotherham) -----------------------------------------------
-$rvs-navy: #002554; // primary brand
-$rvs-navy-dark: #001a3e;
-$rvs-blue-deep: #010066;
-$rvs-blue: #0052ba;
-$rvs-sky: #66cbf3;
-$rvs-blue-pale: #9fcfff;
-$rvs-blue-tint: #e2ebf1;
-$rvs-yellow: #ffe13b; // focus / highlight
-$rvs-cream: #fff9d2;
-$rvs-maroon: #a0505c; // visited links
-$rvs-purple: #87189d;
-$rvs-ink: #252b36; // body text
-$rvs-grey: #616365; // secondary text
-$rvs-grey-warm: #eeece8;
-$rvs-border: #d8e4ec;
-$rvs-white: #ffffff;
+// --- Colour ------------------------------------------------------------------
+$ds-navy: #172b4d;
+$ds-navy-900: #0f2140;
+$ds-teal: #00a6a6;
+$ds-teal-700: #006b6e;
+$ds-teal-800: #00575a;
+$ds-teal-50: #e0f4f4;
+$ds-yellow: #ffc857;
+$ds-yellow-800: #7a5a00;
+$ds-yellow-50: #fff4dc;
+$ds-coral: #f26b5b;
+$ds-coral-700: #b83a2c;
+$ds-coral-50: #fdece9;
+$ds-purple: #a58bda;
+$ds-purple-700: #5e3fa3;
+$ds-purple-50: #f1ecfa;
+$ds-pale-blue: #eaf4f7;
+$ds-surface: #ffffff;
+$ds-surface-alt: #f4f8fa;
+$ds-text-secondary: #4a5a73;
+$ds-border: #c9d6df;
+$ds-border-strong: #5f6f86;
+$ds-link-visited: #4c2c92;
+$ds-error: #b42318;
+$ds-error-50: #fdecec;
 
-// --- Status ------------------------------------------------------------------
-// Rotherham's own status colours, sampled from their button styles. These are
-// surface colours: they are designed to carry dark text as a background, and
-// they are NOT safe to use as text or icons on white (the green is only 1.72:1).
-$rvs-success-surface: #a4d0b1;
-$rvs-warning-surface: #f3a536;
-$rvs-danger-surface: #f1a3aa;
-$rvs-error: #ae1a28; // 7.05:1 on white — safe as text
-
-// GOV.UK treats `success` as a functional colour: it is used as the background
-// of the confirmation panel (with white text) and as the colour of success
-// links. It therefore has to pass 4.5:1 in both directions, which Rotherham's
-// light green does not (1.72:1). This is the same hue (137deg vs the palette's
-// 138deg) darkened until it passes — 6.43:1 against white, both ways.
-$rvs-success-functional: #2a6b3c;
-
-// --- Audience accents (Virtual School twist) ---------------------------------
-// Used for card top-borders and accents, never as a text background alone, so
-// every pairing keeps WCAG 2.2 AA contrast against white.
-$rvs-audience-young: $rvs-purple;
-$rvs-audience-parent: $rvs-navy;
-$rvs-audience-school: $rvs-blue;
-$rvs-audience-social: $rvs-maroon;
-$rvs-audience-other: $rvs-grey;
-
-// --- Typography --------------------------------------------------------------
-// Rotherham uses Muli (now "Mulish"), self-hosted from ./_fonts.scss.
-// "Mulish Fallback" is Arial re-declared with Mulish's metrics, so the swap from
-// fallback to webfont does not reflow the page; it is not an installed family.
-$rvs-font-family: "Mulish", "Mulish Fallback", arial, sans-serif;
+// --- Type --------------------------------------------------------------------
+// One family: Noto Sans, self-hosted (see ./_fonts.scss).
+$ds-font-sans: "Noto Sans", "Noto Sans Fallback", "Helvetica Neue", Arial, sans-serif;
 
 // --- Layout ------------------------------------------------------------------
-$rvs-pupil-radius: 16px;
+$ds-page-width: 1140px;
+$ds-measure: 38em;
+$ds-bp-tablet: 641px;
+$ds-bp-desktop: 769px;
 
-// Spacing scale: GOV.UK's 5px ladder, named by unit the way `govuk-spacing()`
-// is. Page-level styles are plain CSS and cannot call the Sass helper, so the
-// steps the layout consumes are emitted as custom properties below. Anything
-// not a multiple of five here would be the two-systems problem again.
-$rvs-space-3: 15px;
-$rvs-space-4: 20px;
-$rvs-space-5: 25px;
-$rvs-space-6: 30px;
-$rvs-space-8: 40px;
-$rvs-space-10: 50px;
-
-// Only the tokens that components actually consume are emitted as custom
-// properties. The rest of the palette stays available as Sass variables above,
-// where it is used to configure GOV.UK Frontend and the zone themes.
+// -----------------------------------------------------------------------------
+// Custom properties
+// -----------------------------------------------------------------------------
 :root {
-	--rvs-navy: #{$rvs-navy};
-	--rvs-blue: #{$rvs-blue};
-	--rvs-yellow: #{$rvs-yellow};
-	--rvs-ink: #{$rvs-ink};
-	--rvs-grey: #{$rvs-grey};
-	--rvs-border: #{$rvs-border};
+	// Colour
+	--navy: #{$ds-navy};
+	--navy-900: #{$ds-navy-900};
+	--teal: #{$ds-teal};
+	--teal-700: #{$ds-teal-700};
+	--teal-800: #{$ds-teal-800};
+	--teal-50: #{$ds-teal-50};
+	--yellow: #{$ds-yellow};
+	--yellow-800: #{$ds-yellow-800};
+	--yellow-50: #{$ds-yellow-50};
+	--coral: #{$ds-coral};
+	--coral-700: #{$ds-coral-700};
+	--coral-50: #{$ds-coral-50};
+	--purple: #{$ds-purple};
+	--purple-700: #{$ds-purple-700};
+	--purple-50: #{$ds-purple-50};
+	--pale-blue: #{$ds-pale-blue};
+	--surface: #{$ds-surface};
+	--surface-alt: #{$ds-surface-alt};
 
-	--rvs-space-3: #{$rvs-space-3};
-	--rvs-space-4: #{$rvs-space-4};
-	--rvs-space-5: #{$rvs-space-5};
-	--rvs-space-6: #{$rvs-space-6};
-	--rvs-space-8: #{$rvs-space-8};
-	--rvs-space-10: #{$rvs-space-10};
+	--text: var(--navy);
+	--text-secondary: #{$ds-text-secondary};
+	--text-inverse: #{$ds-surface};
+	--border: #{$ds-border};
+	--border-strong: #{$ds-border-strong};
+	--link: var(--teal-700);
+	--link-hover: var(--teal-800);
+	--link-visited: #{$ds-link-visited};
+	--link-inverse: var(--surface);
+	--focus: var(--yellow);
+	--focus-text: var(--navy);
+	--error: #{$ds-error};
+	--error-50: #{$ds-error-50};
+	--success: var(--teal-700);
+	--success-50: var(--teal-50);
 
-	--rvs-audience-young: #{$rvs-audience-young};
-	--rvs-audience-parent: #{$rvs-audience-parent};
-	--rvs-audience-school: #{$rvs-audience-school};
-	--rvs-audience-social: #{$rvs-audience-social};
-	--rvs-audience-other: #{$rvs-audience-other};
+	// Audience accents — five audiences, one colour each.
+	--accent-young-people: var(--teal);
+	--accent-young-people-text: var(--teal-700);
+	--accent-young-people-soft: var(--teal-50);
+	--accent-parents-carers: var(--coral);
+	--accent-parents-carers-text: var(--coral-700);
+	--accent-parents-carers-soft: var(--coral-50);
+	--accent-schools: var(--yellow);
+	--accent-schools-text: var(--yellow-800);
+	--accent-schools-soft: var(--yellow-50);
+	--accent-social-workers: var(--purple);
+	--accent-social-workers-text: var(--purple-700);
+	--accent-social-workers-soft: var(--purple-50);
+	--accent-professionals: var(--navy);
+	--accent-professionals-text: var(--navy);
+	--accent-professionals-soft: var(--pale-blue);
 
-	--rvs-pupil-radius: #{$rvs-pupil-radius};
+	// Elevation
+	--shadow-card: 0 1px 2px rgb(23 43 77 / 0.08);
+	--shadow-raised: 0 8px 24px rgb(23 43 77 / 0.16);
+
+	// Spacing
+	--space-0: 0;
+	--space-1: 5px;
+	--space-2: 10px;
+	--space-3: 15px;
+	--space-4: 20px;
+	--space-5: 25px;
+	--space-6: 30px;
+	--space-7: 40px;
+	--space-8: 50px;
+	--space-9: 60px;
+
+	// Shape
+	--radius-none: 0;
+	--radius-sm: 4px;
+	--radius-md: 8px;
+	--radius-lg: 16px;
+	--radius-pill: 999px;
+
+	// Layout
+	--page-width: #{$ds-page-width};
+	--measure: #{$ds-measure};
+	--bp-tablet: #{$ds-bp-tablet};
+	--bp-desktop: #{$ds-bp-desktop};
+
+	// Borders
+	--border-width: 1px;
+	--border-width-control: 2px;
+	--focus-width: 3px;
+
+	// Type
+	--font-sans: #{$ds-font-sans};
 }

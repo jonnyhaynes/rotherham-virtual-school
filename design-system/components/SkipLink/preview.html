@@ -1,0 +1,14 @@
+<!-- @dsCard group="Utility" height=80 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>SkipLink</title></head>
+<body>
+<div id="root"></div>
+<script>
+var R = window.RVS, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'rvs-demo'},h('p',{className:'rvs-muted',style:{margin:0,fontSize:'16px'}},'Press Tab to reveal it:'),h(R.SkipLink,null))
+);
+</script>
+</body>
+</html>

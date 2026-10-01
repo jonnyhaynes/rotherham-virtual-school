@@ -1,153 +1,154 @@
 ---
-import InsetText from "../../components/govuk/InsetText.astro";
-import PupilLayout from "../../layouts/PupilLayout.astro";
+import Explainer from "../../components/ds/Explainer.astro";
+import Glossary from "../../components/ds/Glossary.astro";
+import Grid from "../../components/ds/Grid.astro";
+import Panel from "../../components/ds/Panel.astro";
+import Prose from "../../components/ds/Prose.astro";
+import PupilCard from "../../components/ds/PupilCard.astro";
+import type { IconName } from "../../components/ds/icons";
+import AudienceLanding from "../../layouts/AudienceLanding.astro";
 
-const cards = [
+// The service's own content for children and young people, word for word as the
+// live site has it. Only the presentation is the design system's: the four
+// jump-links are pupil-zone cards, "Your PEP" is an Explainer, and the words at
+// the end are a Glossary.
+const CARDS: { title: string; text: string; href: string; icon: IconName; tone: "teal" | "yellow" | "coral" | "purple" }[] = [
 	{
 		title: "Your PEP",
 		text: "What a Personal Education Plan is, and what should happen at your PEP meeting.",
 		href: "#your-pep",
+		icon: "book",
+		tone: "teal",
 	},
 	{
 		title: "Moving to a new school",
 		text: "What to expect when you change school or move to a new home.",
 		href: "#moving-schools",
+		icon: "transition",
+		tone: "yellow",
 	},
 	{
 		title: "Going to college or work",
 		text: "Help with what comes next after year 11, including money and support.",
 		href: "#post-16",
+		icon: "graduation",
+		tone: "coral",
 	},
 	{
 		title: "Who can help you",
 		text: "The people you can talk to if something is worrying you at school.",
 		href: "#who-can-help",
+		icon: "users",
+		tone: "purple",
+	},
+];
+
+const GLOSSARY = [
+	{
+		term: "Looked after",
+		definition:
+			"It means a child or young person who is in the care of the council. Some people say “child in care” instead.",
+	},
+	{
+		term: "Designated teacher",
+		definition:
+			"A teacher at your school who is responsible for making sure children in care get the help they need.",
+	},
+	{
+		term: "Personal adviser",
+		definition:
+			"Someone who helps you plan what you will do after school, and supports you until you are 25 if you want them to.",
 	},
 ];
 ---
 
-<PupilLayout
+<AudienceLanding
+	audience="young-people"
+	eyebrow="For children and young people"
 	title="Children and young people"
+	headline="Your education. Your voice. Your future."
 	lead="This part of the website is for you. It explains the people who help with your education, and what you can ask for."
+	illustration={{ name: "children", alt: "" }}
 	breadcrumbs={[{ label: "Home", href: "/" }, { label: "Children and young people" }]}
+	description="What a virtual school is, what your PEP means, and who you can talk to if you need help."
 >
-	<ul class="pupil-cards" role="list">
+	<Grid as="ul" min="280px">
 		{
-			cards.map((card) => (
+			CARDS.map((card) => (
 				<li>
-					<a class="rvs-pupil-card" href={card.href}>
-						<h2 class="govuk-heading-m rvs-pupil-card__title">{card.title}</h2>
-						<p class="rvs-pupil-card__text">{card.text}</p>
-					</a>
+					<PupilCard
+						href={card.href}
+						title={card.title}
+						text={card.text}
+						icon={card.icon}
+						tone={card.tone}
+					/>
 				</li>
 			))
 		}
-	</ul>
+	</Grid>
 
-	<h2 class="govuk-heading-l" id="what-is-a-virtual-school">What is a virtual school?</h2>
-	<p class="govuk-body">
-		<span class="rvs-break-words"><strong>Rotherham Virtual School</strong></span> is not a real
-		building and you do not go to it. It is a team of people whose job is to make sure you are
-		doing well at school.
-	</p>
-	<p class="govuk-body">
-		They check how you are getting on, help if you are finding things hard, and work with your
-		school and your carers to sort out problems. They are on your side.
-	</p>
+	<Explainer
+		id="your-pep"
+		icon="document"
+		tone="teal"
+		question="Your PEP"
+		answer="PEP stands for Personal Education Plan. It is a document about you and your learning."
+		points={[
+			{ icon: "star", text: "What you are good at" },
+			{ icon: "heart", text: "What you find difficult, and what help you will get" },
+			{ icon: "sprout", text: "What goals you are working towards" },
+		]}
+	/>
 
-	<h2 class="govuk-heading-l" id="your-pep">Your PEP</h2>
-	<p class="govuk-body">
-		PEP stands for <strong>Personal Education Plan</strong>. It is a document about <em>you</em>
-		and your learning.
-	</p>
-	<p class="govuk-body">It says:</p>
-	<ul class="govuk-list govuk-list--bullet">
-		<li>what you are good at</li>
-		<li>what you find difficult and what help you will get</li>
-		<li>what goals you are working towards</li>
-	</ul>
-	<p class="govuk-body">
-		Your PEP is talked about in a meeting about three times a year. You should be asked what you
-		think, and what you want to happen. If you do not want to go to the meeting, you can ask for
-		your views to be written down and shared instead.
-	</p>
+	<Prose>
+		<p>
+			Your PEP is talked about in a meeting about three times a year. You should be asked what you
+			think, and what you want to happen. If you do not want to go to the meeting, you can ask for
+			your views to be written down and shared instead.
+		</p>
+	</Prose>
 
-	<InsetText title="It's your PEP">
-		<p class="govuk-body">
+	<Panel tone="advice" title="It's your PEP">
+		<p>
 			You have a right to have a say in your PEP. If you feel like nobody asked you, tell your
 			social worker, your carer or your teacher.
 		</p>
-	</InsetText>
+	</Panel>
 
-	<h2 class="govuk-heading-l" id="moving-schools">Moving to a new school</h2>
-	<p class="govuk-body">
-		Changing school can happen quickly, and it can feel like a lot. You should not lose any
-		school time because of a move.
-	</p>
-	<p class="govuk-body">
-		The Virtual School makes sure your new school knows what support you need, and that your PEP
-		moves with you. You can ask to visit the new school before you start.
-	</p>
+	<Prose>
+		<h2 id="moving-schools">Moving to a new school</h2>
+		<p>
+			Changing school can happen quickly, and it can feel like a lot. You should not lose any school
+			time because of a move.
+		</p>
+		<p>
+			The Virtual School makes sure your new school knows what support you need, and that your PEP
+			moves with you. You can ask to visit the new school before you start.
+		</p>
 
-	<h2 class="govuk-heading-l" id="post-16">Going to college or work</h2>
-	<p class="govuk-body">
-		When you finish year 11, you still get support — up to age 25 if you want it. This could be
-		help choosing a college course, an apprenticeship, or a job, and help with money for things
-		like travel, books or equipment.
-	</p>
-	<p class="govuk-body">
-		Your <strong>personal adviser</strong> is the person who helps you with this. If you do not
-		know who yours is, ask your social worker.
-	</p>
+		<h2 id="post-16">Going to college or work</h2>
+		<p>
+			When you finish year 11, you still get support — up to age 25 if you want it. This could be
+			help choosing a college course, an apprenticeship, or a job, and help with money for things
+			like travel, books or equipment.
+		</p>
+		<p>
+			Your <strong>personal adviser</strong> is the person who helps you with this. If you do not
+			know who yours is, ask your social worker.
+		</p>
 
-	<h2 class="govuk-heading-l" id="who-can-help">Who can help you</h2>
-	<ul class="govuk-list govuk-list--bullet">
-		<li><strong>Your carer</strong> — they can raise things with your school.</li>
-		<li><strong>Your social worker</strong> — they come to your PEP meetings.</li>
-		<li>
-			<strong>Your designated teacher</strong> — every school has one. Their job is to look
-			after the education of children in care at your school.
-		</li>
-		<li><strong>The Virtual School</strong> — you can email us any time.</li>
-	</ul>
+		<h2 id="who-can-help">Who can help you</h2>
+		<ul>
+			<li><strong>Your carer</strong> — they can raise things with your school.</li>
+			<li><strong>Your social worker</strong> — they come to your PEP meetings.</li>
+			<li>
+				<strong>Your designated teacher</strong> — every school has one. Their job is to look after
+				the education of children in care at your school.
+			</li>
+			<li><strong>The Virtual School</strong> — you can email us any time.</li>
+		</ul>
+	</Prose>
 
-	<h2 class="govuk-heading-l" id="words">Words you might hear</h2>
-	<details class="govuk-details">
-		<summary class="govuk-details__summary">
-			<span class="govuk-details__summary-text">What does "looked after" mean?</span>
-		</summary>
-		<div class="govuk-details__text">
-			It means a child or young person who is in the care of the council. Some people say
-			"child in care" instead.
-		</div>
-	</details>
-	<details class="govuk-details">
-		<summary class="govuk-details__summary">
-			<span class="govuk-details__summary-text">What does "designated teacher" mean?</span>
-		</summary>
-		<div class="govuk-details__text">
-			A teacher at your school who is responsible for making sure children in care get the
-			help they need.
-		</div>
-	</details>
-	<details class="govuk-details">
-		<summary class="govuk-details__summary">
-			<span class="govuk-details__summary-text">What is a "personal adviser"?</span>
-		</summary>
-		<div class="govuk-details__text">
-			Someone who helps you plan what you will do after school, and supports you until you are
-			25 if you want them to.
-		</div>
-	</details>
-</PupilLayout>
-
-<style>
-	.pupil-cards {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		gap: 1.25rem;
-		list-style: none;
-		padding: 0;
-		margin: 0 0 2.5rem;
-	}
-</style>
+	<Glossary heading="Words you might hear" terms={GLOSSARY} searchable={false} />
+</AudienceLanding>
