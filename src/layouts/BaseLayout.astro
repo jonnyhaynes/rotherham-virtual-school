@@ -3,7 +3,7 @@ import { getSiteSettingsWithCacheHint } from "emdash";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
 import PrototypeNotice from "../components/PrototypeNotice.astro";
-import YorkshireRose from "../components/YorkshireRose.astro";
+import ColouringCodeRose from "../components/ColouringCodeRose.astro";
 import ContactPanel from "../components/ds/ContactPanel.astro";
 import DsFooter from "../components/ds/Footer.astro";
 import DsHeader from "../components/ds/Header.astro";
@@ -173,9 +173,8 @@ const pageCtx = createPublicPageContext({
 				The rose is decorative, so the credit still reads as a sentence.
 			*/}
 			<span slot="credit">
-				Forged in Yorkshire{" "}
-				<YorkshireRose />{" "}
-				by <a href="https://www.colouringcode.com" rel="noopener noreferrer" target="_blank">
+				Another project by <ColouringCodeRose />{" "}
+				<a href="https://www.colouringcode.com" rel="noopener noreferrer" target="_blank">
 					Colouring Code
 				</a>
 			</span>
